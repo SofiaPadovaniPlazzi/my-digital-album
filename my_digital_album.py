@@ -145,6 +145,10 @@ APP_HTML = r"""<!doctype html>
       gap: 6px;
     }
 
+    .segmented.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
     .choice, .icon-button, .primary, .secondary, .danger {
       min-height: 40px;
       border-radius: 8px;
@@ -201,6 +205,132 @@ APP_HTML = r"""<!doctype html>
       justify-content: flex-end;
     }
 
+    .top-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .top-tab {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--field);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .top-tab.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+      width: min(980px, 100%);
+    }
+
+    .library-card {
+      display: grid;
+      gap: 12px;
+      min-height: 280px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .book-cover {
+      position: relative;
+      min-height: 210px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--book-cover, #d9a6a6);
+      color: rgba(255, 255, 255, 0.94);
+      box-shadow: inset 12px 0 18px rgba(64, 35, 22, 0.16), 0 12px 24px rgba(64, 35, 22, 0.16);
+    }
+
+    .book-cover::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--book-art);
+      opacity: 0.95;
+    }
+
+    .book-cover::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 18px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.38);
+      box-shadow: 2px 0 10px rgba(50, 28, 16, 0.22);
+    }
+
+    .book-cover-title {
+      position: absolute;
+      left: 34px;
+      right: 18px;
+      bottom: 22px;
+      font-size: 19px;
+      line-height: 1.08;
+      font-weight: 950;
+      text-shadow: 0 2px 10px rgba(34, 20, 14, 0.26);
+    }
+
+    .book-cover-meta {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .template-card {
+      display: grid;
+      gap: 6px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .template-card.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 -3px 0 var(--accent);
+    }
+
+    .template-card .book-cover {
+      min-height: 92px;
+      border-radius: 7px;
+    }
+
+    .template-card span {
+      font-size: 12px;
+      font-weight: 900;
+    }
+
     .album-stage {
       display: grid;
       place-items: start center;
@@ -218,8 +348,21 @@ APP_HTML = r"""<!doctype html>
       width: min(100%, var(--album-width));
       border-radius: 8px;
       background: var(--cover);
-      padding: 18px;
+      padding: 18px 18px 24px;
       box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .album::before {
+      content: "";
+      position: absolute;
+      top: 70px;
+      bottom: 24px;
+      left: 24px;
+      width: 11px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.26);
+      box-shadow: inset -3px 0 6px rgba(60, 33, 19, 0.16);
     }
 
     .album.vertical {
@@ -276,7 +419,38 @@ APP_HTML = r"""<!doctype html>
       background: var(--paper);
       padding: 24px;
       overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(69, 49, 32, 0.12);
+      box-shadow:
+        inset 0 0 0 1px rgba(69, 49, 32, 0.12),
+        inset 18px 0 28px rgba(66, 42, 24, 0.08),
+        8px 8px 0 rgba(255, 255, 255, 0.26);
+    }
+
+    .album-page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: var(--page-pattern);
+      opacity: 0.88;
+    }
+
+    .album-page::after {
+      content: "";
+      position: absolute;
+      top: 72px;
+      bottom: 72px;
+      left: 12px;
+      width: 9px;
+      border-radius: 99px;
+      background:
+        radial-gradient(circle at center, rgba(84, 58, 38, 0.28) 0 3px, transparent 4px) 0 0 / 9px 64px;
+      pointer-events: none;
+    }
+
+    .album-page > * {
+      position: relative;
+      z-index: 1;
     }
 
     .album.vertical .album-page {
@@ -340,6 +514,12 @@ APP_HTML = r"""<!doctype html>
       overflow: hidden;
       background: rgba(255, 255, 255, 0.58);
       border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .photo-slot.selected {
+      outline: 3px solid rgba(185, 111, 107, 0.45);
+      outline-offset: 2px;
     }
 
     .frame-none .photo-frame {
@@ -402,6 +582,26 @@ APP_HTML = r"""<!doctype html>
       height: 100%;
       object-fit: cover;
       display: block;
+      transform-origin: center;
+    }
+
+    .photo-actions {
+      position: absolute;
+      z-index: 4;
+      top: 8px;
+      right: 8px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .mini-button {
+      min-width: 32px;
+      min-height: 30px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--ink);
+      font-weight: 950;
     }
 
     .upload-prompt {
@@ -445,10 +645,18 @@ APP_HTML = r"""<!doctype html>
     .page-sticker {
       position: absolute;
       z-index: 5;
-      width: 52px;
-      height: 52px;
+      width: var(--sticker-size);
+      height: var(--sticker-size);
       transform: rotate(var(--tilt));
       text-shadow: 0 4px 10px rgba(70, 45, 26, 0.12);
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .page-sticker.selected {
+      outline: 2px dashed var(--accent);
+      outline-offset: 4px;
+      border-radius: 8px;
     }
 
     .sticker-svg {
@@ -463,14 +671,73 @@ APP_HTML = r"""<!doctype html>
       height: 100%;
     }
 
-    .suggestions {
+    .pin-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(246, 241, 234, 0.78);
+      backdrop-filter: blur(12px);
+    }
+
+    .pin-overlay.visible {
+      display: flex;
+    }
+
+    .pin-card {
+      width: min(360px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .pin-dot {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--line);
+      border-radius: 99px;
+    }
+
+    .pin-dot.filled {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .pin-pad {
       display: grid;
-      gap: 9px;
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.42;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .pin-key {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 950;
+    }
+
+    .pin-message {
+      min-height: 20px;
+      margin: 10px 0 0;
+      color: #b84242;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 850;
     }
 
     .hidden {
@@ -494,7 +761,7 @@ APP_HTML = r"""<!doctype html>
     }
 
     @media print {
-      aside, .toolbar, .page-tabs, .cover-title button {
+      aside, .toolbar, .top-tabs, .page-tabs, .cover-title button {
         display: none;
       }
 
@@ -525,6 +792,10 @@ APP_HTML = r"""<!doctype html>
         <div class="field">
           <label for="albumTitle">Album title</label>
           <input id="albumTitle" type="text" placeholder="Summer in Italy">
+        </div>
+        <div class="field">
+          <label>Cover template</label>
+          <div class="template-grid" id="templateGrid"></div>
         </div>
         <div class="field">
           <label>Orientation</label>
@@ -561,7 +832,20 @@ APP_HTML = r"""<!doctype html>
             <option value="polaroid">Polaroid</option>
           </select>
         </div>
-        <button class="primary" id="createAlbum" type="button">Create album</button>
+        <div class="field">
+          <label for="pagePattern">Page pattern</label>
+          <select id="pagePattern">
+            <option value="plain">Plain paper</option>
+            <option value="dots">Tiny dots</option>
+            <option value="grid">Soft grid</option>
+            <option value="hearts">Little hearts</option>
+            <option value="pressed">Pressed flowers</option>
+          </select>
+        </div>
+        <div class="row">
+          <button class="primary" id="createAlbum" type="button">New album</button>
+          <button class="secondary" id="duplicateAlbum" type="button">Duplicate</button>
+        </div>
       </section>
 
       <section class="panel">
@@ -582,25 +866,49 @@ APP_HTML = r"""<!doctype html>
           <label>Cute stickers</label>
           <div class="sticker-tray" id="stickerTray"></div>
         </div>
+        <div class="field">
+          <label for="stickerSize">Sticker size</label>
+          <input id="stickerSize" type="range" min="30" max="120" value="52">
+        </div>
         <div class="row">
           <button class="secondary" id="addPage" type="button">Add page</button>
           <button class="danger" id="deletePage" type="button">Delete page</button>
         </div>
       </section>
 
+      <section class="panel" id="cropPanel">
+        <h2>Selected Photo</h2>
+        <div class="field">
+          <label for="cropZoom">Zoom</label>
+          <input id="cropZoom" type="range" min="1" max="2.4" step="0.05" value="1">
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="cropX">Move X</label>
+            <input id="cropX" type="range" min="0" max="100" value="50">
+          </div>
+          <div class="field">
+            <label for="cropY">Move Y</label>
+            <input id="cropY" type="range" min="0" max="100" value="50">
+          </div>
+        </div>
+        <button class="secondary" id="removePhoto" type="button">Remove photo</button>
+      </section>
+
       <section class="panel">
-        <h2>Suggestions</h2>
-        <ul class="suggestions">
-          <li>Create one album per trip, season, friendship, or year.</li>
-          <li>Use one page title for a little chapter, then captions for each photo.</li>
-          <li>Try 1 photo pages for special memories and 4 photo pages for busy days.</li>
-          <li>Use the cover color like the outside cover of a real album.</li>
-          <li>Print to PDF when you want to save or share a finished version.</li>
-        </ul>
+        <h2>Privacy</h2>
+        <div class="row">
+          <button class="secondary" id="passwordButton" type="button">Password</button>
+          <button class="secondary" id="exportHtmlButton" type="button">Export HTML</button>
+        </div>
       </section>
     </aside>
 
     <main>
+      <div class="top-tabs">
+        <button class="top-tab active" id="libraryTab" type="button">Library</button>
+        <button class="top-tab" id="editorTab" type="button">Editor</button>
+      </div>
       <div class="toolbar">
         <div>
           <h2 id="modeTitle">Album preview</h2>
@@ -612,6 +920,13 @@ APP_HTML = r"""<!doctype html>
         </div>
       </div>
 
+      <div class="view active" id="libraryView">
+        <div class="album-stage">
+          <div class="library-grid" id="libraryGrid"></div>
+        </div>
+      </div>
+
+      <div class="view" id="editorView">
       <div class="album-stage">
         <section class="album vertical frame-none" id="album">
           <div class="cover-title">
@@ -622,11 +937,65 @@ APP_HTML = r"""<!doctype html>
           <article class="album-page" id="albumPage"></article>
         </section>
       </div>
+      </div>
     </main>
   </div>
 
+  <div class="pin-overlay" id="pinOverlay" aria-modal="true" role="dialog"></div>
+
   <script>
-    const storageKey = "my-digital-album-v1";
+    const legacyStorageKey = "my-digital-album-v1";
+    const storageKey = "my-digital-album-library-v2";
+    const sessionKey = "my-digital-album-unlocked";
+    const templates = [
+      {
+        id: "travel",
+        name: "Travel",
+        coverColor: "#6fa8b5",
+        paperColor: "#fff7e6",
+        pattern: "pressed",
+        art: "radial-gradient(circle at 72% 18%, rgba(255,255,255,.72) 0 9px, transparent 10px), linear-gradient(135deg, transparent 0 46%, rgba(255,255,255,.28) 47% 53%, transparent 54%), radial-gradient(circle at 22% 72%, rgba(255,217,128,.78) 0 24px, transparent 25px)"
+      },
+      {
+        id: "family",
+        name: "Family",
+        coverColor: "#d79ca8",
+        paperColor: "#fff6f2",
+        pattern: "hearts",
+        art: "radial-gradient(circle at 30% 24%, rgba(255,255,255,.72) 0 18px, transparent 19px), radial-gradient(circle at 62% 64%, rgba(255,238,196,.85) 0 26px, transparent 27px), linear-gradient(45deg, transparent 0 70%, rgba(255,255,255,.25) 71%)"
+      },
+      {
+        id: "birthday",
+        name: "Birthday",
+        coverColor: "#f0b45d",
+        paperColor: "#fff9df",
+        pattern: "dots",
+        art: "radial-gradient(circle at 24% 22%, rgba(255,255,255,.75) 0 7px, transparent 8px), radial-gradient(circle at 70% 38%, rgba(255,126,159,.7) 0 11px, transparent 12px), radial-gradient(circle at 46% 72%, rgba(126,214,196,.75) 0 12px, transparent 13px)"
+      },
+      {
+        id: "graduation",
+        name: "Graduation",
+        coverColor: "#52627e",
+        paperColor: "#fbf7ef",
+        pattern: "grid",
+        art: "linear-gradient(135deg, rgba(255,255,255,.35) 0 18%, transparent 19%), radial-gradient(circle at 72% 24%, rgba(246,196,83,.9) 0 15px, transparent 16px), linear-gradient(90deg, transparent 0 18px, rgba(255,255,255,.2) 19px 20px, transparent 21px)"
+      },
+      {
+        id: "wedding",
+        name: "Wedding",
+        coverColor: "#c7b7a6",
+        paperColor: "#fffaf3",
+        pattern: "pressed",
+        art: "radial-gradient(circle at 28% 28%, rgba(255,255,255,.8) 0 22px, transparent 23px), radial-gradient(circle at 70% 68%, rgba(255,235,226,.86) 0 30px, transparent 31px), linear-gradient(120deg, transparent 0 58%, rgba(255,255,255,.28) 59%)"
+      }
+    ];
+    const pagePatterns = {
+      plain: "linear-gradient(transparent, transparent)",
+      dots: "radial-gradient(circle, rgba(91,67,45,.14) 0 1px, transparent 1.5px) 0 0 / 18px 18px",
+      grid: "linear-gradient(rgba(91,67,45,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(91,67,45,.09) 1px, transparent 1px)",
+      hearts: "radial-gradient(circle at 40% 42%, rgba(255,154,174,.22) 0 5px, transparent 6px), radial-gradient(circle at 60% 42%, rgba(255,154,174,.22) 0 5px, transparent 6px), linear-gradient(45deg, transparent 43%, rgba(255,154,174,.2) 44% 56%, transparent 57%)",
+      pressed: "radial-gradient(ellipse at 18% 22%, rgba(126,190,143,.18) 0 18px, transparent 19px), radial-gradient(ellipse at 82% 76%, rgba(255,155,193,.14) 0 20px, transparent 21px)"
+    };
     const stickers = [
       {
         id: "flower",
@@ -669,22 +1038,29 @@ APP_HTML = r"""<!doctype html>
         art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="m32 7 7 16 17 2-13 11 4 17-15-9-15 9 4-17L8 25l17-2Z" fill="#ffcf6a" stroke="#bf7c24" stroke-width="2" stroke-linejoin="round"/><path d="M24 31c4 4 12 4 16 0" fill="none" stroke="#8b5b24" stroke-width="2" stroke-linecap="round"/></svg>`
       }
     ];
-    const defaultAlbum = {
-      title: "My Digital Album",
-      orientation: "vertical",
-      paperColor: "#fff8ec",
-      coverColor: "#d9a6a6",
-      photosPerPage: 2,
-      frameStyle: "simple",
-      pages: [blankPage()]
+    const defaultLibrary = {
+      activeAlbumId: "",
+      security: { pinHash: "" },
+      albums: []
     };
 
-    let album = loadAlbum();
+    let library = loadLibrary();
+    let album = activeAlbum();
+    let activeView = "library";
     let activePageIndex = 0;
+    let selectedPhotoIndex = null;
+    let selectedStickerId = null;
+    let draggingSticker = null;
+    let pinMode = "unlock";
+    let pinBuffer = "";
+    let pinMessage = "";
+    let pendingPin = "";
 
     const albumEl = document.getElementById("album");
     const albumPage = document.getElementById("albumPage");
     const pageTabs = document.getElementById("pageTabs");
+    const libraryGrid = document.getElementById("libraryGrid");
+    const templateGrid = document.getElementById("templateGrid");
     const stickerTray = document.getElementById("stickerTray");
     const albumTitle = document.getElementById("albumTitle");
     const coverTitle = document.getElementById("coverTitle");
@@ -692,25 +1068,43 @@ APP_HTML = r"""<!doctype html>
     const coverColor = document.getElementById("coverColor");
     const photosPerPage = document.getElementById("photosPerPage");
     const frameStyle = document.getElementById("frameStyle");
+    const pagePattern = document.getElementById("pagePattern");
     const pageTitle = document.getElementById("pageTitle");
     const pageDate = document.getElementById("pageDate");
     const pageText = document.getElementById("pageText");
+    const stickerSize = document.getElementById("stickerSize");
+    const cropPanel = document.getElementById("cropPanel");
+    const cropZoom = document.getElementById("cropZoom");
+    const cropX = document.getElementById("cropX");
+    const cropY = document.getElementById("cropY");
+    const libraryTab = document.getElementById("libraryTab");
+    const editorTab = document.getElementById("editorTab");
+    const libraryView = document.getElementById("libraryView");
+    const editorView = document.getElementById("editorView");
+    const pinOverlay = document.getElementById("pinOverlay");
 
     document.getElementById("createAlbum").addEventListener("click", createAlbumFromOptions);
+    document.getElementById("duplicateAlbum").addEventListener("click", duplicateAlbum);
     document.getElementById("addPage").addEventListener("click", addPage);
     document.getElementById("deletePage").addEventListener("click", deletePage);
-    document.getElementById("saveButton").addEventListener("click", saveAlbum);
+    document.getElementById("saveButton").addEventListener("click", saveLibrary);
     document.getElementById("exportButton").addEventListener("click", () => window.print());
+    document.getElementById("exportHtmlButton").addEventListener("click", exportSingleHtml);
     document.getElementById("resetButton").addEventListener("click", resetAlbum);
+    document.getElementById("passwordButton").addEventListener("click", openPasswordSettings);
+    document.getElementById("removePhoto").addEventListener("click", removeSelectedPhoto);
+    libraryTab.addEventListener("click", () => setView("library"));
+    editorTab.addEventListener("click", () => setView("editor"));
 
     coverTitle.addEventListener("input", () => {
       album.title = coverTitle.value || "My Digital Album";
       albumTitle.value = album.title;
-      saveAlbum();
+      saveLibrary();
+      renderLibrary();
       renderTabs();
     });
 
-    [albumTitle, paperColor, coverColor, photosPerPage, frameStyle].forEach((input) => {
+    [albumTitle, paperColor, coverColor, photosPerPage, frameStyle, pagePattern].forEach((input) => {
       input.addEventListener("input", updateAlbumOptions);
       input.addEventListener("change", updateAlbumOptions);
     });
@@ -719,10 +1113,22 @@ APP_HTML = r"""<!doctype html>
       input.addEventListener("input", updatePageText);
     });
 
+    [cropZoom, cropX, cropY].forEach((input) => {
+      input.addEventListener("input", updateSelectedPhotoCrop);
+    });
+
+    stickerSize.addEventListener("input", () => {
+      const sticker = selectedSticker();
+      if (!sticker) return;
+      sticker.size = Number(stickerSize.value);
+      saveLibrary();
+      renderPage();
+    });
+
     document.querySelectorAll("[data-orientation]").forEach((button) => {
       button.addEventListener("click", () => {
         album.orientation = button.dataset.orientation;
-        saveAlbum();
+        saveLibrary();
         render();
       });
     });
@@ -737,46 +1143,114 @@ APP_HTML = r"""<!doctype html>
       };
     }
 
-    function loadAlbum() {
-      const stored = localStorage.getItem(storageKey);
-      if (!stored) return structuredClone(defaultAlbum);
-      try {
-        const saved = JSON.parse(stored);
-        return {
-          ...defaultAlbum,
-          ...saved,
-          pages: saved.pages?.length ? saved.pages.map((page) => ({
-            ...blankPage(),
-            ...page,
-            photos: page.photos ?? [],
-            stickers: page.stickers ?? []
-          })) : [blankPage()]
-        };
-      } catch {
-        return structuredClone(defaultAlbum);
-      }
+    function blankAlbum(templateId = "family", title = "") {
+      const template = templates.find((item) => item.id === templateId) ?? templates[0];
+      return {
+        id: crypto.randomUUID(),
+        title: title || `${template.name} Album`,
+        template: template.id,
+        orientation: "vertical",
+        paperColor: template.paperColor,
+        coverColor: template.coverColor,
+        photosPerPage: 2,
+        frameStyle: "simple",
+        pagePattern: template.pattern,
+        pages: [blankPage()]
+      };
     }
 
-    function saveAlbum() {
-      localStorage.setItem(storageKey, JSON.stringify(album));
+    function normalizeAlbum(saved) {
+      const fallback = blankAlbum(saved?.template ?? "family", saved?.title);
+      return {
+        ...fallback,
+        ...saved,
+        id: saved?.id ?? crypto.randomUUID(),
+        pagePattern: saved?.pagePattern ?? fallback.pagePattern,
+        pages: saved?.pages?.length ? saved.pages.map((page) => ({
+          ...blankPage(),
+          ...page,
+          photos: (page.photos ?? []).map((photo) => photo ? ({
+            ...photo,
+            cropX: photo.cropX ?? 50,
+            cropY: photo.cropY ?? 50,
+            zoom: photo.zoom ?? 1
+          }) : null),
+          stickers: (page.stickers ?? []).map((sticker) => ({
+            id: sticker.id ?? sticker.value,
+            x: sticker.x ?? 12,
+            y: sticker.y ?? 12,
+            tilt: sticker.tilt ?? 0,
+            size: sticker.size ?? 52
+          }))
+        })) : [blankPage()]
+      };
+    }
+
+    function loadLibrary() {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const saved = JSON.parse(stored);
+          const albums = saved.albums?.length ? saved.albums.map(normalizeAlbum) : [blankAlbum()];
+          return {
+            ...defaultLibrary,
+            ...saved,
+            albums,
+            activeAlbumId: saved.activeAlbumId && albums.some((item) => item.id === saved.activeAlbumId) ? saved.activeAlbumId : albums[0].id,
+            security: { pinHash: saved.security?.pinHash ?? "" }
+          };
+        } catch {}
+      }
+
+      const legacy = localStorage.getItem(legacyStorageKey);
+      if (legacy) {
+        try {
+          const migrated = normalizeAlbum(JSON.parse(legacy));
+          return { ...defaultLibrary, activeAlbumId: migrated.id, albums: [migrated] };
+        } catch {}
+      }
+
+      const first = blankAlbum("family", "My Digital Album");
+      return { ...defaultLibrary, activeAlbumId: first.id, albums: [first] };
+    }
+
+    function activeAlbum() {
+      return library.albums.find((item) => item.id === library.activeAlbumId) ?? library.albums[0];
+    }
+
+    function saveLibrary() {
+      localStorage.setItem(storageKey, JSON.stringify(library));
     }
 
     function createAlbumFromOptions() {
-      const confirmed = album.pages.some((page) => page.photos.length || page.title || page.text)
-        ? window.confirm("Create a new album and replace the current one?")
-        : true;
-      if (!confirmed) return;
-      album = {
-        title: albumTitle.value || "My Digital Album",
-        orientation: album.orientation,
-        paperColor: paperColor.value,
-        coverColor: coverColor.value,
-        photosPerPage: Number(photosPerPage.value),
-        frameStyle: frameStyle.value,
-        pages: [blankPage()]
-      };
+      const templateId = album?.template ?? "family";
+      const next = blankAlbum(templateId, albumTitle.value || "");
+      next.orientation = album.orientation;
+      next.paperColor = paperColor.value;
+      next.coverColor = coverColor.value;
+      next.photosPerPage = Number(photosPerPage.value);
+      next.frameStyle = frameStyle.value;
+      next.pagePattern = pagePattern.value;
+      library.albums.push(next);
+      library.activeAlbumId = next.id;
+      album = next;
       activePageIndex = 0;
-      saveAlbum();
+      selectedPhotoIndex = null;
+      selectedStickerId = null;
+      setView("editor", false);
+      saveLibrary();
+      render();
+    }
+
+    function duplicateAlbum() {
+      const copy = normalizeAlbum(JSON.parse(JSON.stringify(album)));
+      copy.id = crypto.randomUUID();
+      copy.title = `${album.title} Copy`;
+      library.albums.push(copy);
+      library.activeAlbumId = copy.id;
+      album = copy;
+      activePageIndex = 0;
+      saveLibrary();
       render();
     }
 
@@ -786,10 +1260,33 @@ APP_HTML = r"""<!doctype html>
       album.coverColor = coverColor.value;
       album.photosPerPage = Number(photosPerPage.value);
       album.frameStyle = frameStyle.value;
+      album.pagePattern = pagePattern.value;
       coverTitle.value = album.title;
       trimExtraPhotos();
-      saveAlbum();
+      saveLibrary();
       render();
+    }
+
+    function applyTemplate(templateId) {
+      const template = templates.find((item) => item.id === templateId);
+      if (!template) return;
+      album.template = template.id;
+      album.coverColor = template.coverColor;
+      album.paperColor = template.paperColor;
+      album.pagePattern = template.pattern;
+      saveLibrary();
+      render();
+    }
+
+    function setView(view, shouldRender = true) {
+      activeView = view;
+      libraryTab.classList.toggle("active", view === "library");
+      editorTab.classList.toggle("active", view === "editor");
+      libraryView.classList.toggle("active", view === "library");
+      editorView.classList.toggle("active", view === "editor");
+      document.getElementById("modeTitle").textContent = view === "library" ? "Album library" : "Album editor";
+      document.getElementById("helperText").textContent = view === "library" ? "Choose a cover to open an album, or create a new one." : "Edit pages, photos, captions, stickers, and album style.";
+      if (shouldRender) render();
     }
 
     function updatePageText() {
@@ -797,7 +1294,7 @@ APP_HTML = r"""<!doctype html>
       page.title = pageTitle.value;
       page.date = pageDate.value;
       page.text = pageText.value;
-      saveAlbum();
+      saveLibrary();
       renderPage();
       renderTabs();
     }
@@ -809,7 +1306,9 @@ APP_HTML = r"""<!doctype html>
     function addPage() {
       album.pages.push(blankPage());
       activePageIndex = album.pages.length - 1;
-      saveAlbum();
+      selectedPhotoIndex = null;
+      selectedStickerId = null;
+      saveLibrary();
       render();
     }
 
@@ -820,16 +1319,22 @@ APP_HTML = r"""<!doctype html>
         album.pages.splice(activePageIndex, 1);
         activePageIndex = Math.max(0, activePageIndex - 1);
       }
-      saveAlbum();
+      selectedPhotoIndex = null;
+      selectedStickerId = null;
+      saveLibrary();
       render();
     }
 
     function resetAlbum() {
-      const confirmed = window.confirm("Reset the whole album? This removes uploaded photos, text, dates, and stickers.");
+      const confirmed = window.confirm("Delete this album from the library?");
       if (!confirmed) return;
-      localStorage.removeItem(storageKey);
-      album = structuredClone(defaultAlbum);
+      library.albums = library.albums.filter((item) => item.id !== album.id);
+      if (!library.albums.length) library.albums.push(blankAlbum("family", "My Digital Album"));
+      library.activeAlbumId = library.albums[0].id;
+      album = activeAlbum();
       activePageIndex = 0;
+      setView("library", false);
+      saveLibrary();
       render();
     }
 
@@ -840,6 +1345,61 @@ APP_HTML = r"""<!doctype html>
     }
 
     function render() {
+      album = activeAlbum();
+      activePageIndex = Math.min(activePageIndex, album.pages.length - 1);
+      renderTemplateGrid();
+      renderLibrary();
+      renderEditor();
+      renderCropPanel();
+    }
+
+    function renderTemplateGrid() {
+      templateGrid.innerHTML = templates.map((template) => `
+        <button class="template-card ${album.template === template.id ? "active" : ""}" type="button" data-template="${template.id}">
+          ${coverMarkup({ ...album, title: template.name, coverColor: template.coverColor, template: template.id }, false)}
+          <span>${template.name}</span>
+        </button>
+      `).join("");
+      templateGrid.querySelectorAll("[data-template]").forEach((button) => {
+        button.addEventListener("click", () => applyTemplate(button.dataset.template));
+      });
+    }
+
+    function renderLibrary() {
+      libraryGrid.innerHTML = library.albums.map((item) => `
+        <button class="library-card" type="button" data-open-album="${item.id}">
+          ${coverMarkup(item, true)}
+          <span class="book-cover-meta">${item.pages.length} page${item.pages.length === 1 ? "" : "s"} · ${templateName(item.template)}</span>
+        </button>
+      `).join("");
+      libraryGrid.querySelectorAll("[data-open-album]").forEach((button) => {
+        button.addEventListener("click", () => {
+          library.activeAlbumId = button.dataset.openAlbum;
+          album = activeAlbum();
+          activePageIndex = 0;
+          selectedPhotoIndex = null;
+          selectedStickerId = null;
+          setView("editor", false);
+          saveLibrary();
+          render();
+        });
+      });
+    }
+
+    function coverMarkup(item, showTitle) {
+      const template = templates.find((entry) => entry.id === item.template) ?? templates[0];
+      return `
+        <span class="book-cover" style="--book-cover:${item.coverColor}; --book-art:${template.art}">
+          ${showTitle ? `<span class="book-cover-title">${escapeHtml(item.title)}</span>` : ""}
+        </span>
+      `;
+    }
+
+    function templateName(id) {
+      return templates.find((template) => template.id === id)?.name ?? "Album";
+    }
+
+    function renderEditor() {
       albumEl.className = `album ${album.orientation} frame-${album.frameStyle}`;
       albumEl.style.setProperty("--paper", album.paperColor);
       albumEl.style.setProperty("--cover", album.coverColor);
@@ -851,6 +1411,7 @@ APP_HTML = r"""<!doctype html>
       coverColor.value = album.coverColor;
       photosPerPage.value = String(album.photosPerPage);
       frameStyle.value = album.frameStyle;
+      pagePattern.value = album.pagePattern;
       document.querySelectorAll("[data-orientation]").forEach((button) => {
         button.classList.toggle("active", button.dataset.orientation === album.orientation);
       });
@@ -869,6 +1430,8 @@ APP_HTML = r"""<!doctype html>
       pageTabs.querySelectorAll("[data-page]").forEach((button) => {
         button.addEventListener("click", () => {
           activePageIndex = Number(button.dataset.page);
+          selectedPhotoIndex = null;
+          selectedStickerId = null;
           render();
         });
       });
@@ -893,6 +1456,7 @@ APP_HTML = r"""<!doctype html>
     function renderPage() {
       const page = currentPage();
       const slots = Array.from({ length: album.photosPerPage }, (_, index) => page.photos[index] ?? null);
+      albumPage.style.setProperty("--page-pattern", pagePatterns[album.pagePattern] ?? pagePatterns.plain);
       albumPage.innerHTML = `
         <div class="page-heading">
           <input class="page-title-inline" type="text" value="${escapeAttribute(page.title)}" placeholder="Page title" data-page-field="title">
@@ -902,8 +1466,8 @@ APP_HTML = r"""<!doctype html>
           ${slots.map((photo, index) => photoSlotMarkup(photo, index)).join("")}
         </div>
         <textarea class="page-note" placeholder="Write a little memory here..." data-page-field="text">${escapeHtml(page.text)}</textarea>
-        ${page.stickers.map((sticker) => `
-          <span class="page-sticker" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg">${stickerArt(sticker.id)}</span>
+        ${page.stickers.map((sticker, index) => `
+          <span class="page-sticker ${selectedStickerId === index ? "selected" : ""}" data-sticker-index="${index}" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>
         `).join("")}
       `;
 
@@ -911,7 +1475,7 @@ APP_HTML = r"""<!doctype html>
         input.addEventListener("input", () => {
           const field = input.dataset.pageField;
           currentPage()[field] = input.value;
-          saveAlbum();
+          saveLibrary();
           renderPageControls();
           renderTabs();
         });
@@ -925,24 +1489,77 @@ APP_HTML = r"""<!doctype html>
         input.addEventListener("input", () => {
           const index = Number(input.dataset.caption);
           currentPage().photos[index].caption = input.value;
-          saveAlbum();
+          saveLibrary();
         });
       });
+
+      albumPage.querySelectorAll("[data-photo-slot]").forEach((slot) => {
+        slot.addEventListener("click", (event) => {
+          if (event.target.matches("input")) return;
+          selectedPhotoIndex = Number(slot.dataset.photoSlot);
+          selectedStickerId = null;
+          render();
+        });
+        slot.addEventListener("dragstart", (event) => {
+          event.dataTransfer.setData("text/plain", slot.dataset.photoSlot);
+        });
+        slot.addEventListener("dragover", (event) => event.preventDefault());
+        slot.addEventListener("drop", (event) => {
+          event.preventDefault();
+          const to = Number(slot.dataset.photoSlot);
+          const file = event.dataTransfer.files?.[0];
+          if (file?.type?.startsWith("image/")) {
+            readPhotoFile(file, to);
+            return;
+          }
+          const from = Number(event.dataTransfer.getData("text/plain"));
+          swapPhotos(from, to);
+        });
+      });
+
+      albumPage.querySelectorAll("[data-remove-photo]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectedPhotoIndex = Number(button.dataset.removePhoto);
+          removeSelectedPhoto();
+        });
+      });
+
+      albumPage.querySelectorAll("[data-sticker-index]").forEach((sticker) => {
+        sticker.addEventListener("pointerdown", startStickerDrag);
+        sticker.addEventListener("click", (event) => {
+          event.stopPropagation();
+          selectedStickerId = Number(sticker.dataset.stickerIndex);
+          selectedPhotoIndex = null;
+          renderCropPanel();
+          renderPage();
+        });
+      });
+      renderCropPanel();
     }
 
     function photoSlotMarkup(photo, index) {
+      const selected = selectedPhotoIndex === index ? "selected" : "";
+      const image = photo ? `
+        <img
+          src="${photo.src}"
+          alt="${escapeAttribute(photo.caption || "Album photo")}"
+          style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1})"
+        >
+        <span class="photo-actions"><button class="mini-button" type="button" data-remove-photo="${index}">x</button></span>
+      ` : `
+        <span class="upload-prompt">
+          <strong>Upload photo</strong>
+          <span>Choose or drag here</span>
+        </span>
+      `;
       return `
-        <div class="photo-slot">
+        <div class="photo-slot ${selected}" data-photo-slot="${index}" draggable="${photo ? "true" : "false"}">
           <label class="photo-frame">
-            ${photo ? `<img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}">` : `
-              <span class="upload-prompt">
-                <strong>Upload photo</strong>
-                <span>Choose from your device</span>
-              </span>
-            `}
+            ${image}
             <input class="hidden" type="file" accept="image/*" data-upload="${index}">
           </label>
-          <input class="photo-caption" type="text" value="${escapeAttribute(photo?.caption ?? "")}" placeholder="Picture title or caption" data-caption="${index}">
+          <input class="photo-caption" type="text" value="${escapeAttribute(photo?.caption ?? "")}" placeholder="Picture title or caption" data-caption="${index}" ${photo ? "" : "disabled"}>
         </div>
       `;
     }
@@ -951,18 +1568,73 @@ APP_HTML = r"""<!doctype html>
       const file = input.files?.[0];
       if (!file) return;
       const index = Number(input.dataset.upload);
+      readPhotoFile(file, index);
+    }
+
+    function readPhotoFile(file, index) {
       const reader = new FileReader();
       reader.onload = () => {
         const page = currentPage();
         page.photos[index] = {
           src: reader.result,
           caption: page.photos[index]?.caption ?? "",
-          name: file.name
+          name: file.name,
+          cropX: 50,
+          cropY: 50,
+          zoom: 1
         };
-        saveAlbum();
+        selectedPhotoIndex = index;
+        saveLibrary();
         renderPage();
       };
       reader.readAsDataURL(file);
+    }
+
+    function swapPhotos(from, to) {
+      if (Number.isNaN(from) || Number.isNaN(to) || from === to) return;
+      const photos = currentPage().photos;
+      [photos[from], photos[to]] = [photos[to], photos[from]];
+      selectedPhotoIndex = to;
+      saveLibrary();
+      renderPage();
+    }
+
+    function selectedPhoto() {
+      return selectedPhotoIndex === null ? null : currentPage().photos[selectedPhotoIndex];
+    }
+
+    function updateSelectedPhotoCrop() {
+      const photo = selectedPhoto();
+      if (!photo) return;
+      photo.zoom = Number(cropZoom.value);
+      photo.cropX = Number(cropX.value);
+      photo.cropY = Number(cropY.value);
+      saveLibrary();
+      renderPage();
+    }
+
+    function removeSelectedPhoto() {
+      if (selectedPhotoIndex === null) return;
+      currentPage().photos[selectedPhotoIndex] = null;
+      selectedPhotoIndex = null;
+      saveLibrary();
+      renderPage();
+    }
+
+    function renderCropPanel() {
+      const photo = selectedPhoto();
+      const sticker = selectedSticker();
+      cropPanel.style.opacity = photo ? "1" : "0.52";
+      cropZoom.disabled = !photo;
+      cropX.disabled = !photo;
+      cropY.disabled = !photo;
+      if (photo) {
+        cropZoom.value = photo.zoom ?? 1;
+        cropX.value = photo.cropX ?? 50;
+        cropY.value = photo.cropY ?? 50;
+      }
+      stickerSize.disabled = !sticker;
+      stickerSize.value = sticker?.size ?? 52;
     }
 
     function addSticker(value) {
@@ -972,10 +1644,194 @@ APP_HTML = r"""<!doctype html>
         id: value,
         x: 10 + ((count * 17) % 72),
         y: 12 + ((count * 23) % 68),
-        tilt: [-10, 8, -4, 12][count % 4]
+        tilt: [-10, 8, -4, 12][count % 4],
+        size: 52
       });
-      saveAlbum();
+      selectedStickerId = page.stickers.length - 1;
+      selectedPhotoIndex = null;
+      saveLibrary();
       renderPage();
+    }
+
+    function selectedSticker() {
+      return selectedStickerId === null ? null : currentPage().stickers[selectedStickerId];
+    }
+
+    function startStickerDrag(event) {
+      const index = Number(event.currentTarget.dataset.stickerIndex);
+      selectedStickerId = index;
+      selectedPhotoIndex = null;
+      const rect = albumPage.getBoundingClientRect();
+      draggingSticker = { index, rect };
+      event.currentTarget.setPointerCapture(event.pointerId);
+      event.currentTarget.addEventListener("pointermove", moveSticker);
+      event.currentTarget.addEventListener("pointerup", endStickerDrag, { once: true });
+    }
+
+    function moveSticker(event) {
+      if (!draggingSticker) return;
+      const sticker = currentPage().stickers[draggingSticker.index];
+      sticker.x = clamp(((event.clientX - draggingSticker.rect.left) / draggingSticker.rect.width) * 100, 0, 92);
+      sticker.y = clamp(((event.clientY - draggingSticker.rect.top) / draggingSticker.rect.height) * 100, 0, 92);
+      event.currentTarget.style.left = `${sticker.x}%`;
+      event.currentTarget.style.top = `${sticker.y}%`;
+    }
+
+    function endStickerDrag(event) {
+      event.currentTarget.removeEventListener("pointermove", moveSticker);
+      draggingSticker = null;
+      saveLibrary();
+      renderPage();
+    }
+
+    function exportSingleHtml() {
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(album.title)}</title><style>${document.querySelector("style").textContent}</style></head><body><main style="padding:24px">${exportAlbumMarkup()}</main></body></html>`;
+      const blob = new Blob([html], { type: "text/html" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${slugify(album.title)}.html`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function exportAlbumMarkup() {
+      const savedIndex = activePageIndex;
+      const markup = album.pages.map((page, index) => {
+        activePageIndex = index;
+        const slots = Array.from({ length: album.photosPerPage }, (_, slotIndex) => page.photos[slotIndex] ?? null);
+        return `<section class="album ${album.orientation} frame-${album.frameStyle}" style="--paper:${album.paperColor}; --cover:${album.coverColor}; margin:0 auto 24px"><article class="album-page" style="--page-pattern:${pagePatterns[album.pagePattern] ?? pagePatterns.plain}">${staticPageMarkup(page, slots)}</article></section>`;
+      }).join("");
+      activePageIndex = savedIndex;
+      return markup;
+    }
+
+    function staticPageMarkup(page, slots) {
+      return `
+        <div class="page-heading"><h2>${escapeHtml(page.title)}</h2><strong>${escapeHtml(page.date)}</strong></div>
+        <div class="photo-grid slots-${album.photosPerPage}">
+          ${slots.map((photo) => `<div class="photo-slot"><div class="photo-frame">${photo ? `<img src="${photo.src}" style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1})">` : ""}</div><p>${escapeHtml(photo?.caption ?? "")}</p></div>`).join("")}
+        </div>
+        <p class="page-note">${escapeHtml(page.text)}</p>
+        ${page.stickers.map((sticker) => `<span class="page-sticker" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>`).join("")}
+      `;
+    }
+
+    function passwordIsEnabled() {
+      return Boolean(library.security?.pinHash);
+    }
+
+    function passwordIsUnlocked() {
+      return !passwordIsEnabled() || sessionStorage.getItem(sessionKey) === "true";
+    }
+
+    async function hashPin(pin) {
+      if (!window.crypto?.subtle) return `plain:${pin}`;
+      const data = new TextEncoder().encode(`my-digital-album:${pin}`);
+      const digest = await crypto.subtle.digest("SHA-256", data);
+      return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+    }
+
+    function openPasswordSettings() {
+      openPinModal(passwordIsEnabled() ? "manage" : "setup");
+    }
+
+    function openPinModal(mode, message = "") {
+      pinMode = mode;
+      pinBuffer = "";
+      pinMessage = message;
+      if (mode !== "confirm_setup") pendingPin = "";
+      pinOverlay.classList.add("visible");
+      renderPinModal();
+    }
+
+    function closePinModal() {
+      if (pinMode === "unlock" && !passwordIsUnlocked()) return;
+      pinOverlay.classList.remove("visible");
+    }
+
+    function renderPinModal() {
+      const manage = pinMode === "manage";
+      const locked = pinMode === "unlock";
+      const title = { unlock: "Enter Password", setup: "Choose Password", confirm_setup: "Confirm Password", manage: "Password" }[pinMode];
+      pinOverlay.innerHTML = `
+        <section class="pin-card">
+          <h2>${title}</h2>
+          <p>${manage ? "A 4 digit code is active." : "Use the number pad to enter a 4 digit code."}</p>
+          ${locked ? "" : `<button class="secondary" id="pinClose" type="button">Close</button>`}
+          ${manage ? `<div class="row"><button class="primary" data-pin-action="change" type="button">Change</button><button class="danger" data-pin-action="disable" type="button">Disable</button></div>` : pinPadMarkup()}
+          <p class="pin-message">${pinMessage}</p>
+        </section>
+      `;
+      document.getElementById("pinClose")?.addEventListener("click", closePinModal);
+      pinOverlay.querySelectorAll("[data-pin-key]").forEach((button) => button.addEventListener("click", () => handlePinKey(button.dataset.pinKey)));
+      pinOverlay.querySelectorAll("[data-pin-action]").forEach((button) => button.addEventListener("click", () => handlePinAction(button.dataset.pinAction)));
+    }
+
+    function pinPadMarkup() {
+      return `
+        <div class="pin-dots">${[0,1,2,3].map((index) => `<span class="pin-dot ${index < pinBuffer.length ? "filled" : ""}"></span>`).join("")}</div>
+        <div class="pin-pad">
+          ${["1","2","3","4","5","6","7","8","9","back","0","clear"].map((key) => `<button class="pin-key" data-pin-key="${key}" type="button">${key === "back" ? "⌫" : key === "clear" ? "Clear" : key}</button>`).join("")}
+        </div>
+      `;
+    }
+
+    async function handlePinKey(key) {
+      if (key === "clear") pinBuffer = "";
+      else if (key === "back") pinBuffer = pinBuffer.slice(0, -1);
+      else if (pinBuffer.length < 4) pinBuffer += key;
+      pinMessage = "";
+      if (pinBuffer.length === 4) await submitPin(pinBuffer);
+      else renderPinModal();
+    }
+
+    async function submitPin(pin) {
+      if (pinMode === "unlock") {
+        if (await hashPin(pin) === library.security.pinHash) {
+          sessionStorage.setItem(sessionKey, "true");
+          closePinModal();
+        } else {
+          openPinModal("unlock", "Wrong code. Try again.");
+        }
+        return;
+      }
+      if (pinMode === "setup") {
+        pendingPin = pin;
+        openPinModal("confirm_setup");
+        return;
+      }
+      if (pinMode === "confirm_setup") {
+        if (pin !== pendingPin) {
+          openPinModal("setup", "Codes did not match. Start again.");
+          return;
+        }
+        library.security = { pinHash: await hashPin(pin) };
+        sessionStorage.setItem(sessionKey, "true");
+        saveLibrary();
+        closePinModal();
+      }
+    }
+
+    function handlePinAction(action) {
+      if (action === "change") openPinModal("setup");
+      if (action === "disable") {
+        library.security = { pinHash: "" };
+        sessionStorage.removeItem(sessionKey);
+        saveLibrary();
+        closePinModal();
+      }
+    }
+
+    function initPasswordGate() {
+      if (passwordIsEnabled() && !passwordIsUnlocked()) openPinModal("unlock");
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function slugify(value) {
+      return String(value || "album").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "album";
     }
 
     function stickerArt(id) {
@@ -996,7 +1852,11 @@ APP_HTML = r"""<!doctype html>
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
 
+    setView("library", false);
+    saveLibrary();
     render();
+    initPasswordGate();
+
   </script>
 </body>
 </html>

@@ -19,8 +19,17 @@ It runs on your computer and opens in your browser. You can choose an album styl
 - Add picture captions.
 - Add free text memories on each page.
 - Add cute custom stickers drawn inside the app.
+- Move and resize stickers on the album page.
+- Drag photos between page slots.
+- Drag image files from your device directly onto photo slots.
+- Choose album templates: travel, family, birthday, graduation, or wedding.
+- Choose page background patterns.
+- Use crop controls for each photo frame.
+- Manage multiple albums from the library page.
+- Add an optional 4 digit password lock.
 - Add and delete pages.
 - Print or save the album as PDF from the browser.
+- Export the current album as a single HTML file.
 - Save the album locally in browser storage.
 
 ## How It Works
@@ -52,21 +61,12 @@ Your album is local to your computer and browser profile.
 Important caveats:
 
 - The album is not uploaded anywhere by the app.
+- The optional password is a local app lock. It helps during normal use, but it does not encrypt album data.
+- Exported HTML files include the album content and uploaded images inside the file.
 - Clearing browser data can erase the saved album.
 - Large photo files can fill browser storage quickly.
 - A different browser profile will have different saved albums.
 - Anyone with access to your computer/browser profile may be able to see the album.
-
-## Suggestions
-
-- Add drag-and-drop photo placement.
-- Add sticker moving and resizing.
-- Add multiple album templates, such as travel, family, birthday, graduation, or wedding.
-- Add page background patterns.
-- Add export to a single HTML file.
-- Add password protection like My Simple Tracker.
-- Add image cropping controls inside each photo frame.
-- Add a library page for managing multiple albums.
 
 ## Project Structure
 
