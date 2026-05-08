@@ -7,6 +7,10 @@ It runs on your computer and opens in your browser. You can choose an album styl
 ## Features
 
 - Create an album from a setup page.
+- Start from a home/library page and click `+` to create a new album.
+- Move through separate connected views: Home, Setup, and Album.
+- Preview the cover as a book before opening the album.
+- Open the album into a two-page book spread.
 - Choose album orientation: vertical or horizontal.
 - Choose the paper color.
 - Choose the outside cover color.
@@ -23,6 +27,7 @@ It runs on your computer and opens in your browser. You can choose an album styl
 - Drag photos between page slots.
 - Drag image files from your device directly onto photo slots.
 - Choose album templates: travel, family, birthday, graduation, or wedding.
+- Use generated book-cover designs for albums in the library.
 - Choose page background patterns.
 - Use crop controls for each photo frame.
 - Manage multiple albums from the library page.

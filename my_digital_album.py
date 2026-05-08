@@ -53,6 +53,27 @@ APP_HTML = r"""<!doctype html>
       grid-template-columns: 340px minmax(0, 1fr);
     }
 
+    .app.library-mode {
+      grid-template-columns: 1fr;
+    }
+
+    .app.setup-mode {
+      grid-template-columns: 340px minmax(0, 1fr);
+    }
+
+    .app.library-mode aside {
+      display: none;
+    }
+
+    .app.setup-mode aside .editor-panel,
+    .app.library-mode aside .editor-panel {
+      display: none;
+    }
+
+    .app.editor-mode aside .setup-only {
+      display: none;
+    }
+
     aside {
       border-right: 1px solid var(--line);
       padding: 22px;
@@ -241,6 +262,20 @@ APP_HTML = r"""<!doctype html>
       width: min(980px, 100%);
     }
 
+    .home-head {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .home-head h1 {
+      font-size: 42px;
+      line-height: 1;
+    }
+
     .library-card {
       display: grid;
       gap: 12px;
@@ -253,6 +288,26 @@ APP_HTML = r"""<!doctype html>
       text-align: left;
     }
 
+    .new-album-card {
+      place-items: center;
+      text-align: center;
+      border-style: dashed;
+    }
+
+    .plus-mark {
+      display: grid;
+      place-items: center;
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-size: 46px;
+      line-height: 1;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+    }
+
     .book-cover {
       position: relative;
       min-height: 210px;
@@ -261,6 +316,22 @@ APP_HTML = r"""<!doctype html>
       background: var(--book-cover, #d9a6a6);
       color: rgba(255, 255, 255, 0.94);
       box-shadow: inset 12px 0 18px rgba(64, 35, 22, 0.16), 0 12px 24px rgba(64, 35, 22, 0.16);
+    }
+
+    .book-cover.large {
+      width: min(300px, 72vw);
+      height: 410px;
+      min-height: 0;
+      transform: perspective(900px) rotateY(-14deg);
+      transform-origin: left center;
+      box-shadow:
+        inset 18px 0 24px rgba(64, 35, 22, 0.18),
+        18px 20px 36px rgba(64, 35, 22, 0.18);
+    }
+
+    .book-cover.large::after {
+      left: 28px;
+      width: 2px;
     }
 
     .book-cover::before {
@@ -331,6 +402,29 @@ APP_HTML = r"""<!doctype html>
       font-weight: 900;
     }
 
+    .setup-preview {
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) minmax(260px, 420px);
+      gap: 34px;
+      align-items: center;
+      width: min(920px, 100%);
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.54);
+      box-shadow: var(--shadow);
+    }
+
+    .setup-copy {
+      display: grid;
+      gap: 12px;
+    }
+
+    .setup-copy h1 {
+      font-size: 38px;
+      line-height: 1;
+    }
+
     .album-stage {
       display: grid;
       place-items: start center;
@@ -351,6 +445,21 @@ APP_HTML = r"""<!doctype html>
       padding: 18px 18px 24px;
       box-shadow: var(--shadow);
       position: relative;
+    }
+
+    .album.opening {
+      animation: bookOpen 700ms ease both;
+    }
+
+    @keyframes bookOpen {
+      0% {
+        transform: perspective(1200px) rotateY(-22deg) scale(0.92);
+        opacity: 0.15;
+      }
+      100% {
+        transform: perspective(1200px) rotateY(0deg) scale(1);
+        opacity: 1;
+      }
     }
 
     .album::before {
@@ -416,8 +525,8 @@ APP_HTML = r"""<!doctype html>
       position: relative;
       min-height: var(--page-height);
       border-radius: 8px;
-      background: var(--paper);
-      padding: 24px;
+      background: color-mix(in srgb, var(--cover) 18%, var(--paper));
+      padding: 18px;
       overflow: hidden;
       box-shadow:
         inset 0 0 0 1px rgba(69, 49, 32, 0.12),
@@ -453,6 +562,72 @@ APP_HTML = r"""<!doctype html>
       z-index: 1;
     }
 
+    .book-spread {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0;
+      min-height: calc(var(--page-height) - 36px);
+      perspective: 1200px;
+    }
+
+    .book-spread::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(50% - 8px);
+      z-index: 3;
+      width: 16px;
+      background:
+        linear-gradient(90deg, rgba(64, 42, 28, 0.16), rgba(255, 255, 255, 0.48), rgba(64, 42, 28, 0.18));
+      box-shadow: 0 0 20px rgba(64, 42, 28, 0.14);
+      pointer-events: none;
+    }
+
+    .book-page {
+      position: relative;
+      min-width: 0;
+      padding: 22px;
+      background: var(--paper);
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(69, 49, 32, 0.1);
+    }
+
+    .book-page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--page-pattern);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .book-page > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .book-page.left {
+      border-radius: 8px 0 0 8px;
+      transform-origin: right center;
+    }
+
+    .book-page.right {
+      border-radius: 0 8px 8px 0;
+      box-shadow:
+        inset 16px 0 24px rgba(66, 42, 24, 0.08),
+        inset 0 0 0 1px rgba(69, 49, 32, 0.1);
+    }
+
+    .book-page.empty-page {
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+    }
+
     .album.vertical .album-page {
       --page-height: 780px;
     }
@@ -471,7 +646,7 @@ APP_HTML = r"""<!doctype html>
     .photo-grid {
       display: grid;
       gap: 14px;
-      min-height: 390px;
+      min-height: 320px;
     }
 
     .slots-1 {
@@ -749,6 +924,12 @@ APP_HTML = r"""<!doctype html>
         grid-template-columns: 1fr;
       }
 
+      .setup-preview,
+      .home-head,
+      .book-spread {
+        grid-template-columns: 1fr;
+      }
+
       aside {
         border-right: 0;
         border-bottom: 1px solid var(--line);
@@ -780,14 +961,14 @@ APP_HTML = r"""<!doctype html>
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="app" id="app">
     <aside>
       <div class="brand">
         <h1>My Digital Album</h1>
         <p>Build a sweet photo album from your own pictures, with paper choices, frames, dates, captions, notes, and stickers.</p>
       </div>
 
-      <section class="panel">
+      <section class="panel setup-panel">
         <h2>Album Setup</h2>
         <div class="field">
           <label for="albumTitle">Album title</label>
@@ -842,13 +1023,13 @@ APP_HTML = r"""<!doctype html>
             <option value="pressed">Pressed flowers</option>
           </select>
         </div>
-        <div class="row">
-          <button class="primary" id="createAlbum" type="button">New album</button>
+        <div class="row setup-only">
+          <button class="primary" id="createAlbum" type="button">Open album</button>
           <button class="secondary" id="duplicateAlbum" type="button">Duplicate</button>
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel editor-panel">
         <h2>Page Tools</h2>
         <div class="field">
           <label for="pageTitle">Page title</label>
@@ -876,7 +1057,7 @@ APP_HTML = r"""<!doctype html>
         </div>
       </section>
 
-      <section class="panel" id="cropPanel">
+      <section class="panel editor-panel" id="cropPanel">
         <h2>Selected Photo</h2>
         <div class="field">
           <label for="cropZoom">Zoom</label>
@@ -895,7 +1076,7 @@ APP_HTML = r"""<!doctype html>
         <button class="secondary" id="removePhoto" type="button">Remove photo</button>
       </section>
 
-      <section class="panel">
+      <section class="panel editor-panel">
         <h2>Privacy</h2>
         <div class="row">
           <button class="secondary" id="passwordButton" type="button">Password</button>
@@ -906,8 +1087,9 @@ APP_HTML = r"""<!doctype html>
 
     <main>
       <div class="top-tabs">
-        <button class="top-tab active" id="libraryTab" type="button">Library</button>
-        <button class="top-tab" id="editorTab" type="button">Editor</button>
+        <button class="top-tab active" id="libraryTab" type="button">Home</button>
+        <button class="top-tab" id="setupTab" type="button">Setup</button>
+        <button class="top-tab" id="editorTab" type="button">Album</button>
       </div>
       <div class="toolbar">
         <div>
@@ -922,7 +1104,27 @@ APP_HTML = r"""<!doctype html>
 
       <div class="view active" id="libraryView">
         <div class="album-stage">
+          <div class="home-head">
+            <div>
+              <h1>My Digital Album</h1>
+              <p>Choose an album from your library or create a new book from scratch.</p>
+            </div>
+          </div>
           <div class="library-grid" id="libraryGrid"></div>
+        </div>
+      </div>
+
+      <div class="view" id="setupView">
+        <div class="album-stage">
+          <section class="setup-preview">
+            <div id="setupBookPreview"></div>
+            <div class="setup-copy">
+              <h1>Design your album</h1>
+              <p>Choose the cover, paper, orientation, page pattern, frames, and how many photos each page can hold. Then open the album like a book.</p>
+              <button class="primary" id="openAlbumButton" type="button">Open album</button>
+              <button class="secondary" id="backHomeButton" type="button">Back to home</button>
+            </div>
+          </section>
         </div>
       </div>
 
@@ -1047,6 +1249,7 @@ APP_HTML = r"""<!doctype html>
     let library = loadLibrary();
     let album = activeAlbum();
     let activeView = "library";
+    let draftAlbum = null;
     let activePageIndex = 0;
     let selectedPhotoIndex = null;
     let selectedStickerId = null;
@@ -1056,10 +1259,12 @@ APP_HTML = r"""<!doctype html>
     let pinMessage = "";
     let pendingPin = "";
 
+    const app = document.getElementById("app");
     const albumEl = document.getElementById("album");
     const albumPage = document.getElementById("albumPage");
     const pageTabs = document.getElementById("pageTabs");
     const libraryGrid = document.getElementById("libraryGrid");
+    const setupBookPreview = document.getElementById("setupBookPreview");
     const templateGrid = document.getElementById("templateGrid");
     const stickerTray = document.getElementById("stickerTray");
     const albumTitle = document.getElementById("albumTitle");
@@ -1078,12 +1283,16 @@ APP_HTML = r"""<!doctype html>
     const cropX = document.getElementById("cropX");
     const cropY = document.getElementById("cropY");
     const libraryTab = document.getElementById("libraryTab");
+    const setupTab = document.getElementById("setupTab");
     const editorTab = document.getElementById("editorTab");
     const libraryView = document.getElementById("libraryView");
+    const setupView = document.getElementById("setupView");
     const editorView = document.getElementById("editorView");
     const pinOverlay = document.getElementById("pinOverlay");
 
-    document.getElementById("createAlbum").addEventListener("click", createAlbumFromOptions);
+    document.getElementById("createAlbum").addEventListener("click", openAlbumFromSetup);
+    document.getElementById("openAlbumButton").addEventListener("click", openAlbumFromSetup);
+    document.getElementById("backHomeButton").addEventListener("click", () => setView("library"));
     document.getElementById("duplicateAlbum").addEventListener("click", duplicateAlbum);
     document.getElementById("addPage").addEventListener("click", addPage);
     document.getElementById("deletePage").addEventListener("click", deletePage);
@@ -1094,7 +1303,8 @@ APP_HTML = r"""<!doctype html>
     document.getElementById("passwordButton").addEventListener("click", openPasswordSettings);
     document.getElementById("removePhoto").addEventListener("click", removeSelectedPhoto);
     libraryTab.addEventListener("click", () => setView("library"));
-    editorTab.addEventListener("click", () => setView("editor"));
+    setupTab.addEventListener("click", () => startNewAlbum());
+    editorTab.addEventListener("click", () => draftAlbum ? openAlbumFromSetup() : setView("editor"));
 
     coverTitle.addEventListener("input", () => {
       album.title = coverTitle.value || "My Digital Album";
@@ -1222,24 +1432,28 @@ APP_HTML = r"""<!doctype html>
       localStorage.setItem(storageKey, JSON.stringify(library));
     }
 
-    function createAlbumFromOptions() {
-      const templateId = album?.template ?? "family";
-      const next = blankAlbum(templateId, albumTitle.value || "");
-      next.orientation = album.orientation;
-      next.paperColor = paperColor.value;
-      next.coverColor = coverColor.value;
-      next.photosPerPage = Number(photosPerPage.value);
-      next.frameStyle = frameStyle.value;
-      next.pagePattern = pagePattern.value;
-      library.albums.push(next);
-      library.activeAlbumId = next.id;
-      album = next;
+    function startNewAlbum(templateId = "family") {
+      draftAlbum = blankAlbum(templateId, "New Album");
+      album = draftAlbum;
       activePageIndex = 0;
       selectedPhotoIndex = null;
       selectedStickerId = null;
+      setView("setup", false);
+      render();
+    }
+
+    function openAlbumFromSetup() {
+      if (draftAlbum) {
+        library.albums.push(draftAlbum);
+        library.activeAlbumId = draftAlbum.id;
+        album = draftAlbum;
+        draftAlbum = null;
+      }
       setView("editor", false);
       saveLibrary();
       render();
+      albumEl.classList.add("opening");
+      setTimeout(() => albumEl.classList.remove("opening"), 760);
     }
 
     function duplicateAlbum() {
@@ -1248,9 +1462,11 @@ APP_HTML = r"""<!doctype html>
       copy.title = `${album.title} Copy`;
       library.albums.push(copy);
       library.activeAlbumId = copy.id;
+      draftAlbum = null;
       album = copy;
       activePageIndex = 0;
       saveLibrary();
+      setView("setup", false);
       render();
     }
 
@@ -1263,7 +1479,7 @@ APP_HTML = r"""<!doctype html>
       album.pagePattern = pagePattern.value;
       coverTitle.value = album.title;
       trimExtraPhotos();
-      saveLibrary();
+      if (!draftAlbum) saveLibrary();
       render();
     }
 
@@ -1274,18 +1490,21 @@ APP_HTML = r"""<!doctype html>
       album.coverColor = template.coverColor;
       album.paperColor = template.paperColor;
       album.pagePattern = template.pattern;
-      saveLibrary();
+      if (!draftAlbum) saveLibrary();
       render();
     }
 
     function setView(view, shouldRender = true) {
       activeView = view;
+      app.className = `app ${view}-mode`;
       libraryTab.classList.toggle("active", view === "library");
+      setupTab.classList.toggle("active", view === "setup");
       editorTab.classList.toggle("active", view === "editor");
       libraryView.classList.toggle("active", view === "library");
+      setupView.classList.toggle("active", view === "setup");
       editorView.classList.toggle("active", view === "editor");
-      document.getElementById("modeTitle").textContent = view === "library" ? "Album library" : "Album editor";
-      document.getElementById("helperText").textContent = view === "library" ? "Choose a cover to open an album, or create a new one." : "Edit pages, photos, captions, stickers, and album style.";
+      document.getElementById("modeTitle").textContent = view === "library" ? "Home" : view === "setup" ? "Album setup" : "Open album";
+      document.getElementById("helperText").textContent = view === "library" ? "Click + to create a new album, or open an existing cover." : view === "setup" ? "Choose the book and page details before opening it." : "Edit the open album pages.";
       if (shouldRender) render();
     }
 
@@ -1345,10 +1564,11 @@ APP_HTML = r"""<!doctype html>
     }
 
     function render() {
-      album = activeAlbum();
+      if (!draftAlbum) album = activeAlbum();
       activePageIndex = Math.min(activePageIndex, album.pages.length - 1);
       renderTemplateGrid();
       renderLibrary();
+      renderSetupPreview();
       renderEditor();
       renderCropPanel();
     }
@@ -1366,15 +1586,23 @@ APP_HTML = r"""<!doctype html>
     }
 
     function renderLibrary() {
-      libraryGrid.innerHTML = library.albums.map((item) => `
+      libraryGrid.innerHTML = `
+        <button class="library-card new-album-card" type="button" id="newAlbumCard">
+          <span class="plus-mark">+</span>
+          <strong>Create new album</strong>
+          <span class="book-cover-meta">Start from a book cover</span>
+        </button>
+        ${library.albums.map((item) => `
         <button class="library-card" type="button" data-open-album="${item.id}">
           ${coverMarkup(item, true)}
           <span class="book-cover-meta">${item.pages.length} page${item.pages.length === 1 ? "" : "s"} · ${templateName(item.template)}</span>
         </button>
-      `).join("");
+      `).join("")}`;
+      document.getElementById("newAlbumCard").addEventListener("click", () => startNewAlbum());
       libraryGrid.querySelectorAll("[data-open-album]").forEach((button) => {
         button.addEventListener("click", () => {
           library.activeAlbumId = button.dataset.openAlbum;
+          draftAlbum = null;
           album = activeAlbum();
           activePageIndex = 0;
           selectedPhotoIndex = null;
@@ -1386,10 +1614,14 @@ APP_HTML = r"""<!doctype html>
       });
     }
 
-    function coverMarkup(item, showTitle) {
+    function renderSetupPreview() {
+      setupBookPreview.innerHTML = coverMarkup(album, true, "large");
+    }
+
+    function coverMarkup(item, showTitle, extraClass = "") {
       const template = templates.find((entry) => entry.id === item.template) ?? templates[0];
       return `
-        <span class="book-cover" style="--book-cover:${item.coverColor}; --book-art:${template.art}">
+        <span class="book-cover ${extraClass}" style="--book-cover:${item.coverColor}; --book-art:${template.art}">
           ${showTitle ? `<span class="book-cover-title">${escapeHtml(item.title)}</span>` : ""}
         </span>
       `;
@@ -1455,20 +1687,18 @@ APP_HTML = r"""<!doctype html>
 
     function renderPage() {
       const page = currentPage();
+      const rightPage = album.pages[activePageIndex + 1] ?? null;
       const slots = Array.from({ length: album.photosPerPage }, (_, index) => page.photos[index] ?? null);
       albumPage.style.setProperty("--page-pattern", pagePatterns[album.pagePattern] ?? pagePatterns.plain);
       albumPage.innerHTML = `
-        <div class="page-heading">
-          <input class="page-title-inline" type="text" value="${escapeAttribute(page.title)}" placeholder="Page title" data-page-field="title">
-          <input type="date" value="${escapeAttribute(page.date)}" data-page-field="date">
+        <div class="book-spread">
+          <section class="book-page left">
+            ${editablePageMarkup(page, slots)}
+          </section>
+          <section class="book-page right ${rightPage ? "" : "empty-page"}">
+            ${rightPage ? previewPageMarkup(rightPage) : "<span>Next page is waiting for your memories.</span>"}
+          </section>
         </div>
-        <div class="photo-grid slots-${album.photosPerPage}">
-          ${slots.map((photo, index) => photoSlotMarkup(photo, index)).join("")}
-        </div>
-        <textarea class="page-note" placeholder="Write a little memory here..." data-page-field="text">${escapeHtml(page.text)}</textarea>
-        ${page.stickers.map((sticker, index) => `
-          <span class="page-sticker ${selectedStickerId === index ? "selected" : ""}" data-sticker-index="${index}" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>
-        `).join("")}
       `;
 
       albumPage.querySelectorAll("[data-page-field]").forEach((input) => {
@@ -1536,6 +1766,46 @@ APP_HTML = r"""<!doctype html>
         });
       });
       renderCropPanel();
+    }
+
+    function editablePageMarkup(page, slots) {
+      return `
+        <div class="page-heading">
+          <input class="page-title-inline" type="text" value="${escapeAttribute(page.title)}" placeholder="Page title" data-page-field="title">
+          <input type="date" value="${escapeAttribute(page.date)}" data-page-field="date">
+        </div>
+        <div class="photo-grid slots-${album.photosPerPage}">
+          ${slots.map((photo, index) => photoSlotMarkup(photo, index)).join("")}
+        </div>
+        <textarea class="page-note" placeholder="Write a little memory here..." data-page-field="text">${escapeHtml(page.text)}</textarea>
+        ${page.stickers.map((sticker, index) => `
+          <span class="page-sticker ${selectedStickerId === index ? "selected" : ""}" data-sticker-index="${index}" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>
+        `).join("")}
+      `;
+    }
+
+    function previewPageMarkup(page) {
+      const slots = Array.from({ length: album.photosPerPage }, (_, index) => page.photos[index] ?? null);
+      return `
+        <div class="page-heading">
+          <h2>${escapeHtml(page.title || "Untitled page")}</h2>
+          <strong>${escapeHtml(page.date)}</strong>
+        </div>
+        <div class="photo-grid slots-${album.photosPerPage}">
+          ${slots.map((photo) => `
+            <div class="photo-slot">
+              <div class="photo-frame">
+                ${photo ? `<img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}" style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1})">` : `<span class="upload-prompt"><span>Empty space</span></span>`}
+              </div>
+              <p class="photo-caption">${escapeHtml(photo?.caption ?? "")}</p>
+            </div>
+          `).join("")}
+        </div>
+        <p class="page-note">${escapeHtml(page.text)}</p>
+        ${page.stickers.map((sticker) => `
+          <span class="page-sticker" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>
+        `).join("")}
+      `;
     }
 
     function photoSlotMarkup(photo, index) {
