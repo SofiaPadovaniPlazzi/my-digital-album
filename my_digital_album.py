@@ -74,6 +74,14 @@ APP_HTML = r"""<!doctype html>
       display: none;
     }
 
+    .app.editor-mode.setup-hidden {
+      grid-template-columns: 1fr;
+    }
+
+    .app.editor-mode.setup-hidden aside {
+      display: none;
+    }
+
     aside {
       border-right: 1px solid var(--line);
       padding: 22px;
@@ -224,6 +232,26 @@ APP_HTML = r"""<!doctype html>
       gap: 8px;
       flex-wrap: wrap;
       justify-content: flex-end;
+    }
+
+    .floating-setup-toggle {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 20;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      font-weight: 900;
+      display: none;
+    }
+
+    .app.editor-mode.setup-hidden .floating-setup-toggle {
+      display: block;
     }
 
     .top-tabs {
@@ -982,7 +1010,10 @@ APP_HTML = r"""<!doctype html>
       </div>
 
       <section class="panel setup-panel">
-        <h2>Album Setup</h2>
+        <div class="toolbar">
+          <h2>Album Setup</h2>
+          <button class="secondary" id="hideSetupButton" type="button">Hide</button>
+        </div>
         <div class="field">
           <label for="albumTitle">Album title</label>
           <input id="albumTitle" type="text" placeholder="Summer in Italy">
@@ -1159,6 +1190,8 @@ APP_HTML = r"""<!doctype html>
       </div>
     </main>
   </div>
+
+  <button class="floating-setup-toggle" id="showSetupButton" type="button">Show setup</button>
 
   <div class="pin-overlay" id="pinOverlay" aria-modal="true" role="dialog"></div>
 
@@ -1387,6 +1420,7 @@ APP_HTML = r"""<!doctype html>
     let album = activeAlbum();
     let activeView = "library";
     let draftAlbum = null;
+    let setupHidden = localStorage.getItem(`${storageKey}-setup-hidden`) === "true";
     let activePageIndex = 0;
     let selectedPhotoIndex = null;
     let selectedStickerId = null;
@@ -1440,6 +1474,8 @@ APP_HTML = r"""<!doctype html>
     document.getElementById("resetButton").addEventListener("click", resetAlbum);
     document.getElementById("passwordButton").addEventListener("click", openPasswordSettings);
     document.getElementById("removePhoto").addEventListener("click", removeSelectedPhoto);
+    document.getElementById("hideSetupButton").addEventListener("click", () => setSetupHidden(true));
+    document.getElementById("showSetupButton").addEventListener("click", () => setSetupHidden(false));
     libraryTab.addEventListener("click", () => setView("library"));
     setupTab.addEventListener("click", () => startNewAlbum());
     editorTab.addEventListener("click", () => draftAlbum ? openAlbumFromSetup() : setView("editor"));
@@ -1654,6 +1690,7 @@ APP_HTML = r"""<!doctype html>
     function setView(view, shouldRender = true) {
       activeView = view;
       app.className = `app ${view}-mode`;
+      app.classList.toggle("setup-hidden", setupHidden && view === "editor");
       libraryTab.classList.toggle("active", view === "library");
       setupTab.classList.toggle("active", view === "setup");
       editorTab.classList.toggle("active", view === "editor");
@@ -1663,6 +1700,12 @@ APP_HTML = r"""<!doctype html>
       document.getElementById("modeTitle").textContent = view === "library" ? "Home" : view === "setup" ? "Album setup" : "Open album";
       document.getElementById("helperText").textContent = view === "library" ? "Click + to create a new album, or open an existing cover." : view === "setup" ? "Choose the book and page details before opening it." : "Edit the open album pages.";
       if (shouldRender) render();
+    }
+
+    function setSetupHidden(hidden) {
+      setupHidden = hidden;
+      localStorage.setItem(`${storageKey}-setup-hidden`, String(hidden));
+      setView(activeView, false);
     }
 
     function updatePageText() {
