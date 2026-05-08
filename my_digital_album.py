@@ -1189,9 +1189,8 @@ APP_HTML = r"""<!doctype html>
       </div>
       </div>
     </main>
+    <button class="floating-setup-toggle" id="showSetupButton" type="button">Show setup</button>
   </div>
-
-  <button class="floating-setup-toggle" id="showSetupButton" type="button">Show setup</button>
 
   <div class="pin-overlay" id="pinOverlay" aria-modal="true" role="dialog"></div>
 
@@ -1288,7 +1287,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#fff1b8",
         paperColor: "#fff7e6",
         pagePattern: "pressed",
-        art: "radial-gradient(circle at 78% 22%, var(--pattern-color) 0 18px, transparent 19px), linear-gradient(180deg, transparent 0 54%, color-mix(in srgb, var(--pattern-color) 42%, transparent) 55% 58%, transparent 59%), radial-gradient(ellipse at 20% 84%, color-mix(in srgb, var(--pattern-color) 38%, transparent) 0 30px, transparent 31px)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><circle cx="184" cy="58" r="23" fill="PATTERN" opacity=".92"/><path d="M0 190c32-17 64-17 96 0s64 17 96 0 48-17 48-17v147H0Z" fill="PATTERN" opacity=".28"/><path d="M0 220c34-13 68-13 102 0s68 13 102 0 36-12 36-12" fill="none" stroke="PATTERN" stroke-width="8" opacity=".7"/><path d="M109 159v58" stroke="PATTERN" stroke-width="5" stroke-linecap="round"/><path d="M113 164 165 207h-52Z" fill="PATTERN" opacity=".72"/><path d="M105 175 72 210h33Z" fill="PATTERN" opacity=".54"/><path d="M67 219h111l-16 15H83Z" fill="PATTERN" opacity=".82"/></svg>`
       },
       {
         id: "mountains",
@@ -1298,7 +1297,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#f5ead6",
         paperColor: "#fbf7ef",
         pagePattern: "grid",
-        art: "linear-gradient(135deg, transparent 0 55%, color-mix(in srgb, var(--pattern-color) 55%, transparent) 56% 64%, transparent 65%), linear-gradient(45deg, transparent 0 48%, color-mix(in srgb, var(--pattern-color) 50%, transparent) 49% 58%, transparent 59%), linear-gradient(180deg, transparent 0 72%, color-mix(in srgb, var(--pattern-color) 42%, transparent) 73%)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><circle cx="54" cy="58" r="17" fill="PATTERN" opacity=".72"/><path d="M0 236 54 142l34 50 38-70 76 114Z" fill="PATTERN" opacity=".44"/><path d="M60 154 88 192l14-25 24-45 76 114H93Z" fill="PATTERN" opacity=".66"/><path d="M0 252h240v68H0Z" fill="PATTERN" opacity=".22"/><path d="M126 122 108 157l23-12 19 17Z" fill="PATTERN" opacity=".95"/></svg>`
       },
       {
         id: "sunset",
@@ -1308,7 +1307,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#ffe2a1",
         paperColor: "#fff6f2",
         pagePattern: "plain",
-        art: "radial-gradient(circle at 50% 42%, var(--pattern-color) 0 32px, transparent 33px), repeating-linear-gradient(0deg, transparent 0 18px, color-mix(in srgb, var(--pattern-color) 32%, transparent) 19px 21px)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><circle cx="120" cy="132" r="47" fill="PATTERN" opacity=".9"/><path d="M0 166h240" stroke="PATTERN" stroke-width="8" opacity=".75"/><path d="M36 196h168M18 224h204M52 252h136" stroke="PATTERN" stroke-width="8" stroke-linecap="round" opacity=".45"/><path d="M0 269c42-13 78-13 120 0s78 13 120 0v51H0Z" fill="PATTERN" opacity=".28"/></svg>`
       },
       {
         id: "city",
@@ -1318,7 +1317,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#f7d778",
         paperColor: "#fbf7ef",
         pagePattern: "grid",
-        art: "linear-gradient(180deg, transparent 0 56%, color-mix(in srgb, var(--pattern-color) 40%, transparent) 57%), repeating-linear-gradient(90deg, transparent 0 13px, color-mix(in srgb, var(--pattern-color) 58%, transparent) 14px 18px, transparent 19px 32px)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><path d="M0 166h28v-38h35v69h27v-92h47v57h29v-42h38v76h36v124H0Z" fill="PATTERN" opacity=".48"/><g fill="PATTERN" opacity=".95"><rect x="39" y="146" width="7" height="10"/><rect x="52" y="146" width="7" height="10"/><rect x="103" y="126" width="8" height="11"/><rect x="120" y="126" width="8" height="11"/><rect x="177" y="140" width="7" height="10"/><rect x="190" y="140" width="7" height="10"/><circle cx="38" cy="66" r="2"/><circle cx="75" cy="42" r="2"/><circle cx="169" cy="70" r="2"/><circle cx="203" cy="48" r="2"/></g></svg>`
       },
       {
         id: "forest",
@@ -1328,7 +1327,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#e8f0cf",
         paperColor: "#fffaf3",
         pagePattern: "pressed",
-        art: "repeating-linear-gradient(120deg, transparent 0 18px, color-mix(in srgb, var(--pattern-color) 58%, transparent) 19px 28px, transparent 29px 46px), linear-gradient(180deg, transparent 0 76%, color-mix(in srgb, var(--pattern-color) 45%, transparent) 77%)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><g fill="PATTERN" opacity=".72"><path d="M24 232 50 172l26 60H57v55H43v-55Z"/><path d="M92 244 124 154l32 90h-24v58h-16v-58Z"/><path d="M160 235 190 166l30 69h-22v57h-15v-57Z"/></g><path d="M0 276h240v44H0Z" fill="PATTERN" opacity=".25"/></svg>`
       },
       {
         id: "birds",
@@ -1338,7 +1337,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#fff8e5",
         paperColor: "#fff7e6",
         pagePattern: "dots",
-        art: "radial-gradient(ellipse at 30% 32%, transparent 0 11px, var(--pattern-color) 12px 13px, transparent 14px), radial-gradient(ellipse at 37% 32%, transparent 0 11px, var(--pattern-color) 12px 13px, transparent 14px), radial-gradient(ellipse at 68% 58%, transparent 0 10px, var(--pattern-color) 11px 12px, transparent 13px)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><g fill="none" stroke="PATTERN" stroke-width="7" stroke-linecap="round" opacity=".82"><path d="M42 96c18-18 34-18 52 0 18-18 34-18 52 0"/><path d="M26 184c14-14 28-14 42 0 14-14 28-14 42 0"/><path d="M126 154c16-16 31-16 47 0 16-16 31-16 47 0"/><path d="M88 246c13-13 26-13 39 0 13-13 26-13 39 0"/></g></svg>`
       },
       {
         id: "cats",
@@ -1348,7 +1347,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#fff1dc",
         paperColor: "#fff8ec",
         pagePattern: "hearts",
-        art: "radial-gradient(circle at 30% 68%, color-mix(in srgb, var(--pattern-color) 62%, transparent) 0 18px, transparent 19px), radial-gradient(circle at 70% 34%, color-mix(in srgb, var(--pattern-color) 52%, transparent) 0 15px, transparent 16px), linear-gradient(45deg, transparent 0 72%, color-mix(in srgb, var(--pattern-color) 38%, transparent) 73%)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><g fill="PATTERN" opacity=".72"><path d="M57 211c0-31 18-50 44-50s44 19 44 50v33H57Z"/><path d="M66 170 75 130l25 30 25-30 10 40Z"/><circle cx="101" cy="210" r="48"/><path d="M143 226c24 0 39-13 44-34 6 26-8 58-44 58Z"/><path d="M150 112c0-20 12-33 30-33s30 13 30 33v22h-60Z" opacity=".58"/><path d="M156 86 164 61l16 20 17-20 7 25Z" opacity=".58"/></g></svg>`
       },
       {
         id: "butterflies",
@@ -1358,7 +1357,7 @@ APP_HTML = r"""<!doctype html>
         patternColor: "#fff0bd",
         paperColor: "#fff6f2",
         pagePattern: "pressed",
-        art: "radial-gradient(ellipse at 24% 30%, color-mix(in srgb, var(--pattern-color) 58%, transparent) 0 10px, transparent 11px), radial-gradient(ellipse at 32% 30%, color-mix(in srgb, var(--pattern-color) 58%, transparent) 0 10px, transparent 11px), radial-gradient(ellipse at 66% 68%, color-mix(in srgb, var(--pattern-color) 48%, transparent) 0 12px, transparent 13px), radial-gradient(ellipse at 76% 68%, color-mix(in srgb, var(--pattern-color) 48%, transparent) 0 12px, transparent 13px)"
+        svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><rect width="240" height="320" fill="none"/><g fill="PATTERN" opacity=".75"><path d="M78 96c-31-34-68-15-50 25 15 32 42 26 52 4 10 22 37 28 52-4 18-40-19-59-50-25Z"/><rect x="76" y="91" width="8" height="54" rx="4"/><path d="M160 215c-26-29-58-13-43 21 13 27 36 22 45 3 9 19 32 24 45-3 15-34-17-50-43-21Z" opacity=".68"/><rect x="158" y="211" width="7" height="45" rx="4" opacity=".68"/></g></svg>`
       }
     ];
     const pagePatterns = {
@@ -1826,11 +1825,17 @@ APP_HTML = r"""<!doctype html>
 
     function coverMarkup(item, showTitle, extraClass = "") {
       const pattern = coverPatterns.find((entry) => entry.id === item.coverPattern) ?? coverPatterns[0];
+      const art = pattern.svg ? svgBackground(pattern.svg, item.patternColor ?? pattern.patternColor) : pattern.art;
       return `
-        <span class="book-cover ${extraClass}" style="--book-cover:${item.coverColor}; --pattern-color:${item.patternColor ?? pattern.patternColor}; --book-art:${pattern.art}">
+        <span class="book-cover ${extraClass}" style="--book-cover:${item.coverColor}; --pattern-color:${item.patternColor ?? pattern.patternColor}; --book-art:${art}">
           ${showTitle ? `<span class="book-cover-title">${escapeHtml(item.title)}</span>` : ""}
         </span>
       `;
+    }
+
+    function svgBackground(svg, color) {
+      const encoded = encodeURIComponent(svg.replaceAll("PATTERN", color));
+      return `url('data:image/svg+xml,${encoded}')`;
     }
 
     function coverPatternName(id) {
