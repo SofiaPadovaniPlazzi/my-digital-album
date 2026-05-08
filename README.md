@@ -14,6 +14,7 @@ It runs on your computer and opens in your browser. You can choose an album styl
 - Choose album orientation: vertical or horizontal.
 - Choose the paper color.
 - Choose the outside cover color.
+- Choose the cover pattern color.
 - Pick how many photos each page should contain, from 1 to 4.
 - Pick a frame style: no frame, simple frame, photo corners, or polaroid.
 - Upload pictures from your device into page spaces.
@@ -26,7 +27,7 @@ It runs on your computer and opens in your browser. You can choose an album styl
 - Move and resize stickers on the album page.
 - Drag photos between page slots.
 - Drag image files from your device directly onto photo slots.
-- Choose album templates: travel, family, birthday, graduation, or wedding.
+- Choose from 16 cover patterns: real book textures, simple patterns, scenarios, and silhouettes.
 - Use generated book-cover designs for albums in the library.
 - Choose page background patterns.
 - Use crop controls for each photo frame.

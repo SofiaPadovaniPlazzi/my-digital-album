@@ -374,6 +374,19 @@ APP_HTML = r"""<!doctype html>
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
+      max-height: 360px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .pattern-group-title {
+      grid-column: 1 / -1;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .template-card {
@@ -975,7 +988,7 @@ APP_HTML = r"""<!doctype html>
           <input id="albumTitle" type="text" placeholder="Summer in Italy">
         </div>
         <div class="field">
-          <label>Cover template</label>
+          <label>Cover pattern</label>
           <div class="template-grid" id="templateGrid"></div>
         </div>
         <div class="field">
@@ -994,6 +1007,10 @@ APP_HTML = r"""<!doctype html>
             <label for="coverColor">Cover color</label>
             <input id="coverColor" type="color" value="#d9a6a6">
           </div>
+        </div>
+        <div class="field">
+          <label for="patternColor">Pattern color</label>
+          <input id="patternColor" type="color" value="#fff4df">
         </div>
         <div class="field">
           <label for="photosPerPage">Photos per page</label>
@@ -1149,46 +1166,166 @@ APP_HTML = r"""<!doctype html>
     const legacyStorageKey = "my-digital-album-v1";
     const storageKey = "my-digital-album-library-v2";
     const sessionKey = "my-digital-album-unlocked";
-    const templates = [
+    const coverPatterns = [
       {
-        id: "travel",
-        name: "Travel",
-        coverColor: "#6fa8b5",
+        id: "cloth",
+        name: "Book cloth",
+        group: "Real book textures",
+        coverColor: "#8e6f5d",
+        patternColor: "#f7eee2",
+        paperColor: "#fff8ec",
+        pagePattern: "plain",
+        art: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--pattern-color) 32%, transparent) 0 1px, transparent 1px 5px), repeating-linear-gradient(90deg, color-mix(in srgb, var(--pattern-color) 24%, transparent) 0 1px, transparent 1px 6px)"
+      },
+      {
+        id: "leather",
+        name: "Soft leather",
+        group: "Real book textures",
+        coverColor: "#7a4737",
+        patternColor: "#f3c79a",
         paperColor: "#fff7e6",
-        pattern: "pressed",
-        art: "radial-gradient(circle at 72% 18%, rgba(255,255,255,.72) 0 9px, transparent 10px), linear-gradient(135deg, transparent 0 46%, rgba(255,255,255,.28) 47% 53%, transparent 54%), radial-gradient(circle at 22% 72%, rgba(255,217,128,.78) 0 24px, transparent 25px)"
+        pagePattern: "plain",
+        art: "radial-gradient(circle at 20% 24%, color-mix(in srgb, var(--pattern-color) 20%, transparent) 0 2px, transparent 3px), radial-gradient(circle at 72% 62%, color-mix(in srgb, var(--pattern-color) 16%, transparent) 0 3px, transparent 4px), repeating-linear-gradient(35deg, transparent 0 12px, color-mix(in srgb, var(--pattern-color) 12%, transparent) 13px 15px)"
       },
       {
-        id: "family",
-        name: "Family",
-        coverColor: "#d79ca8",
-        paperColor: "#fff6f2",
-        pattern: "hearts",
-        art: "radial-gradient(circle at 30% 24%, rgba(255,255,255,.72) 0 18px, transparent 19px), radial-gradient(circle at 62% 64%, rgba(255,238,196,.85) 0 26px, transparent 27px), linear-gradient(45deg, transparent 0 70%, rgba(255,255,255,.25) 71%)"
-      },
-      {
-        id: "birthday",
-        name: "Birthday",
-        coverColor: "#f0b45d",
-        paperColor: "#fff9df",
-        pattern: "dots",
-        art: "radial-gradient(circle at 24% 22%, rgba(255,255,255,.75) 0 7px, transparent 8px), radial-gradient(circle at 70% 38%, rgba(255,126,159,.7) 0 11px, transparent 12px), radial-gradient(circle at 46% 72%, rgba(126,214,196,.75) 0 12px, transparent 13px)"
-      },
-      {
-        id: "graduation",
-        name: "Graduation",
-        coverColor: "#52627e",
-        paperColor: "#fbf7ef",
-        pattern: "grid",
-        art: "linear-gradient(135deg, rgba(255,255,255,.35) 0 18%, transparent 19%), radial-gradient(circle at 72% 24%, rgba(246,196,83,.9) 0 15px, transparent 16px), linear-gradient(90deg, transparent 0 18px, rgba(255,255,255,.2) 19px 20px, transparent 21px)"
-      },
-      {
-        id: "wedding",
-        name: "Wedding",
-        coverColor: "#c7b7a6",
+        id: "linen",
+        name: "Fine linen",
+        group: "Real book textures",
+        coverColor: "#b9a58e",
+        patternColor: "#fff8ec",
         paperColor: "#fffaf3",
-        pattern: "pressed",
-        art: "radial-gradient(circle at 28% 28%, rgba(255,255,255,.8) 0 22px, transparent 23px), radial-gradient(circle at 70% 68%, rgba(255,235,226,.86) 0 30px, transparent 31px), linear-gradient(120deg, transparent 0 58%, rgba(255,255,255,.28) 59%)"
+        pagePattern: "pressed",
+        art: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--pattern-color) 34%, transparent) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, color-mix(in srgb, var(--pattern-color) 28%, transparent) 0 1px, transparent 1px 4px)"
+      },
+      {
+        id: "pinstripes",
+        name: "Pinstripes",
+        group: "Simple patterns",
+        coverColor: "#6fa8b5",
+        patternColor: "#fff7e6",
+        paperColor: "#fff7e6",
+        pagePattern: "grid",
+        art: "repeating-linear-gradient(90deg, transparent 0 13px, var(--pattern-color) 14px 15px)"
+      },
+      {
+        id: "dots",
+        name: "Pois",
+        group: "Simple patterns",
+        coverColor: "#d79ca8",
+        patternColor: "#fff4df",
+        paperColor: "#fff6f2",
+        pagePattern: "dots",
+        art: "radial-gradient(circle, var(--pattern-color) 0 4px, transparent 5px) 0 0 / 28px 28px"
+      },
+      {
+        id: "gingham",
+        name: "Gingham",
+        group: "Simple patterns",
+        coverColor: "#91b99b",
+        patternColor: "#fffaf0",
+        paperColor: "#fbf7ef",
+        pagePattern: "grid",
+        art: "repeating-linear-gradient(0deg, color-mix(in srgb, var(--pattern-color) 38%, transparent) 0 12px, transparent 12px 24px), repeating-linear-gradient(90deg, color-mix(in srgb, var(--pattern-color) 38%, transparent) 0 12px, transparent 12px 24px)"
+      },
+      {
+        id: "diagonal",
+        name: "Diagonal lines",
+        group: "Simple patterns",
+        coverColor: "#c49ab8",
+        patternColor: "#fff5d6",
+        paperColor: "#fff8ec",
+        pagePattern: "plain",
+        art: "repeating-linear-gradient(135deg, transparent 0 12px, var(--pattern-color) 13px 15px, transparent 16px 26px)"
+      },
+      {
+        id: "waves",
+        name: "Soft waves",
+        group: "Simple patterns",
+        coverColor: "#7897c0",
+        patternColor: "#e9f6ff",
+        paperColor: "#fffaf3",
+        pagePattern: "dots",
+        art: "radial-gradient(ellipse at 50% 100%, transparent 0 16px, var(--pattern-color) 17px 19px, transparent 20px) 0 0 / 42px 24px"
+      },
+      {
+        id: "sea",
+        name: "Sea horizon",
+        group: "Scenarios",
+        coverColor: "#5f9aaa",
+        patternColor: "#fff1b8",
+        paperColor: "#fff7e6",
+        pagePattern: "pressed",
+        art: "radial-gradient(circle at 78% 22%, var(--pattern-color) 0 18px, transparent 19px), linear-gradient(180deg, transparent 0 54%, color-mix(in srgb, var(--pattern-color) 42%, transparent) 55% 58%, transparent 59%), radial-gradient(ellipse at 20% 84%, color-mix(in srgb, var(--pattern-color) 38%, transparent) 0 30px, transparent 31px)"
+      },
+      {
+        id: "mountains",
+        name: "Mountains",
+        group: "Scenarios",
+        coverColor: "#6f7f68",
+        patternColor: "#f5ead6",
+        paperColor: "#fbf7ef",
+        pagePattern: "grid",
+        art: "linear-gradient(135deg, transparent 0 55%, color-mix(in srgb, var(--pattern-color) 55%, transparent) 56% 64%, transparent 65%), linear-gradient(45deg, transparent 0 48%, color-mix(in srgb, var(--pattern-color) 50%, transparent) 49% 58%, transparent 59%), linear-gradient(180deg, transparent 0 72%, color-mix(in srgb, var(--pattern-color) 42%, transparent) 73%)"
+      },
+      {
+        id: "sunset",
+        name: "Sunset",
+        group: "Scenarios",
+        coverColor: "#c98265",
+        patternColor: "#ffe2a1",
+        paperColor: "#fff6f2",
+        pagePattern: "plain",
+        art: "radial-gradient(circle at 50% 42%, var(--pattern-color) 0 32px, transparent 33px), repeating-linear-gradient(0deg, transparent 0 18px, color-mix(in srgb, var(--pattern-color) 32%, transparent) 19px 21px)"
+      },
+      {
+        id: "city",
+        name: "City night",
+        group: "Scenarios",
+        coverColor: "#52627e",
+        patternColor: "#f7d778",
+        paperColor: "#fbf7ef",
+        pagePattern: "grid",
+        art: "linear-gradient(180deg, transparent 0 56%, color-mix(in srgb, var(--pattern-color) 40%, transparent) 57%), repeating-linear-gradient(90deg, transparent 0 13px, color-mix(in srgb, var(--pattern-color) 58%, transparent) 14px 18px, transparent 19px 32px)"
+      },
+      {
+        id: "forest",
+        name: "Trees",
+        group: "Silhouettes",
+        coverColor: "#557461",
+        patternColor: "#e8f0cf",
+        paperColor: "#fffaf3",
+        pagePattern: "pressed",
+        art: "repeating-linear-gradient(120deg, transparent 0 18px, color-mix(in srgb, var(--pattern-color) 58%, transparent) 19px 28px, transparent 29px 46px), linear-gradient(180deg, transparent 0 76%, color-mix(in srgb, var(--pattern-color) 45%, transparent) 77%)"
+      },
+      {
+        id: "birds",
+        name: "Birds",
+        group: "Silhouettes",
+        coverColor: "#8fa7c6",
+        patternColor: "#fff8e5",
+        paperColor: "#fff7e6",
+        pagePattern: "dots",
+        art: "radial-gradient(ellipse at 30% 32%, transparent 0 11px, var(--pattern-color) 12px 13px, transparent 14px), radial-gradient(ellipse at 37% 32%, transparent 0 11px, var(--pattern-color) 12px 13px, transparent 14px), radial-gradient(ellipse at 68% 58%, transparent 0 10px, var(--pattern-color) 11px 12px, transparent 13px)"
+      },
+      {
+        id: "cats",
+        name: "Cats",
+        group: "Silhouettes",
+        coverColor: "#a67878",
+        patternColor: "#fff1dc",
+        paperColor: "#fff8ec",
+        pagePattern: "hearts",
+        art: "radial-gradient(circle at 30% 68%, color-mix(in srgb, var(--pattern-color) 62%, transparent) 0 18px, transparent 19px), radial-gradient(circle at 70% 34%, color-mix(in srgb, var(--pattern-color) 52%, transparent) 0 15px, transparent 16px), linear-gradient(45deg, transparent 0 72%, color-mix(in srgb, var(--pattern-color) 38%, transparent) 73%)"
+      },
+      {
+        id: "butterflies",
+        name: "Butterflies",
+        group: "Silhouettes",
+        coverColor: "#b48ac2",
+        patternColor: "#fff0bd",
+        paperColor: "#fff6f2",
+        pagePattern: "pressed",
+        art: "radial-gradient(ellipse at 24% 30%, color-mix(in srgb, var(--pattern-color) 58%, transparent) 0 10px, transparent 11px), radial-gradient(ellipse at 32% 30%, color-mix(in srgb, var(--pattern-color) 58%, transparent) 0 10px, transparent 11px), radial-gradient(ellipse at 66% 68%, color-mix(in srgb, var(--pattern-color) 48%, transparent) 0 12px, transparent 13px), radial-gradient(ellipse at 76% 68%, color-mix(in srgb, var(--pattern-color) 48%, transparent) 0 12px, transparent 13px)"
       }
     ];
     const pagePatterns = {
@@ -1271,6 +1408,7 @@ APP_HTML = r"""<!doctype html>
     const coverTitle = document.getElementById("coverTitle");
     const paperColor = document.getElementById("paperColor");
     const coverColor = document.getElementById("coverColor");
+    const patternColor = document.getElementById("patternColor");
     const photosPerPage = document.getElementById("photosPerPage");
     const frameStyle = document.getElementById("frameStyle");
     const pagePattern = document.getElementById("pagePattern");
@@ -1314,7 +1452,7 @@ APP_HTML = r"""<!doctype html>
       renderTabs();
     });
 
-    [albumTitle, paperColor, coverColor, photosPerPage, frameStyle, pagePattern].forEach((input) => {
+    [albumTitle, paperColor, coverColor, patternColor, photosPerPage, frameStyle, pagePattern].forEach((input) => {
       input.addEventListener("input", updateAlbumOptions);
       input.addEventListener("change", updateAlbumOptions);
     });
@@ -1353,28 +1491,45 @@ APP_HTML = r"""<!doctype html>
       };
     }
 
-    function blankAlbum(templateId = "family", title = "") {
-      const template = templates.find((item) => item.id === templateId) ?? templates[0];
+    function normalizeCoverPatternId(value) {
+      const legacy = {
+        travel: "sea",
+        family: "dots",
+        birthday: "sunset",
+        graduation: "city",
+        wedding: "linen"
+      };
+      const id = legacy[value] ?? value ?? "cloth";
+      return coverPatterns.some((pattern) => pattern.id === id) ? id : "cloth";
+    }
+
+    function blankAlbum(patternId = "cloth", title = "") {
+      patternId = normalizeCoverPatternId(patternId);
+      const pattern = coverPatterns.find((item) => item.id === patternId) ?? coverPatterns[0];
       return {
         id: crypto.randomUUID(),
-        title: title || `${template.name} Album`,
-        template: template.id,
+        title: title || `${pattern.name} Album`,
+        coverPattern: pattern.id,
         orientation: "vertical",
-        paperColor: template.paperColor,
-        coverColor: template.coverColor,
+        paperColor: pattern.paperColor,
+        coverColor: pattern.coverColor,
+        patternColor: pattern.patternColor,
         photosPerPage: 2,
         frameStyle: "simple",
-        pagePattern: template.pattern,
+        pagePattern: pattern.pagePattern,
         pages: [blankPage()]
       };
     }
 
     function normalizeAlbum(saved) {
-      const fallback = blankAlbum(saved?.template ?? "family", saved?.title);
+      const coverPattern = normalizeCoverPatternId(saved?.coverPattern ?? saved?.template ?? "cloth");
+      const fallback = blankAlbum(coverPattern, saved?.title);
       return {
         ...fallback,
         ...saved,
         id: saved?.id ?? crypto.randomUUID(),
+        coverPattern,
+        patternColor: saved?.patternColor ?? fallback.patternColor,
         pagePattern: saved?.pagePattern ?? fallback.pagePattern,
         pages: saved?.pages?.length ? saved.pages.map((page) => ({
           ...blankPage(),
@@ -1420,7 +1575,7 @@ APP_HTML = r"""<!doctype html>
         } catch {}
       }
 
-      const first = blankAlbum("family", "My Digital Album");
+      const first = blankAlbum("cloth", "My Digital Album");
       return { ...defaultLibrary, activeAlbumId: first.id, albums: [first] };
     }
 
@@ -1432,8 +1587,8 @@ APP_HTML = r"""<!doctype html>
       localStorage.setItem(storageKey, JSON.stringify(library));
     }
 
-    function startNewAlbum(templateId = "family") {
-      draftAlbum = blankAlbum(templateId, "New Album");
+    function startNewAlbum(patternId = "cloth") {
+      draftAlbum = blankAlbum(patternId, "New Album");
       album = draftAlbum;
       activePageIndex = 0;
       selectedPhotoIndex = null;
@@ -1474,6 +1629,7 @@ APP_HTML = r"""<!doctype html>
       album.title = albumTitle.value || "My Digital Album";
       album.paperColor = paperColor.value;
       album.coverColor = coverColor.value;
+      album.patternColor = patternColor.value;
       album.photosPerPage = Number(photosPerPage.value);
       album.frameStyle = frameStyle.value;
       album.pagePattern = pagePattern.value;
@@ -1483,13 +1639,14 @@ APP_HTML = r"""<!doctype html>
       render();
     }
 
-    function applyTemplate(templateId) {
-      const template = templates.find((item) => item.id === templateId);
-      if (!template) return;
-      album.template = template.id;
-      album.coverColor = template.coverColor;
-      album.paperColor = template.paperColor;
-      album.pagePattern = template.pattern;
+    function applyCoverPattern(patternId) {
+      const pattern = coverPatterns.find((item) => item.id === patternId);
+      if (!pattern) return;
+      album.coverPattern = pattern.id;
+      album.coverColor = pattern.coverColor;
+      album.patternColor = pattern.patternColor;
+      album.paperColor = pattern.paperColor;
+      album.pagePattern = pattern.pagePattern;
       if (!draftAlbum) saveLibrary();
       render();
     }
@@ -1548,7 +1705,7 @@ APP_HTML = r"""<!doctype html>
       const confirmed = window.confirm("Delete this album from the library?");
       if (!confirmed) return;
       library.albums = library.albums.filter((item) => item.id !== album.id);
-      if (!library.albums.length) library.albums.push(blankAlbum("family", "My Digital Album"));
+      if (!library.albums.length) library.albums.push(blankAlbum("cloth", "My Digital Album"));
       library.activeAlbumId = library.albums[0].id;
       album = activeAlbum();
       activePageIndex = 0;
@@ -1574,14 +1731,20 @@ APP_HTML = r"""<!doctype html>
     }
 
     function renderTemplateGrid() {
-      templateGrid.innerHTML = templates.map((template) => `
-        <button class="template-card ${album.template === template.id ? "active" : ""}" type="button" data-template="${template.id}">
-          ${coverMarkup({ ...album, title: template.name, coverColor: template.coverColor, template: template.id }, false)}
-          <span>${template.name}</span>
-        </button>
-      `).join("");
-      templateGrid.querySelectorAll("[data-template]").forEach((button) => {
-        button.addEventListener("click", () => applyTemplate(button.dataset.template));
+      let currentGroup = "";
+      templateGrid.innerHTML = coverPatterns.map((pattern) => {
+        const heading = pattern.group === currentGroup ? "" : `<div class="pattern-group-title">${pattern.group}</div>`;
+        currentGroup = pattern.group;
+        return `
+          ${heading}
+          <button class="template-card ${album.coverPattern === pattern.id ? "active" : ""}" type="button" data-cover-pattern="${pattern.id}">
+            ${coverMarkup({ ...album, title: pattern.name, coverColor: pattern.coverColor, patternColor: pattern.patternColor, coverPattern: pattern.id }, false)}
+            <span>${pattern.name}</span>
+          </button>
+        `;
+      }).join("");
+      templateGrid.querySelectorAll("[data-cover-pattern]").forEach((button) => {
+        button.addEventListener("click", () => applyCoverPattern(button.dataset.coverPattern));
       });
     }
 
@@ -1590,12 +1753,12 @@ APP_HTML = r"""<!doctype html>
         <button class="library-card new-album-card" type="button" id="newAlbumCard">
           <span class="plus-mark">+</span>
           <strong>Create new album</strong>
-          <span class="book-cover-meta">Start from a book cover</span>
+          <span class="book-cover-meta">Choose a cover pattern</span>
         </button>
         ${library.albums.map((item) => `
         <button class="library-card" type="button" data-open-album="${item.id}">
           ${coverMarkup(item, true)}
-          <span class="book-cover-meta">${item.pages.length} page${item.pages.length === 1 ? "" : "s"} · ${templateName(item.template)}</span>
+          <span class="book-cover-meta">${item.pages.length} page${item.pages.length === 1 ? "" : "s"} · ${coverPatternName(item.coverPattern)}</span>
         </button>
       `).join("")}`;
       document.getElementById("newAlbumCard").addEventListener("click", () => startNewAlbum());
@@ -1619,16 +1782,16 @@ APP_HTML = r"""<!doctype html>
     }
 
     function coverMarkup(item, showTitle, extraClass = "") {
-      const template = templates.find((entry) => entry.id === item.template) ?? templates[0];
+      const pattern = coverPatterns.find((entry) => entry.id === item.coverPattern) ?? coverPatterns[0];
       return `
-        <span class="book-cover ${extraClass}" style="--book-cover:${item.coverColor}; --book-art:${template.art}">
+        <span class="book-cover ${extraClass}" style="--book-cover:${item.coverColor}; --pattern-color:${item.patternColor ?? pattern.patternColor}; --book-art:${pattern.art}">
           ${showTitle ? `<span class="book-cover-title">${escapeHtml(item.title)}</span>` : ""}
         </span>
       `;
     }
 
-    function templateName(id) {
-      return templates.find((template) => template.id === id)?.name ?? "Album";
+    function coverPatternName(id) {
+      return coverPatterns.find((pattern) => pattern.id === id)?.name ?? "Album";
     }
 
     function renderEditor() {
@@ -1641,6 +1804,7 @@ APP_HTML = r"""<!doctype html>
       coverTitle.value = album.title;
       paperColor.value = album.paperColor;
       coverColor.value = album.coverColor;
+      patternColor.value = album.patternColor;
       photosPerPage.value = String(album.photosPerPage);
       frameStyle.value = album.frameStyle;
       pagePattern.value = album.pagePattern;
