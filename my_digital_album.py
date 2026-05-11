@@ -1270,7 +1270,7 @@ APP_HTML = r"""<!doctype html>
 
     .photo-actions {
       position: absolute;
-      z-index: 4;
+      z-index: 20;
       top: 8px;
       right: 8px;
       display: flex;
