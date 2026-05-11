@@ -1312,11 +1312,13 @@ APP_HTML = r"""<!doctype html>
     }
 
     .photo-frame.effect-watermark img {
-      filter: contrast(0.98) brightness(1.04);
-      opacity: 0.86;
+      filter: saturate(0.86) contrast(0.92) brightness(1.12);
+      opacity: 0.9;
     }
 
+    .photo-frame.effect-watermark::before,
     .photo-frame.effect-watermark::after,
+    .photo-frame.effect-sparkling::before,
     .photo-frame.effect-sparkling::after {
       content: "";
       position: absolute;
@@ -1324,22 +1326,64 @@ APP_HTML = r"""<!doctype html>
       pointer-events: none;
     }
 
+    .photo-frame.effect-watermark::before {
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.42) 0 20%, transparent 42%),
+        url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 220 160%22%3E%3Cg fill=%22none%22 stroke=%22white%22 stroke-width=%227%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 opacity=%22.92%22%3E%3Cpath d=%22M110 42c-27-30-61-13-44 23 13 29 37 23 44 3 7 20 31 26 44-3 17-36-17-53-44-23Z%22/%3E%3Cpath d=%22M82 113c18-23 38-36 62-47%22 opacity=%22.7%22/%3E%3Cpath d=%22M74 105c-18 0-31 8-39 23 19 4 35-4 39-23Z%22 opacity=%22.58%22/%3E%3Cpath d=%22M140 78c18 2 32 13 40 30-20 2-35-8-40-30Z%22 opacity=%22.58%22/%3E%3C/g%3E%3C/svg%3E') center / 62% 62% no-repeat;
+      mix-blend-mode: soft-light;
+      opacity: .62;
+    }
+
     .photo-frame.effect-watermark::after {
       background:
-        repeating-linear-gradient(135deg, rgba(255,255,255,.18) 0 1px, transparent 1px 18px);
-      mix-blend-mode: screen;
+        radial-gradient(ellipse at 50% 50%, transparent 0 44%, rgba(255,255,255,.2) 62%, transparent 78%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,0) 28%, rgba(255,255,255,.1));
+      box-shadow: inset 0 0 30px rgba(255,255,255,.22);
+      mix-blend-mode: overlay;
     }
 
     .photo-frame.effect-sparkling img {
-      filter: brightness(1.05) saturate(1.08);
+      filter: brightness(1.08) saturate(1.12) contrast(1.03);
+    }
+
+    .photo-frame.effect-sparkling::before {
+      background:
+        linear-gradient(115deg, transparent 0 22%, rgba(255,255,255,.46) 32%, transparent 43% 100%);
+      mix-blend-mode: screen;
+      opacity: .72;
+      animation: sparkleSheen 3.2s ease-in-out infinite;
     }
 
     .photo-frame.effect-sparkling::after {
       background:
-        radial-gradient(circle at 18% 22%, rgba(255,255,255,.82) 0 2px, transparent 3px),
-        radial-gradient(circle at 78% 18%, rgba(255,244,173,.72) 0 2px, transparent 3px),
-        radial-gradient(circle at 68% 72%, rgba(255,255,255,.62) 0 1px, transparent 3px);
-      opacity: .65;
+        url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 130%22%3E%3Cg fill=%22white%22 opacity=%22.94%22%3E%3Cpath d=%22M36 15l4 12 12 4-12 4-4 12-4-12-12-4 12-4Z%22/%3E%3Cpath d=%22M132 24l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z%22 opacity=%22.78%22/%3E%3Cpath d=%22M112 86l5 15 15 5-15 5-5 15-5-15-15-5 15-5Z%22 opacity=%22.82%22/%3E%3Ccircle cx=%2273%22 cy=%2272%22 r=%223%22 opacity=%22.8%22/%3E%3Ccircle cx=%22155%22 cy=%2282%22 r=%222.3%22 opacity=%22.65%22/%3E%3C/g%3E%3Cg fill=%22%23ffe7a1%22 opacity=%22.82%22%3E%3Cpath d=%22M74 22l2 7 7 2-7 2-2 7-2-7-7-2 7-2Z%22/%3E%3Cpath d=%22M34 96l2 7 7 2-7 2-2 7-2-7-7-2 7-2Z%22/%3E%3C/g%3E%3C/svg%3E') center / cover no-repeat,
+        radial-gradient(circle at 24% 28%, rgba(255,255,255,.8) 0 2px, transparent 7px),
+        radial-gradient(circle at 78% 70%, rgba(255,230,150,.5) 0 2px, transparent 9px);
+      mix-blend-mode: screen;
+      opacity: .8;
+      animation: sparklePulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes sparkleSheen {
+      0%, 100% {
+        transform: translateX(-30%);
+        opacity: .24;
+      }
+      45%, 60% {
+        transform: translateX(30%);
+        opacity: .72;
+      }
+    }
+
+    @keyframes sparklePulse {
+      0%, 100% {
+        opacity: .52;
+        filter: drop-shadow(0 0 2px rgba(255,255,255,.45));
+      }
+      50% {
+        opacity: .94;
+        filter: drop-shadow(0 0 8px rgba(255,235,160,.68));
+      }
     }
 
     .page-note {
