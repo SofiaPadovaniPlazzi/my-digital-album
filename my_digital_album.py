@@ -201,10 +201,46 @@ APP_HTML = r"""<!doctype html>
       margin-bottom: 22px;
     }
 
+    .brand-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+    }
+
     .brand p {
       margin-bottom: 0;
       font-size: 14px;
     }
+
+    .sidebar-icon {
+      width: 38px;
+      height: 38px;
+      min-height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--field);
+      color: var(--ink);
+      box-shadow: 0 8px 18px rgba(61, 42, 26, 0.08);
+    }
+
+    .sidebar-icon svg {
+      width: 19px;
+      height: 19px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .sidebar-icon:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
 
     .panel {
       border: 1px solid var(--line);
@@ -1814,7 +1850,16 @@ APP_HTML = r"""<!doctype html>
   <div class="app" id="app">
     <aside>
       <div class="brand">
-        <h1>My Digital Album</h1>
+        <div class="brand-head">
+          <h1>My Digital Album</h1>
+          <button class="sidebar-icon edit-only" id="hideSetupButton" type="button" title="Hide setup" aria-label="Hide setup">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <path d="M9 5v14"></path>
+              <path d="m15 9-3 3 3 3"></path>
+            </svg>
+          </button>
+        </div>
         <p>Build a sweet photo album from your own pictures, with paper choices, frames, dates, captions, notes, and stickers.</p>
       </div>
 
@@ -1953,7 +1998,6 @@ APP_HTML = r"""<!doctype html>
           <input id="searchInput" type="search" placeholder="Search @person, caption, place...">
           <button class="secondary" id="searchButton" type="button">Search</button>
           <button class="secondary" id="settingsButton" type="button" aria-label="Settings">⚙</button>
-          <button class="secondary edit-only" id="hideSetupButton" type="button">Hide setup</button>
           <button class="secondary" id="exportButton" type="button">Print / Save PDF</button>
           <button class="danger edit-only" id="resetButton" type="button">Reset</button>
         </div>
