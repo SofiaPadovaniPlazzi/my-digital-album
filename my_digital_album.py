@@ -132,6 +132,10 @@ APP_HTML = r"""<!doctype html>
       display: none;
     }
 
+    .app.library-mode .mode-switch {
+      display: none;
+    }
+
     .app.setup-mode aside .editor-panel,
     .app.library-mode aside .editor-panel {
       display: none;
@@ -282,6 +286,32 @@ APP_HTML = r"""<!doctype html>
     input[type="color"] {
       height: 42px;
       padding: 4px;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      min-height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .toggle-field {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 44px;
+      margin-bottom: 13px;
+    }
+
+    .toggle-field span {
+      display: grid;
+      gap: 2px;
+    }
+
+    .toggle-field small {
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.3;
     }
 
     .segmented {
@@ -1151,13 +1181,55 @@ APP_HTML = r"""<!doctype html>
       min-height: 0;
     }
 
-    .photo-frame img {
+    .photo-frame img,
+    .photo-frame video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
       transform-origin: center;
+    }
+
+    .photo-frame img {
       cursor: grab;
+    }
+
+    .photo-frame video {
+      background: #111;
+    }
+
+    .video-toggle {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      background: radial-gradient(circle, rgba(24, 19, 16, 0.28), rgba(24, 19, 16, 0.02) 54%, transparent 72%);
+      transition: opacity 150ms ease;
+    }
+
+    .photo-frame:hover .video-toggle,
+    .video-toggle:focus-visible {
+      opacity: 1;
+    }
+
+    .video-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.82);
+      color: #34271f;
+      box-shadow: 0 10px 24px rgba(31, 23, 16, 0.2);
+    }
+
+    .video-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
     }
 
     .photo-actions {
@@ -1290,28 +1362,49 @@ APP_HTML = r"""<!doctype html>
       display: none;
     }
 
+    .video-loop {
+      display: none;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-height: 34px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
     .page-photo.selected .photo-mentions,
-    .page-photo.selected .photo-effect {
+    .page-photo.selected .photo-effect,
+    .page-photo.selected .video-loop {
       display: block;
     }
 
-    .photo-frame.effect-bw img {
+    .page-photo.selected .video-loop {
+      display: grid;
+    }
+
+    .photo-frame.effect-bw img,
+    .photo-frame.effect-bw video {
       filter: grayscale(1) contrast(1.04);
     }
 
-    .photo-frame.effect-soft-saturated img {
+    .photo-frame.effect-soft-saturated img,
+    .photo-frame.effect-soft-saturated video {
       filter: saturate(1.22) contrast(1.04) brightness(1.03);
     }
 
-    .photo-frame.effect-warm img {
+    .photo-frame.effect-warm img,
+    .photo-frame.effect-warm video {
       filter: sepia(0.14) saturate(1.12) brightness(1.04);
     }
 
-    .photo-frame.effect-matte img {
+    .photo-frame.effect-matte img,
+    .photo-frame.effect-matte video {
       filter: contrast(0.92) saturate(0.94) brightness(1.06);
     }
 
-    .photo-frame.effect-watermark img {
+    .photo-frame.effect-watermark img,
+    .photo-frame.effect-watermark video {
       filter: saturate(0.86) contrast(0.92) brightness(1.12);
       opacity: 0.9;
     }
@@ -1342,7 +1435,8 @@ APP_HTML = r"""<!doctype html>
       mix-blend-mode: overlay;
     }
 
-    .photo-frame.effect-sparkling img {
+    .photo-frame.effect-sparkling img,
+    .photo-frame.effect-sparkling video {
       filter: brightness(1.08) saturate(1.12) contrast(1.03);
     }
 
@@ -1804,12 +1898,12 @@ APP_HTML = r"""<!doctype html>
         <div class="panel-body">
         <div class="tool-actions">
           <div class="row">
-            <button class="secondary" id="addPhotoButton" type="button">Add photo</button>
+            <button class="secondary" id="addPhotoButton" type="button">Add photo/video</button>
             <button class="secondary" id="addTextButton" type="button">Add text</button>
           </div>
           <button class="secondary" id="addStickerButton" type="button">Add sticker</button>
         </div>
-        <input class="hidden" id="addPhotoInput" type="file" accept="image/*" multiple>
+        <input class="hidden" id="addPhotoInput" type="file" accept="image/*,video/*" multiple>
         <div class="field">
           <label for="textFont">Selected text font</label>
           <select id="textFont">
@@ -1838,11 +1932,8 @@ APP_HTML = r"""<!doctype html>
       </details>
 
       <section class="panel editor-panel">
-        <h2>Privacy</h2>
-        <div class="row">
-          <button class="secondary" id="passwordButton" type="button">Password</button>
-          <button class="secondary" id="exportHtmlButton" type="button">Export HTML</button>
-        </div>
+        <h2>Export</h2>
+        <button class="secondary" id="exportHtmlButton" type="button">Export HTML</button>
       </section>
     </aside>
 
@@ -1933,6 +2024,17 @@ APP_HTML = r"""<!doctype html>
           <option value="twilight">Twilight</option>
           <option value="dark">Dark</option>
         </select>
+      </div>
+      <label class="toggle-field" for="autoSaveToggle">
+        <span>
+          <strong>Auto-save</strong>
+          <small>Save every change automatically.</small>
+        </span>
+        <input id="autoSaveToggle" type="checkbox">
+      </label>
+      <div class="field">
+        <label>Password</label>
+        <button class="secondary" id="passwordButton" type="button">Password</button>
       </div>
     </section>
   </div>
@@ -2205,6 +2307,7 @@ APP_HTML = r"""<!doctype html>
     const defaultLibrary = {
       activeAlbumId: "",
       security: { pinHash: "" },
+      settings: { autoSave: true },
       albums: []
     };
 
@@ -2247,6 +2350,7 @@ APP_HTML = r"""<!doctype html>
     const textColor = document.getElementById("textColor");
     const textSize = document.getElementById("textSize");
     const themeChoice = document.getElementById("themeChoice");
+    const autoSaveToggle = document.getElementById("autoSaveToggle");
     const searchInput = document.getElementById("searchInput");
     const libraryTab = document.getElementById("libraryTab");
     const setupTab = document.getElementById("setupTab");
@@ -2277,7 +2381,7 @@ APP_HTML = r"""<!doctype html>
     document.getElementById("addStickerButton").addEventListener("click", openStickerPicker);
     document.getElementById("addPage").addEventListener("click", addPage);
     document.getElementById("deletePage").addEventListener("click", deletePage);
-    document.getElementById("saveButton").addEventListener("click", saveLibrary);
+    document.getElementById("saveButton").addEventListener("click", () => saveLibrary(true));
     document.getElementById("exportButton").addEventListener("click", () => window.print());
     document.getElementById("exportHtmlButton").addEventListener("click", exportSingleHtml);
     document.getElementById("resetButton").addEventListener("click", resetAlbum);
@@ -2288,6 +2392,10 @@ APP_HTML = r"""<!doctype html>
     setupTab.addEventListener("click", () => startNewAlbum());
     editorTab.addEventListener("click", () => setView("editor"));
     themeChoice.addEventListener("change", () => applyTheme(themeChoice.value));
+    autoSaveToggle.addEventListener("change", () => {
+      library.settings = { ...(library.settings ?? {}), autoSave: autoSaveToggle.checked };
+      saveLibrary(true);
+    });
     searchInput.addEventListener("input", () => {
       if (!searchInput.value.trim()) closeSearch();
     });
@@ -2393,6 +2501,8 @@ APP_HTML = r"""<!doctype html>
             zoom: photo.zoom ?? 1,
             rotate: photo.rotate ?? 0,
             effect: photo.effect ?? "none",
+            mediaType: photo.mediaType ?? (String(photo.src ?? "").startsWith("data:video") ? "video" : "image"),
+            loopInView: photo.loopInView ?? true,
             x: photo.x ?? 14,
             y: photo.y ?? 24,
             width: photo.width ?? 210,
@@ -2434,7 +2544,8 @@ APP_HTML = r"""<!doctype html>
             ...saved,
             albums,
             activeAlbumId: saved.activeAlbumId && albums.some((item) => item.id === saved.activeAlbumId) ? saved.activeAlbumId : albums[0].id,
-            security: { pinHash: saved.security?.pinHash ?? "" }
+            security: { pinHash: saved.security?.pinHash ?? "" },
+            settings: { ...defaultLibrary.settings, ...(saved.settings ?? {}) }
           };
         } catch {}
       }
@@ -2455,7 +2566,13 @@ APP_HTML = r"""<!doctype html>
       return library.albums.find((item) => item.id === library.activeAlbumId) ?? library.albums[0];
     }
 
-    function saveLibrary() {
+    function autoSaveEnabled() {
+      library.settings = { ...defaultLibrary.settings, ...(library.settings ?? {}) };
+      return library.settings.autoSave !== false;
+    }
+
+    function saveLibrary(force = false) {
+      if (!force && !autoSaveEnabled()) return;
       localStorage.setItem(storageKey, JSON.stringify(library));
     }
 
@@ -2654,10 +2771,15 @@ APP_HTML = r"""<!doctype html>
     function render() {
       if (!draftAlbum) album = activeAlbum();
       activePageIndex = Math.min(activePageIndex, album.pages.length - 1);
+      renderSettingsControls();
       renderTemplateGrid();
       renderLibrary();
       renderSetupPreview();
       renderEditor();
+    }
+
+    function renderSettingsControls() {
+      autoSaveToggle.checked = autoSaveEnabled();
     }
 
     function renderTemplateGrid() {
@@ -2904,6 +3026,31 @@ APP_HTML = r"""<!doctype html>
         });
       });
 
+      albumPage.querySelectorAll("[data-video-loop]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const index = Number(input.dataset.videoLoop);
+          pageAt(eventPageIndex({ currentTarget: input })).photos[index].loopInView = input.checked;
+          saveLibrary();
+        });
+      });
+
+      albumPage.querySelectorAll("[data-video-toggle]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          const frame = button.closest(".photo-frame");
+          const video = frame?.querySelector("video");
+          if (!video) return;
+          if (video.paused) {
+            video.play();
+            button.innerHTML = `<span class="video-icon">${pauseIcon()}</span>`;
+          } else {
+            video.pause();
+            button.innerHTML = `<span class="video-icon">${playIcon()}</span>`;
+          }
+        });
+      });
+
       albumPage.querySelectorAll("[data-toggle-caption]").forEach((button) => {
         button.addEventListener("click", (event) => {
           event.stopPropagation();
@@ -2921,7 +3068,7 @@ APP_HTML = r"""<!doctype html>
 
       albumPage.querySelectorAll("[data-photo-index]").forEach((photo) => {
         photo.addEventListener("dragstart", (event) => {
-          if (event.target.matches("input, button, .direct-handle")) {
+          if (event.target.matches("input, select, button, label, video, .direct-handle")) {
             event.preventDefault();
             return;
           }
@@ -2933,7 +3080,7 @@ APP_HTML = r"""<!doctype html>
           event.dataTransfer.effectAllowed = "move";
         });
         photo.addEventListener("click", (event) => {
-          if (event.target.matches("input, button, .direct-handle")) return;
+          if (event.target.matches("input, select, button, label, video, .direct-handle")) return;
           event.stopPropagation();
           selectedPageIndex = eventPageIndex(event);
           selectedPhotoIndex = Number(photo.dataset.photoIndex);
@@ -2967,7 +3114,7 @@ APP_HTML = r"""<!doctype html>
         event.preventDefault();
         const moved = moveDraggedPhoto(event, Number(event.currentTarget.dataset.pageIndex));
         if (moved) return;
-        const files = [...(event.dataTransfer.files ?? [])].filter((file) => file.type?.startsWith("image/"));
+        const files = [...(event.dataTransfer.files ?? [])].filter(isSupportedMediaFile);
         if (files.length) addPhotosFromFiles(files, Number(event.currentTarget.dataset.pageIndex));
       });
       albumPage.querySelector(".book-page.right[data-page-index]")?.addEventListener("dragover", (event) => event.preventDefault());
@@ -2975,7 +3122,7 @@ APP_HTML = r"""<!doctype html>
         event.preventDefault();
         const moved = moveDraggedPhoto(event, Number(event.currentTarget.dataset.pageIndex));
         if (moved) return;
-        const files = [...(event.dataTransfer.files ?? [])].filter((file) => file.type?.startsWith("image/"));
+        const files = [...(event.dataTransfer.files ?? [])].filter(isSupportedMediaFile);
         if (files.length) addPhotosFromFiles(files, Number(event.currentTarget.dataset.pageIndex));
       });
 
@@ -3098,7 +3245,7 @@ APP_HTML = r"""<!doctype html>
         <div class="page-photo ${selected} ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" draggable="true" data-photo-index="${index}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
           <div class="photo-shell">
             <div class="photo-frame effect-${escapeAttribute(effect)}">
-              <img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}" data-move-photo="${index}" draggable="false" style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1}) rotate(${photo.rotate ?? 0}deg)">
+              ${mediaMarkup(photo, index, true)}
             </div>
             <div class="caption-row">
               <input class="photo-caption" type="text" value="${escapeAttribute(photo.caption ?? "")}" placeholder="Picture title or caption" data-caption="${index}">
@@ -3108,6 +3255,12 @@ APP_HTML = r"""<!doctype html>
             <select class="photo-effect" data-photo-effect="${index}" aria-label="Photo effect">
               ${photoEffectOptions(effect)}
             </select>
+            ${photo.mediaType === "video" ? `
+              <label class="video-loop">
+                <input type="checkbox" data-video-loop="${index}" ${(photo.loopInView ?? true) ? "checked" : ""}>
+                <span>Loop in View mode</span>
+              </label>
+            ` : ""}
           </div>
           <span class="photo-actions">
             <button class="mini-button" type="button" data-remove-photo="${index}">x</button>
@@ -3125,13 +3278,32 @@ APP_HTML = r"""<!doctype html>
         <div class="page-photo ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
           <div class="photo-shell">
             <div class="photo-frame effect-${escapeAttribute(effect)}">
-              <img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}" draggable="false" style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1}) rotate(${photo.rotate ?? 0}deg)">
+              ${mediaMarkup(photo, index, false)}
             </div>
             ${(photo.captionVisible ?? true) ? `<p class="photo-caption">${escapeHtml(photo.caption ?? "")}</p>` : ""}
             <p class="photo-mentions">${escapeHtml(tagsToInput(photo.tags))}</p>
           </div>
         </div>
       `;
+    }
+
+    function mediaMarkup(photo, index, editable) {
+      const position = `object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1}) rotate(${photo.rotate ?? 0}deg)`;
+      if (photo.mediaType === "video") {
+        return `
+          <video src="${photo.src}" ${editable ? "" : `${(photo.loopInView ?? true) ? "loop autoplay muted playsinline" : "controls playsinline"}`} draggable="false" style="${position}"></video>
+          ${editable ? `<button class="video-toggle" type="button" data-video-toggle="${index}" aria-label="Play or pause video"><span class="video-icon">${playIcon()}</span></button>` : ""}
+        `;
+      }
+      return `<img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}" ${editable ? `data-move-photo="${index}"` : ""} draggable="false" style="${position}">`;
+    }
+
+    function playIcon() {
+      return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7Z"/></svg>`;
+    }
+
+    function pauseIcon() {
+      return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7Zm6 0h4v14h-4Z"/></svg>`;
     }
 
     function eyeIcon(visible) {
@@ -3161,12 +3333,13 @@ APP_HTML = r"""<!doctype html>
     }
 
     function addPhotosFromFiles(fileList, pageIndex = selectedPageIndex) {
-      const files = [...(fileList ?? [])].filter((file) => file.type?.startsWith("image/"));
+      const files = [...(fileList ?? [])].filter(isSupportedMediaFile);
       const page = pageAt(pageIndex);
       if (!page) return;
       selectedPageIndex = pageIndex;
-      files.forEach((file) => {
-        readPhotoFile(file, page.photos.length, pageIndex);
+      const startIndex = page.photos.length;
+      files.forEach((file, offset) => {
+        readPhotoFile(file, startIndex + offset, pageIndex);
       });
       addPhotoInput.value = "";
     }
@@ -3176,10 +3349,12 @@ APP_HTML = r"""<!doctype html>
       reader.onload = () => {
         const page = pageAt(pageIndex) ?? currentPage();
         const count = page.photos.filter(Boolean).length;
+        const mediaType = file.type?.startsWith("video/") ? "video" : "image";
         page.photos[index] = {
           src: reader.result,
           caption: page.photos[index]?.caption ?? "",
           name: file.name,
+          mediaType,
           cropX: 50,
           cropY: 50,
           zoom: 1,
@@ -3191,6 +3366,7 @@ APP_HTML = r"""<!doctype html>
           height: 150,
           tilt: [-3, 2, -5, 4][count % 4],
           captionVisible: true,
+          loopInView: mediaType === "video",
           tags: []
         };
         selectedPageIndex = pageIndex;
@@ -3201,6 +3377,10 @@ APP_HTML = r"""<!doctype html>
         renderPage();
       };
       reader.readAsDataURL(file);
+    }
+
+    function isSupportedMediaFile(file) {
+      return file.type?.startsWith("image/") || file.type?.startsWith("video/");
     }
 
     function swapPhotos(from, to) {
@@ -3669,7 +3849,7 @@ APP_HTML = r"""<!doctype html>
         }
         library.security = { pinHash: await hashPin(pin) };
         sessionStorage.setItem(sessionKey, "true");
-        saveLibrary();
+        saveLibrary(true);
         closePinModal();
       }
     }
@@ -3679,12 +3859,13 @@ APP_HTML = r"""<!doctype html>
       if (action === "disable") {
         library.security = { pinHash: "" };
         sessionStorage.removeItem(sessionKey);
-        saveLibrary();
+        saveLibrary(true);
         closePinModal();
       }
     }
 
     function openSettings() {
+      renderSettingsControls();
       settingsOverlay.classList.add("visible");
     }
 
