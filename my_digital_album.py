@@ -742,16 +742,23 @@ APP_HTML = r"""<!doctype html>
     }
 
     .album.opening {
-      animation: bookOpen 700ms ease both;
+      animation: bookOpen 820ms cubic-bezier(.18,.82,.22,1) both;
     }
 
     @keyframes bookOpen {
       0% {
-        transform: perspective(1200px) rotateY(-22deg) scale(0.92);
-        opacity: 0.15;
+        transform: perspective(1200px) rotateY(-34deg) rotateX(3deg) scale(0.9);
+        transform-origin: left center;
+        filter: brightness(.9);
+        opacity: 0.2;
+      }
+      55% {
+        transform: perspective(1200px) rotateY(4deg) rotateX(0deg) scale(1.015);
+        filter: brightness(1.04);
       }
       100% {
         transform: perspective(1200px) rotateY(0deg) scale(1);
+        filter: brightness(1);
         opacity: 1;
       }
     }
@@ -839,6 +846,50 @@ APP_HTML = r"""<!doctype html>
       color: var(--ink);
     }
 
+    .page-arrow {
+      position: absolute;
+      top: calc(50% + 30px);
+      z-index: 22;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 58px;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+      box-shadow: 0 12px 24px rgba(52, 34, 22, 0.16);
+      transform: translateY(-50%);
+    }
+
+    .page-arrow:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--accent);
+    }
+
+    .page-arrow:disabled {
+      opacity: 0.32;
+      cursor: default;
+    }
+
+    .page-arrow svg {
+      width: 23px;
+      height: 23px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .page-arrow.prev {
+      left: -18px;
+    }
+
+    .page-arrow.next {
+      right: -18px;
+    }
+
     .album-page {
       position: relative;
       min-height: var(--page-height);
@@ -850,6 +901,44 @@ APP_HTML = r"""<!doctype html>
         inset 0 0 0 1px rgba(69, 49, 32, 0.12),
         inset 18px 0 28px rgba(66, 42, 24, 0.08),
         8px 8px 0 rgba(255, 255, 255, 0.26);
+    }
+
+    .album-page.turn-next .book-page.right {
+      animation: turnRightPage 520ms cubic-bezier(.2,.74,.25,1) both;
+      transform-origin: left center;
+    }
+
+    .album-page.turn-prev .book-page.left {
+      animation: turnLeftPage 520ms cubic-bezier(.2,.74,.25,1) both;
+      transform-origin: right center;
+    }
+
+    @keyframes turnRightPage {
+      0% {
+        transform: perspective(1200px) rotateY(-20deg);
+        filter: brightness(.94);
+      }
+      55% {
+        box-shadow: -22px 0 38px rgba(56, 37, 23, .18);
+      }
+      100% {
+        transform: perspective(1200px) rotateY(0);
+        filter: brightness(1);
+      }
+    }
+
+    @keyframes turnLeftPage {
+      0% {
+        transform: perspective(1200px) rotateY(20deg);
+        filter: brightness(.94);
+      }
+      55% {
+        box-shadow: 22px 0 38px rgba(56, 37, 23, .18);
+      }
+      100% {
+        transform: perspective(1200px) rotateY(0);
+        filter: brightness(1);
+      }
     }
 
     .album-page::before {
@@ -2037,7 +2126,13 @@ APP_HTML = r"""<!doctype html>
             <button class="secondary edit-only" id="saveButton" type="button">Save</button>
           </div>
           <div class="page-tabs" id="pageTabs"></div>
+          <button class="page-arrow prev" id="prevPageButton" type="button" aria-label="Previous page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg>
+          </button>
           <article class="album-page" id="albumPage"></article>
+          <button class="page-arrow next" id="nextPageButton" type="button" aria-label="Next page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+          </button>
         </section>
       </div>
       </div>
@@ -2422,12 +2517,15 @@ APP_HTML = r"""<!doctype html>
     let pinBuffer = "";
     let pinMessage = "";
     let pendingPin = "";
+    let audioContext = null;
     const wordStickerCache = {};
 
     const app = document.getElementById("app");
     const albumEl = document.getElementById("album");
     const albumPage = document.getElementById("albumPage");
     const pageTabs = document.getElementById("pageTabs");
+    const prevPageButton = document.getElementById("prevPageButton");
+    const nextPageButton = document.getElementById("nextPageButton");
     const libraryGrid = document.getElementById("libraryGrid");
     const setupBookPreview = document.getElementById("setupBookPreview");
     const templateGrid = document.getElementById("templateGrid");
@@ -2475,6 +2573,8 @@ APP_HTML = r"""<!doctype html>
     document.getElementById("addStickerButton").addEventListener("click", openStickerPicker);
     document.getElementById("addPage").addEventListener("click", addPage);
     document.getElementById("deletePage").addEventListener("click", deletePage);
+    prevPageButton.addEventListener("click", () => navigateToPage(activePageIndex - 1));
+    nextPageButton.addEventListener("click", () => navigateToPage(activePageIndex + 1));
     document.getElementById("saveButton").addEventListener("click", () => saveLibrary(true));
     document.getElementById("exportButton").addEventListener("click", () => window.print());
     document.getElementById("exportHtmlButton").addEventListener("click", exportSingleHtml);
@@ -2685,8 +2785,8 @@ APP_HTML = r"""<!doctype html>
       setView("editor", false);
       saveLibrary();
       render();
-      albumEl.classList.add("opening");
-      setTimeout(() => albumEl.classList.remove("opening"), 760);
+      playBookOpenSound();
+      animateBookOpen();
     }
 
     function openAlbumFromSetup() {
@@ -2699,8 +2799,8 @@ APP_HTML = r"""<!doctype html>
       setView("editor", false);
       saveLibrary();
       render();
-      albumEl.classList.add("opening");
-      setTimeout(() => albumEl.classList.remove("opening"), 760);
+      playBookOpenSound();
+      animateBookOpen();
     }
 
     function duplicateAlbum() {
@@ -2719,6 +2819,8 @@ APP_HTML = r"""<!doctype html>
       saveLibrary();
       setView("editor", false);
       render();
+      playBookOpenSound();
+      animateBookOpen();
     }
 
     function updateAlbumOptions() {
@@ -2918,12 +3020,15 @@ APP_HTML = r"""<!doctype html>
           draftAlbum = null;
           album = activeAlbum();
           activePageIndex = 0;
+          selectedPageIndex = 0;
           selectedPhotoIndex = null;
           selectedStickerId = null;
           selectedTextId = null;
           setView("editor", false);
           saveLibrary();
           render();
+          playBookOpenSound();
+          animateBookOpen();
         });
       });
       libraryGrid.querySelectorAll("[data-delete-album]").forEach((button) => {
@@ -2973,6 +3078,7 @@ APP_HTML = r"""<!doctype html>
         button.classList.toggle("active", button.dataset.orientation === album.orientation);
       });
       renderTabs();
+      renderPageNavigation();
       renderTextStyleControls();
       renderPage();
     }
@@ -2985,17 +3091,101 @@ APP_HTML = r"""<!doctype html>
       `).join("");
       pageTabs.querySelectorAll("[data-page]").forEach((button) => {
         button.addEventListener("click", () => {
-          activePageIndex = Number(button.dataset.page);
-          selectedPageIndex = activePageIndex;
-          selectedPhotoIndex = null;
-          selectedStickerId = null;
-          selectedTextId = null;
-          render();
+          navigateToPage(Number(button.dataset.page));
         });
       });
     }
 
+    function renderPageNavigation() {
+      prevPageButton.disabled = activePageIndex <= 0;
+      nextPageButton.disabled = activePageIndex >= album.pages.length - 1;
+    }
+
+    function navigateToPage(index) {
+      const target = clamp(index, 0, album.pages.length - 1);
+      if (target === activePageIndex) return;
+      const direction = target > activePageIndex ? "next" : "prev";
+      activePageIndex = target;
+      selectedPageIndex = activePageIndex;
+      selectedPhotoIndex = null;
+      selectedStickerId = null;
+      selectedTextId = null;
+      playPageTurnSound(direction);
+      render();
+      animatePageTurn(direction);
+    }
+
     function renderPageControls() {}
+
+    function animateBookOpen() {
+      albumEl.classList.remove("opening");
+      void albumEl.offsetWidth;
+      albumEl.classList.add("opening");
+      setTimeout(() => albumEl.classList.remove("opening"), 860);
+    }
+
+    function animatePageTurn(direction) {
+      const className = direction === "prev" ? "turn-prev" : "turn-next";
+      albumPage.classList.remove("turn-prev", "turn-next");
+      void albumPage.offsetWidth;
+      albumPage.classList.add(className);
+      setTimeout(() => albumPage.classList.remove(className), 560);
+    }
+
+    function getAudioContext() {
+      if (!window.AudioContext && !window.webkitAudioContext) return null;
+      audioContext = audioContext ?? new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === "suspended") audioContext.resume();
+      return audioContext;
+    }
+
+    function playPageTurnSound(direction = "next") {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const duration = 0.24;
+      const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < data.length; i += 1) {
+        const progress = i / data.length;
+        const sweep = direction === "next" ? progress : 1 - progress;
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - progress, 1.8) * (0.18 + sweep * 0.16);
+      }
+      const source = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      source.buffer = buffer;
+      filter.type = "highpass";
+      filter.frequency.setValueAtTime(direction === "next" ? 520 : 420, now);
+      filter.frequency.exponentialRampToValueAtTime(direction === "next" ? 1800 : 1200, now + duration);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.12, now + 0.035);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      source.start(now);
+      source.stop(now + duration);
+    }
+
+    function playBookOpenSound() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      playPageTurnSound("next");
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(110, now + 0.08);
+      oscillator.frequency.exponentialRampToValueAtTime(68, now + 0.38);
+      gain.gain.setValueAtTime(0.0001, now + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.09, now + 0.14);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+      oscillator.connect(gain);
+      gain.connect(ctx.destination);
+      oscillator.start(now + 0.08);
+      oscillator.stop(now + 0.44);
+    }
 
     function selectedTextBox() {
       return selectedTextId === null ? null : selectedPage().textBoxes?.[selectedTextId] ?? null;
