@@ -904,40 +904,91 @@ APP_HTML = r"""<!doctype html>
     }
 
     .album-page.turn-next .book-page.right {
-      animation: turnRightPage 520ms cubic-bezier(.2,.74,.25,1) both;
+      animation: turnRightPage 980ms cubic-bezier(.16,.62,.18,1) both;
       transform-origin: left center;
+      transform-style: preserve-3d;
+      will-change: transform, filter, box-shadow;
     }
 
     .album-page.turn-prev .book-page.left {
-      animation: turnLeftPage 520ms cubic-bezier(.2,.74,.25,1) both;
+      animation: turnLeftPage 980ms cubic-bezier(.16,.62,.18,1) both;
       transform-origin: right center;
+      transform-style: preserve-3d;
+      will-change: transform, filter, box-shadow;
+    }
+
+    .album-page.turn-next .book-page.right::after,
+    .album-page.turn-prev .book-page.left::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.46), transparent 28%, rgba(78,54,35,.22) 74%, transparent),
+        radial-gradient(ellipse at 50% 50%, transparent 0 58%, rgba(84,58,38,.18) 82%, transparent 100%);
+      mix-blend-mode: multiply;
+      animation: paperSheen 980ms ease both;
     }
 
     @keyframes turnRightPage {
       0% {
-        transform: perspective(1200px) rotateY(-20deg);
-        filter: brightness(.94);
+        transform: perspective(1400px) rotateY(-58deg) translateX(-7%) skewY(-1.8deg);
+        filter: brightness(.88) saturate(.96);
+        box-shadow: -38px 0 54px rgba(56, 37, 23, .22);
       }
-      55% {
-        box-shadow: -22px 0 38px rgba(56, 37, 23, .18);
+      38% {
+        transform: perspective(1400px) rotateY(-32deg) translateX(-3%) skewY(-.8deg);
+        filter: brightness(1.03);
+        box-shadow: -30px 0 46px rgba(56, 37, 23, .2);
+      }
+      72% {
+        transform: perspective(1400px) rotateY(-9deg) translateX(-.7%) skewY(.2deg);
+        filter: brightness(1.01);
+        box-shadow: -14px 0 28px rgba(56, 37, 23, .14);
       }
       100% {
-        transform: perspective(1200px) rotateY(0);
+        transform: perspective(1400px) rotateY(0) translateX(0) skewY(0);
         filter: brightness(1);
+        box-shadow: inset 0 0 0 1px rgba(69, 49, 32, 0.1);
       }
     }
 
     @keyframes turnLeftPage {
       0% {
-        transform: perspective(1200px) rotateY(20deg);
-        filter: brightness(.94);
+        transform: perspective(1400px) rotateY(58deg) translateX(7%) skewY(1.8deg);
+        filter: brightness(.88) saturate(.96);
+        box-shadow: 38px 0 54px rgba(56, 37, 23, .22);
       }
-      55% {
-        box-shadow: 22px 0 38px rgba(56, 37, 23, .18);
+      38% {
+        transform: perspective(1400px) rotateY(32deg) translateX(3%) skewY(.8deg);
+        filter: brightness(1.03);
+        box-shadow: 30px 0 46px rgba(56, 37, 23, .2);
+      }
+      72% {
+        transform: perspective(1400px) rotateY(9deg) translateX(.7%) skewY(-.2deg);
+        filter: brightness(1.01);
+        box-shadow: 14px 0 28px rgba(56, 37, 23, .14);
       }
       100% {
-        transform: perspective(1200px) rotateY(0);
+        transform: perspective(1400px) rotateY(0) translateX(0) skewY(0);
         filter: brightness(1);
+        box-shadow: inset 0 0 0 1px rgba(69, 49, 32, 0.1);
+      }
+    }
+
+    @keyframes paperSheen {
+      0% {
+        opacity: .34;
+        transform: translateX(-18%);
+      }
+      42% {
+        opacity: .48;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(16%);
       }
     }
 
@@ -3129,7 +3180,7 @@ APP_HTML = r"""<!doctype html>
       albumPage.classList.remove("turn-prev", "turn-next");
       void albumPage.offsetWidth;
       albumPage.classList.add(className);
-      setTimeout(() => albumPage.classList.remove(className), 560);
+      setTimeout(() => albumPage.classList.remove(className), 1040);
     }
 
     function getAudioContext() {
@@ -3143,29 +3194,48 @@ APP_HTML = r"""<!doctype html>
       const ctx = getAudioContext();
       if (!ctx) return;
       const now = ctx.currentTime;
-      const duration = 0.24;
+      const duration = 0.82;
       const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * duration), ctx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < data.length; i += 1) {
         const progress = i / data.length;
         const sweep = direction === "next" ? progress : 1 - progress;
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - progress, 1.8) * (0.18 + sweep * 0.16);
+        const slowRise = Math.min(1, progress / 0.18);
+        const longTail = Math.pow(1 - progress, 1.15);
+        const softFlutter = Math.sin(progress * Math.PI * 9) * 0.03;
+        data[i] = (Math.random() * 2 - 1) * slowRise * longTail * (0.13 + sweep * 0.11 + softFlutter);
       }
       const source = ctx.createBufferSource();
       const filter = ctx.createBiquadFilter();
       const gain = ctx.createGain();
       source.buffer = buffer;
-      filter.type = "highpass";
-      filter.frequency.setValueAtTime(direction === "next" ? 520 : 420, now);
-      filter.frequency.exponentialRampToValueAtTime(direction === "next" ? 1800 : 1200, now + duration);
+      filter.type = "bandpass";
+      filter.Q.setValueAtTime(0.8, now);
+      filter.frequency.setValueAtTime(direction === "next" ? 340 : 290, now);
+      filter.frequency.exponentialRampToValueAtTime(direction === "next" ? 1320 : 1040, now + duration * 0.72);
+      filter.frequency.exponentialRampToValueAtTime(520, now + duration);
       gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(0.12, now + 0.035);
+      gain.gain.exponentialRampToValueAtTime(0.065, now + 0.16);
+      gain.gain.exponentialRampToValueAtTime(0.045, now + 0.52);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
       source.connect(filter);
       filter.connect(gain);
       gain.connect(ctx.destination);
       source.start(now);
       source.stop(now + duration);
+
+      const bump = ctx.createOscillator();
+      const bumpGain = ctx.createGain();
+      bump.type = "triangle";
+      bump.frequency.setValueAtTime(92, now + 0.58);
+      bump.frequency.exponentialRampToValueAtTime(58, now + 0.76);
+      bumpGain.gain.setValueAtTime(0.0001, now + 0.56);
+      bumpGain.gain.exponentialRampToValueAtTime(0.035, now + 0.62);
+      bumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.82);
+      bump.connect(bumpGain);
+      bumpGain.connect(ctx.destination);
+      bump.start(now + 0.56);
+      bump.stop(now + 0.84);
     }
 
     function playBookOpenSound() {
