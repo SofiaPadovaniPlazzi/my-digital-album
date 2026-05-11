@@ -2,35 +2,43 @@
 
 My Digital Album is a local web app for creating a digital photo album from pictures on your device.
 
-It runs on your computer and opens in your browser. You can choose an album style, upload photos into page slots, add titles, dates, memory text, and decorate pages with cute built-in stickers.
+It runs on your computer and opens in your browser. You can choose an album style, upload photos onto the page, add titles, dates, movable text boxes, and decorate pages with cute built-in stickers.
 
 ## Features
 
-- Create an album from a setup page.
 - Start from a home/library page and click `+` to create a new album.
-- Move through separate connected views: Home, Setup, and Album.
-- Preview the cover as a book before opening the album.
+- Move through separate connected views: Home and Album.
+- Configure album options from the Album sidebar.
+- Collapse Album Options and Page Tools to keep the workspace compact.
 - Open the album into a two-page book spread.
 - Choose album orientation: vertical or horizontal.
+- Choose page size: small, medium, or large.
 - Choose the paper color.
 - Choose the outside cover color.
 - Choose the cover pattern color.
-- Pick how many photos each page should contain, from 1 to 4.
-- Pick a frame style: no frame, simple frame, photo corners, or polaroid.
-- Upload pictures from your device into page spaces.
+- Add as many photos as you want to a page.
+- Pick a frame style: no frame, simple frame, photo corners, polaroid, soft shadow, washi tape, or rounded scrapbook.
+- Upload pictures from your device onto the page.
 - Add a main album title.
 - Add page titles.
 - Add dates.
-- Add picture captions.
-- Add free text memories on each page.
+- Add optional picture captions with an eye toggle.
+- Add `@mentions` to photos for people, places, or keywords.
+- Add movable text boxes on each page.
+- Choose font, color, and size for selected text boxes.
 - Add cute custom stickers drawn inside the app.
-- Move and resize stickers on the album page.
-- Drag photos between page slots.
-- Drag image files from your device directly onto photo slots.
+- Add cute word stickers such as Wow!, Love, Friends, Yay!, Best day, and XOXO.
+- Move, resize, rotate, and delete stickers directly on the album page.
+- Move stickers between adjacent pages.
+- Move, resize, rotate, and delete photos directly on the album page.
+- Move, resize, rotate, and delete text boxes directly on the album page.
+- Drag image files from your device directly onto the left or right album page.
+- Search by `@mention`, caption, file name, album, or page title.
+- Open a search result directly to the correct album and page.
+- Choose app themes from Settings: neutral, pink, light blue, sunrise, twilight, or dark.
 - Choose from 16 cover patterns: real book textures, simple patterns, scenarios, and silhouettes.
 - Use generated book-cover designs for albums in the library.
 - Choose page background patterns.
-- Use crop controls for each photo frame.
 - Manage multiple albums from the library page.
 - Add an optional 4 digit password lock.
 - Add and delete pages.
