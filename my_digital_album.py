@@ -1931,10 +1931,6 @@ APP_HTML = r"""<!doctype html>
         </div>
       </details>
 
-      <section class="panel editor-panel">
-        <h2>Export</h2>
-        <button class="secondary" id="exportHtmlButton" type="button">Export HTML</button>
-      </section>
     </aside>
 
     <main>
@@ -2035,6 +2031,10 @@ APP_HTML = r"""<!doctype html>
       <div class="field">
         <label>Password</label>
         <button class="secondary" id="passwordButton" type="button">Password</button>
+      </div>
+      <div class="field">
+        <label>Export</label>
+        <button class="secondary" id="exportHtmlButton" type="button">Export HTML</button>
       </div>
     </section>
   </div>
@@ -2254,6 +2254,56 @@ APP_HTML = r"""<!doctype html>
         id: "star",
         label: "Star",
         art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="m32 7 7 16 17 2-13 11 4 17-15-9-15 9 4-17L8 25l17-2Z" fill="#ffcf6a" stroke="#bf7c24" stroke-width="2" stroke-linejoin="round"/><path d="M24 31c4 4 12 4 16 0" fill="none" stroke="#8b5b24" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "camera",
+        label: "Camera",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><rect x="9" y="19" width="46" height="34" rx="8" fill="#f4f0ea" stroke="#7a6657" stroke-width="2.4"/><path d="M22 19 26 12h13l4 7Z" fill="#d7c4b5" stroke="#7a6657" stroke-width="2.4" stroke-linejoin="round"/><circle cx="32" cy="36" r="10" fill="#9ec7df" stroke="#4c728b" stroke-width="2.4"/><circle cx="32" cy="36" r="4" fill="#f7fbff"/><circle cx="49" cy="26" r="3" fill="#ff9aaa"/></svg>`
+      },
+      {
+        id: "heart",
+        label: "Heart",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 54C18 44 10 35 10 24c0-8 6-14 14-14 4 0 7 2 8 5 2-3 5-5 9-5 8 0 14 6 14 14 0 11-8 20-23 30Z" fill="#ff719a" stroke="#b84265" stroke-width="2.4" stroke-linejoin="round"/><path d="M20 22c1-4 4-6 8-6" fill="none" stroke="#ffd6e2" stroke-width="3" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "sun",
+        label: "Sun",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#c7861e" stroke-width="3" stroke-linecap="round"><path d="M32 5v8M32 51v8M5 32h8M51 32h8M13 13l6 6M45 45l6 6M51 13l-6 6M19 45l-6 6"/></g><circle cx="32" cy="32" r="16" fill="#ffd36e" stroke="#c7861e" stroke-width="2.4"/><path d="M24 35c4 4 12 4 16 0" fill="none" stroke="#8c5b19" stroke-width="2.4" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "map-pin",
+        label: "Map pin",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 57S16 39 16 25c0-10 7-18 16-18s16 8 16 18c0 14-16 32-16 32Z" fill="#ff8a68" stroke="#aa513b" stroke-width="2.4" stroke-linejoin="round"/><circle cx="32" cy="25" r="7" fill="#fff3df" stroke="#aa513b" stroke-width="2"/></svg>`
+      },
+      {
+        id: "cake",
+        label: "Cake",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M16 30h32v23H16Z" fill="#ffc4d6" stroke="#9b5a69" stroke-width="2.4" stroke-linejoin="round"/><path d="M16 37c5 5 10 5 16 0 6 5 11 5 16 0" fill="none" stroke="#fff3fa" stroke-width="4" stroke-linecap="round"/><path d="M23 30v-7M32 30v-7M41 30v-7" stroke="#9b5a69" stroke-width="2.2" stroke-linecap="round"/><path d="M23 18c-3-3 0-6 0-6s3 3 0 6ZM32 18c-3-3 0-6 0-6s3 3 0 6ZM41 18c-3-3 0-6 0-6s3 3 0 6Z" fill="#ffd45f"/></svg>`
+      },
+      {
+        id: "music",
+        label: "Music",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M39 12v30a8 8 0 1 1-5-8V18l19-4v23a8 8 0 1 1-5-8V10Z" fill="#a890ff" stroke="#6253a8" stroke-width="2.4" stroke-linejoin="round"/><circle cx="26" cy="42" r="7" fill="#d9ccff"/><circle cx="46" cy="37" r="7" fill="#d9ccff"/></svg>`
+      },
+      {
+        id: "coffee",
+        label: "Coffee",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M15 24h31v17c0 8-6 14-14 14h-3c-8 0-14-6-14-14Z" fill="#fff1dc" stroke="#8a6244" stroke-width="2.4"/><path d="M46 29h3a7 7 0 0 1 0 14h-3" fill="none" stroke="#8a6244" stroke-width="2.4"/><path d="M24 16c-3-4 3-5 0-9M34 16c-3-4 3-5 0-9" fill="none" stroke="#bc8c68" stroke-width="2.4" stroke-linecap="round"/><path d="M21 34h20" stroke="#d6a076" stroke-width="3" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "plane",
+        label: "Plane",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M57 9 42 55l-11-20-21-9Z" fill="#bfe8ff" stroke="#4f8aaa" stroke-width="2.4" stroke-linejoin="round"/><path d="M31 35 57 9 22 31" fill="none" stroke="#4f8aaa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="m31 35-6 14 9-8" fill="#8fd4f4" stroke="#4f8aaa" stroke-width="2.2" stroke-linejoin="round"/></svg>`
+      },
+      {
+        id: "leaf",
+        label: "Leaf",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M52 11C29 12 13 25 13 43c0 7 5 12 12 12 18 0 30-18 27-44Z" fill="#91d59b" stroke="#4f8d57" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 49c9-16 20-25 34-38M30 39c-4 0-8-1-12-4M38 29c-1-5-3-8-6-11" fill="none" stroke="#4f8d57" stroke-width="2.2" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "crown",
+        label: "Crown",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 24 25 35l7-20 8 20 11-11-4 27H17Z" fill="#ffd76a" stroke="#a87419" stroke-width="2.4" stroke-linejoin="round"/><circle cx="13" cy="24" r="4" fill="#ff9aaa" stroke="#a87419" stroke-width="2"/><circle cx="32" cy="15" r="4" fill="#ff9aaa" stroke="#a87419" stroke-width="2"/><circle cx="51" cy="24" r="4" fill="#ff9aaa" stroke="#a87419" stroke-width="2"/></svg>`
       },
       {
         id: "wow",
@@ -2503,6 +2553,7 @@ APP_HTML = r"""<!doctype html>
             effect: photo.effect ?? "none",
             mediaType: photo.mediaType ?? (String(photo.src ?? "").startsWith("data:video") ? "video" : "image"),
             loopInView: photo.loopInView ?? true,
+            muted: photo.muted ?? true,
             x: photo.x ?? 14,
             y: photo.y ?? 24,
             width: photo.width ?? 210,
@@ -3034,6 +3085,15 @@ APP_HTML = r"""<!doctype html>
         });
       });
 
+      albumPage.querySelectorAll("[data-video-muted]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const index = Number(input.dataset.videoMuted);
+          pageAt(eventPageIndex({ currentTarget: input })).photos[index].muted = input.checked;
+          saveLibrary();
+          renderPage();
+        });
+      });
+
       albumPage.querySelectorAll("[data-video-toggle]").forEach((button) => {
         button.addEventListener("click", (event) => {
           event.preventDefault();
@@ -3260,6 +3320,10 @@ APP_HTML = r"""<!doctype html>
                 <input type="checkbox" data-video-loop="${index}" ${(photo.loopInView ?? true) ? "checked" : ""}>
                 <span>Loop in View mode</span>
               </label>
+              <label class="video-loop">
+                <input type="checkbox" data-video-muted="${index}" ${(photo.muted ?? true) ? "checked" : ""}>
+                <span>Mute video</span>
+              </label>
             ` : ""}
           </div>
           <span class="photo-actions">
@@ -3290,8 +3354,12 @@ APP_HTML = r"""<!doctype html>
     function mediaMarkup(photo, index, editable) {
       const position = `object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1}) rotate(${photo.rotate ?? 0}deg)`;
       if (photo.mediaType === "video") {
+        const mutedAttr = (photo.muted ?? true) ? "muted" : "";
+        const viewAttrs = (photo.loopInView ?? true)
+          ? `loop ${(photo.muted ?? true) ? "autoplay muted" : "controls"} playsinline`
+          : `controls ${mutedAttr} playsinline`;
         return `
-          <video src="${photo.src}" ${editable ? "" : `${(photo.loopInView ?? true) ? "loop autoplay muted playsinline" : "controls playsinline"}`} draggable="false" style="${position}"></video>
+          <video src="${photo.src}" ${editable ? mutedAttr : viewAttrs} draggable="false" style="${position}"></video>
           ${editable ? `<button class="video-toggle" type="button" data-video-toggle="${index}" aria-label="Play or pause video"><span class="video-icon">${playIcon()}</span></button>` : ""}
         `;
       }
@@ -3360,6 +3428,7 @@ APP_HTML = r"""<!doctype html>
           zoom: 1,
           rotate: 0,
           effect: "none",
+          muted: mediaType === "video",
           x: 12 + ((count * 18) % 52),
           y: 22 + ((count * 14) % 52),
           width: album.orientation === "horizontal" ? 230 : 200,
