@@ -149,6 +149,17 @@ APP_HTML = r"""<!doctype html>
       display: none;
     }
 
+    .app.view-only {
+      grid-template-columns: 1fr;
+    }
+
+    .app.view-only aside,
+    .app.view-only .edit-only,
+    .app.view-only .direct-handle,
+    .app.view-only .photo-actions {
+      display: none;
+    }
+
     aside {
       border-right: 1px solid var(--line);
       padding: 22px;
@@ -281,6 +292,29 @@ APP_HTML = r"""<!doctype html>
 
     .segmented.three {
       grid-template-columns: repeat(3, 1fr);
+    }
+
+    .mode-switch {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(64px, 1fr));
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--field);
+    }
+
+    .mode-switch button {
+      min-height: 32px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .mode-switch button.active {
+      background: var(--ink);
+      color: var(--bg);
     }
 
     .choice, .icon-button, .primary, .secondary, .danger {
@@ -891,6 +925,18 @@ APP_HTML = r"""<!doctype html>
       margin-bottom: 16px;
     }
 
+    .page-title-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 36px;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .page-title-row.title-muted .page-title-inline {
+      opacity: 0.52;
+      border-style: dashed;
+    }
+
     .photo-grid {
       display: grid;
       gap: 14px;
@@ -1134,7 +1180,8 @@ APP_HTML = r"""<!doctype html>
     }
 
     .caption-hidden .photo-caption {
-      display: none;
+      opacity: 0.52;
+      border-style: dashed;
     }
 
     .direct-handle {
@@ -1210,6 +1257,25 @@ APP_HTML = r"""<!doctype html>
       background: transparent;
     }
 
+    .caption-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 36px;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .icon-eye {
+      width: 18px;
+      height: 18px;
+      display: block;
+      margin: auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .photo-mentions {
       min-height: 34px;
       background: rgba(255, 255, 255, 0.5);
@@ -1217,8 +1283,63 @@ APP_HTML = r"""<!doctype html>
       display: none;
     }
 
-    .page-photo.selected .photo-mentions {
+    .photo-effect {
+      min-height: 34px;
+      background: rgba(255, 255, 255, 0.5);
+      font-size: 13px;
+      display: none;
+    }
+
+    .page-photo.selected .photo-mentions,
+    .page-photo.selected .photo-effect {
       display: block;
+    }
+
+    .photo-frame.effect-bw img {
+      filter: grayscale(1) contrast(1.04);
+    }
+
+    .photo-frame.effect-soft-saturated img {
+      filter: saturate(1.22) contrast(1.04) brightness(1.03);
+    }
+
+    .photo-frame.effect-warm img {
+      filter: sepia(0.14) saturate(1.12) brightness(1.04);
+    }
+
+    .photo-frame.effect-matte img {
+      filter: contrast(0.92) saturate(0.94) brightness(1.06);
+    }
+
+    .photo-frame.effect-watermark img {
+      filter: contrast(0.98) brightness(1.04);
+      opacity: 0.86;
+    }
+
+    .photo-frame.effect-watermark::after,
+    .photo-frame.effect-sparkling::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .photo-frame.effect-watermark::after {
+      background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,.18) 0 1px, transparent 1px 18px);
+      mix-blend-mode: screen;
+    }
+
+    .photo-frame.effect-sparkling img {
+      filter: brightness(1.05) saturate(1.08);
+    }
+
+    .photo-frame.effect-sparkling::after {
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,.82) 0 2px, transparent 3px),
+        radial-gradient(circle at 78% 18%, rgba(255,244,173,.72) 0 2px, transparent 3px),
+        radial-gradient(circle at 68% 72%, rgba(255,255,255,.62) 0 1px, transparent 3px);
+      opacity: .65;
     }
 
     .page-note {
@@ -1694,11 +1815,16 @@ APP_HTML = r"""<!doctype html>
         </div>
         <div class="toolbar-actions">
           <button class="secondary" id="homeButton" type="button">Home</button>
+          <div class="mode-switch" role="group" aria-label="Album mode">
+            <button id="editModeButton" class="active" type="button">Edit</button>
+            <button id="viewModeButton" type="button">View</button>
+          </div>
           <input id="searchInput" type="search" placeholder="Search @person, caption, place...">
           <button class="secondary" id="searchButton" type="button">Search</button>
           <button class="secondary" id="settingsButton" type="button" aria-label="Settings">⚙</button>
+          <button class="secondary edit-only" id="hideSetupButton" type="button">Hide setup</button>
           <button class="secondary" id="exportButton" type="button">Print / Save PDF</button>
-          <button class="danger" id="resetButton" type="button">Reset</button>
+          <button class="danger edit-only" id="resetButton" type="button">Reset</button>
         </div>
       </div>
 
@@ -1733,7 +1859,7 @@ APP_HTML = r"""<!doctype html>
         <section class="album vertical frame-none" id="album">
           <div class="cover-title">
             <input id="coverTitle" type="text" value="My Digital Album" aria-label="Album cover title">
-            <button class="secondary" id="saveButton" type="button">Save</button>
+            <button class="secondary edit-only" id="saveButton" type="button">Save</button>
           </div>
           <div class="page-tabs" id="pageTabs"></div>
           <article class="album-page" id="albumPage"></article>
@@ -1772,6 +1898,7 @@ APP_HTML = r"""<!doctype html>
     const storageKey = "my-digital-album-library-v2";
     const sessionKey = "my-digital-album-unlocked";
     const themeKey = "my-digital-album-theme";
+    const modeKey = "my-digital-album-editor-mode";
     const coverPatterns = [
       {
         id: "cloth",
@@ -1938,8 +2065,8 @@ APP_HTML = r"""<!doctype html>
       plain: "linear-gradient(transparent, transparent)",
       dots: "radial-gradient(circle, rgba(91,67,45,.14) 0 1px, transparent 1.5px) 0 0 / 18px 18px",
       grid: "linear-gradient(rgba(91,67,45,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(91,67,45,.09) 1px, transparent 1px)",
-      hearts: "radial-gradient(circle at 40% 42%, rgba(255,154,174,.22) 0 5px, transparent 6px), radial-gradient(circle at 60% 42%, rgba(255,154,174,.22) 0 5px, transparent 6px), linear-gradient(45deg, transparent 43%, rgba(255,154,174,.2) 44% 56%, transparent 57%)",
-      pressed: "radial-gradient(ellipse at 18% 22%, rgba(126,190,143,.18) 0 18px, transparent 19px), radial-gradient(ellipse at 82% 76%, rgba(255,155,193,.14) 0 20px, transparent 21px)"
+      hearts: "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2252%22 height=%2252%22 viewBox=%220 0 52 52%22%3E%3Cpath d=%22M16 18c0-4 5-6 8-2 3-4 8-2 8 2 0 5-8 10-8 10s-8-5-8-10Z%22 fill=%22%23ff9aae%22 fill-opacity=%22.23%22/%3E%3Cpath d=%22M34 35c0-2.8 3.5-4.2 5.4-1.4 2-2.8 5.5-1.4 5.5 1.4 0 3.6-5.5 7-5.5 7s-5.4-3.4-5.4-7Z%22 fill=%22%23ff9aae%22 fill-opacity=%22.18%22/%3E%3C/svg%3E') 0 0 / 52px 52px repeat",
+      pressed: "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2292%22 height=%2292%22 viewBox=%220 0 92 92%22%3E%3Cg fill=%22none%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M24 68c9-14 14-27 13-44%22 stroke=%22%2375a67b%22 stroke-opacity=%22.22%22 stroke-width=%222%22/%3E%3Cpath d=%22M36 38c-12-3-18 3-21 12 10 3 18-1 21-12Z%22 fill=%22%2375a67b%22 fill-opacity=%22.16%22/%3E%3Cpath d=%22M38 30c7-9 16-9 24-4-5 9-13 12-24 4Z%22 fill=%22%2375a67b%22 fill-opacity=%22.14%22/%3E%3Cg fill=%22%23ef9ab3%22 fill-opacity=%22.18%22 stroke=%22%23d77f9d%22 stroke-opacity=%22.16%22%3E%3Cellipse cx=%2262%22 cy=%2258%22 rx=%225%22 ry=%229%22 transform=%22rotate(28 62 58)%22/%3E%3Cellipse cx=%2270%22 cy=%2260%22 rx=%225%22 ry=%229%22 transform=%22rotate(-25 70 60)%22/%3E%3Cellipse cx=%2266%22 cy=%2250%22 rx=%225%22 ry=%229%22/%3E%3Ccircle cx=%2266%22 cy=%2258%22 r=%223%22 fill=%22%23e5be63%22 fill-opacity=%22.26%22/%3E%3C/g%3E%3Cpath d=%22M64 67c-3 6-8 10-14 13%22 stroke=%22%2375a67b%22 stroke-opacity=%22.18%22 stroke-width=%221.8%22/%3E%3C/g%3E%3C/svg%3E') 0 0 / 92px 92px repeat"
     };
     const stickers = [
       {
@@ -2040,6 +2167,7 @@ APP_HTML = r"""<!doctype html>
     let library = loadLibrary();
     let album = activeAlbum();
     let activeView = "library";
+    let editorMode = localStorage.getItem(modeKey) === "view" ? "view" : "edit";
     let draftAlbum = null;
     let setupHidden = localStorage.getItem(`${storageKey}-setup-hidden`) === "true";
     let activePageIndex = 0;
@@ -2086,12 +2214,16 @@ APP_HTML = r"""<!doctype html>
     const searchOverlay = document.getElementById("searchOverlay");
     const stickerOverlay = document.getElementById("stickerOverlay");
     const settingsOverlay = document.getElementById("settingsOverlay");
+    const editModeButton = document.getElementById("editModeButton");
+    const viewModeButton = document.getElementById("viewModeButton");
 
     document.getElementById("createAlbum").addEventListener("click", openAlbumFromSetup);
     document.getElementById("openAlbumButton").addEventListener("click", openAlbumFromSetup);
     document.getElementById("backHomeButton").addEventListener("click", () => setView("library"));
     document.getElementById("duplicateAlbum").addEventListener("click", duplicateAlbum);
     document.getElementById("homeButton").addEventListener("click", () => setView("library"));
+    editModeButton.addEventListener("click", () => setEditorMode("edit"));
+    viewModeButton.addEventListener("click", () => setEditorMode("view"));
     document.getElementById("searchButton").addEventListener("click", () => openSearch(searchInput.value));
     document.getElementById("settingsButton").addEventListener("click", openSettings);
     document.getElementById("closeSettings").addEventListener("click", closeSettings);
@@ -2157,6 +2289,7 @@ APP_HTML = r"""<!doctype html>
     function blankPage() {
       return {
         title: "",
+        titleVisible: true,
         date: "",
         text: "",
         photos: [],
@@ -2208,12 +2341,14 @@ APP_HTML = r"""<!doctype html>
         pages: saved?.pages?.length ? saved.pages.map((page) => ({
           ...blankPage(),
           ...page,
+          titleVisible: page.titleVisible ?? true,
           photos: (page.photos ?? []).map((photo) => photo ? ({
             ...photo,
             cropX: photo.cropX ?? 50,
             cropY: photo.cropY ?? 50,
             zoom: photo.zoom ?? 1,
             rotate: photo.rotate ?? 0,
+            effect: photo.effect ?? "none",
             x: photo.x ?? 14,
             y: photo.y ?? 24,
             width: photo.width ?? 210,
@@ -2360,15 +2495,34 @@ APP_HTML = r"""<!doctype html>
       activeView = view;
       app.className = `app ${view}-mode`;
       app.classList.toggle("setup-hidden", setupHidden && view === "editor");
+      app.classList.toggle("view-only", view === "editor" && editorMode === "view");
       libraryTab.classList.toggle("active", view === "library");
       setupTab.classList.toggle("active", false);
       editorTab.classList.toggle("active", view === "editor");
       libraryView.classList.toggle("active", view === "library");
       setupView.classList.toggle("active", false);
       editorView.classList.toggle("active", view === "editor");
-      document.getElementById("modeTitle").textContent = view === "library" ? "Home" : "Open album";
-      document.getElementById("helperText").textContent = view === "library" ? "Click + to create a new album, or open an existing cover." : "Edit the open album pages.";
+      updateModeControls();
+      document.getElementById("modeTitle").textContent = view === "library" ? "Home" : editorMode === "view" ? "Album view" : "Open album";
+      document.getElementById("helperText").textContent = view === "library" ? "Click + to create a new album, or open an existing cover." : editorMode === "view" ? "View the album without editing tools." : "Edit the open album pages.";
       if (shouldRender) render();
+    }
+
+    function setEditorMode(mode) {
+      editorMode = mode === "view" ? "view" : "edit";
+      localStorage.setItem(modeKey, editorMode);
+      selectedPhotoIndex = null;
+      selectedStickerId = null;
+      selectedTextId = null;
+      setView(activeView, false);
+      render();
+    }
+
+    function updateModeControls() {
+      editModeButton.classList.toggle("active", editorMode === "edit");
+      viewModeButton.classList.toggle("active", editorMode === "view");
+      editModeButton.setAttribute("aria-pressed", String(editorMode === "edit"));
+      viewModeButton.setAttribute("aria-pressed", String(editorMode === "view"));
     }
 
     function setSetupHidden(hidden) {
@@ -2547,6 +2701,7 @@ APP_HTML = r"""<!doctype html>
       document.documentElement.style.setProperty("--cover", album.coverColor);
       albumTitle.value = album.title;
       coverTitle.value = album.title;
+      coverTitle.readOnly = editorMode === "view";
       paperColor.value = album.paperColor;
       coverColor.value = album.coverColor;
       patternColor.value = album.patternColor;
@@ -2640,17 +2795,19 @@ APP_HTML = r"""<!doctype html>
     function renderPage() {
       const page = currentPage();
       const rightPage = album.pages[activePageIndex + 1] ?? null;
+      const pageMarkup = editorMode === "view" ? previewPageMarkup : editablePageMarkup;
       albumPage.style.setProperty("--page-pattern", pagePatterns[album.pagePattern] ?? pagePatterns.plain);
       albumPage.innerHTML = `
         <div class="book-spread">
           <section class="book-page left ${selectedPageIndex === activePageIndex ? "active-edit" : ""}" data-page-index="${activePageIndex}">
-            ${editablePageMarkup(page, activePageIndex)}
+            ${pageMarkup(page, activePageIndex)}
           </section>
           <section class="book-page right ${rightPage ? "" : "empty-page"} ${selectedPageIndex === activePageIndex + 1 ? "active-edit" : ""}" ${rightPage ? `data-page-index="${activePageIndex + 1}"` : ""}>
-            ${rightPage ? editablePageMarkup(rightPage, activePageIndex + 1) : "<span>Add a page to continue the album.</span>"}
+            ${rightPage ? pageMarkup(rightPage, activePageIndex + 1) : "<span>Add a page to continue the album.</span>"}
           </section>
         </div>
       `;
+      if (editorMode === "view") return;
 
       albumPage.querySelectorAll("[data-page-field]").forEach((input) => {
         input.addEventListener("input", () => {
@@ -2660,6 +2817,17 @@ APP_HTML = r"""<!doctype html>
           saveLibrary();
           renderPageControls();
           renderTabs();
+        });
+      });
+
+      albumPage.querySelectorAll("[data-toggle-page-title]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const page = pageAt(eventPageIndex(event));
+          page.titleVisible = !(page.titleVisible ?? true);
+          selectedPageIndex = eventPageIndex(event);
+          saveLibrary();
+          renderPage();
         });
       });
 
@@ -2680,6 +2848,15 @@ APP_HTML = r"""<!doctype html>
           const index = Number(input.dataset.photoTags);
           pageAt(eventPageIndex({ currentTarget: input })).photos[index].tags = normalizeMentions(input.value);
           saveLibrary();
+        });
+      });
+
+      albumPage.querySelectorAll("[data-photo-effect]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const index = Number(input.dataset.photoEffect);
+          pageAt(eventPageIndex({ currentTarget: input })).photos[index].effect = input.value;
+          saveLibrary();
+          renderPage();
         });
       });
 
@@ -2824,7 +3001,10 @@ APP_HTML = r"""<!doctype html>
     function editablePageMarkup(page, pageIndex) {
       return `
         <div class="page-heading">
-          <input class="page-title-inline" type="text" value="${escapeAttribute(page.title)}" placeholder="Page title" data-page-field="title">
+          <div class="page-title-row ${(page.titleVisible ?? true) ? "" : "title-muted"}">
+            <input class="page-title-inline" type="text" value="${escapeAttribute(page.title)}" placeholder="Page title" data-page-field="title">
+            <button class="mini-button" type="button" data-toggle-page-title="${pageIndex}" title="${(page.titleVisible ?? true) ? "Hide page title" : "Show page title"}">${eyeIcon(page.titleVisible ?? true)}</button>
+          </div>
           <input type="date" value="${escapeAttribute(page.date)}" data-page-field="date">
         </div>
         ${page.photos.map((photo, index) => photo ? photoObjectMarkup(photo, index, pageIndex) : "").join("")}
@@ -2852,7 +3032,7 @@ APP_HTML = r"""<!doctype html>
       const slots = page.photos;
       return `
         <div class="page-heading">
-          <h2>${escapeHtml(page.title || "Untitled page")}</h2>
+          ${(page.titleVisible ?? true) ? `<h2>${escapeHtml(page.title || "Untitled page")}</h2>` : "<span></span>"}
           <strong>${escapeHtml(page.date)}</strong>
         </div>
         ${slots.map((photo, index) => photo ? readonlyPhotoMarkup(photo, index) : "").join("")}
@@ -2869,17 +3049,23 @@ APP_HTML = r"""<!doctype html>
 
     function photoObjectMarkup(photo, index, pageIndex) {
       const selected = selectedPageIndex === pageIndex && selectedPhotoIndex === index ? "selected" : "";
+      const effect = photo.effect ?? "none";
       return `
         <div class="page-photo ${selected} ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" draggable="true" data-photo-index="${index}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
           <div class="photo-shell">
-            <div class="photo-frame">
+            <div class="photo-frame effect-${escapeAttribute(effect)}">
               <img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}" data-move-photo="${index}" draggable="false" style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1}) rotate(${photo.rotate ?? 0}deg)">
             </div>
-            <input class="photo-caption" type="text" value="${escapeAttribute(photo.caption ?? "")}" placeholder="Picture title or caption" data-caption="${index}">
+            <div class="caption-row">
+              <input class="photo-caption" type="text" value="${escapeAttribute(photo.caption ?? "")}" placeholder="Picture title or caption" data-caption="${index}">
+              <button class="mini-button" type="button" data-toggle-caption="${index}" title="${(photo.captionVisible ?? true) ? "Hide caption" : "Show caption"}">${eyeIcon(photo.captionVisible ?? true)}</button>
+            </div>
             <input class="photo-mentions" type="text" value="${escapeAttribute(tagsToInput(photo.tags))}" placeholder="@people @places" data-photo-tags="${index}">
+            <select class="photo-effect" data-photo-effect="${index}" aria-label="Photo effect">
+              ${photoEffectOptions(effect)}
+            </select>
           </div>
           <span class="photo-actions">
-            <button class="mini-button" type="button" data-toggle-caption="${index}" title="${(photo.captionVisible ?? true) ? "Hide caption" : "Show caption"}">${(photo.captionVisible ?? true) ? "👁" : "⊘"}</button>
             <button class="mini-button" type="button" data-remove-photo="${index}">x</button>
           </span>
           <span class="direct-handle move-handle" data-move-photo="${index}">↕</span>
@@ -2890,10 +3076,11 @@ APP_HTML = r"""<!doctype html>
     }
 
     function readonlyPhotoMarkup(photo, index) {
+      const effect = photo.effect ?? "none";
       return `
-        <div class="page-photo" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
+        <div class="page-photo ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
           <div class="photo-shell">
-            <div class="photo-frame">
+            <div class="photo-frame effect-${escapeAttribute(effect)}">
               <img src="${photo.src}" alt="${escapeAttribute(photo.caption || "Album photo")}" draggable="false" style="object-position:${photo.cropX ?? 50}% ${photo.cropY ?? 50}%; transform:scale(${photo.zoom ?? 1}) rotate(${photo.rotate ?? 0}deg)">
             </div>
             ${(photo.captionVisible ?? true) ? `<p class="photo-caption">${escapeHtml(photo.caption ?? "")}</p>` : ""}
@@ -2901,6 +3088,25 @@ APP_HTML = r"""<!doctype html>
           </div>
         </div>
       `;
+    }
+
+    function eyeIcon(visible) {
+      return visible
+        ? `<svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="3"/></svg>`
+        : `<svg class="icon-eye" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6c2 0 3.8.7 5.2 1.6"/><path d="M21.5 12s-3.5 6-9.5 6c-2 0-3.8-.7-5.2-1.6"/><circle cx="12" cy="12" r="3"/><path d="m4 4 16 16"/></svg>`;
+    }
+
+    function photoEffectOptions(selected) {
+      const options = [
+        ["none", "No effect"],
+        ["bw", "Black & white"],
+        ["soft-saturated", "Soft saturated"],
+        ["warm", "Warm light"],
+        ["matte", "Matte"],
+        ["watermark", "Filigrana"],
+        ["sparkling", "Sparkling"]
+      ];
+      return options.map(([value, label]) => `<option value="${value}" ${selected === value ? "selected" : ""}>${label}</option>`).join("");
     }
 
     function handlePhotoUpload(input) {
@@ -2934,6 +3140,7 @@ APP_HTML = r"""<!doctype html>
           cropY: 50,
           zoom: 1,
           rotate: 0,
+          effect: "none",
           x: 12 + ((count * 18) % 52),
           y: 22 + ((count * 14) % 52),
           width: album.orientation === "horizontal" ? 230 : 200,
@@ -3319,7 +3526,7 @@ APP_HTML = r"""<!doctype html>
 
     function staticPageMarkup(page) {
       return `
-        <div class="page-heading"><h2>${escapeHtml(page.title)}</h2><strong>${escapeHtml(page.date)}</strong></div>
+        <div class="page-heading">${(page.titleVisible ?? true) ? `<h2>${escapeHtml(page.title)}</h2>` : "<span></span>"}<strong>${escapeHtml(page.date)}</strong></div>
         ${page.photos.map((photo, index) => photo ? readonlyPhotoMarkup(photo, index) : "").join("")}
         <p class="page-note">${escapeHtml(page.text)}</p>
         ${page.stickers.map((sticker) => `<span class="page-sticker" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>`).join("")}
