@@ -904,14 +904,14 @@ APP_HTML = r"""<!doctype html>
     }
 
     .album-page.turn-next .book-page.right {
-      animation: turnRightPage 980ms cubic-bezier(.16,.62,.18,1) both;
+      animation: turnRightPage 1180ms cubic-bezier(.12,.74,.18,1) both;
       transform-origin: left center;
       transform-style: preserve-3d;
       will-change: transform, filter, box-shadow;
     }
 
     .album-page.turn-prev .book-page.left {
-      animation: turnLeftPage 980ms cubic-bezier(.16,.62,.18,1) both;
+      animation: turnLeftPage 1180ms cubic-bezier(.12,.74,.18,1) both;
       transform-origin: right center;
       transform-style: preserve-3d;
       will-change: transform, filter, box-shadow;
@@ -929,27 +929,32 @@ APP_HTML = r"""<!doctype html>
         linear-gradient(90deg, rgba(255,255,255,.46), transparent 28%, rgba(78,54,35,.22) 74%, transparent),
         radial-gradient(ellipse at 50% 50%, transparent 0 58%, rgba(84,58,38,.18) 82%, transparent 100%);
       mix-blend-mode: multiply;
-      animation: paperSheen 980ms ease both;
+      animation: paperSheen 1180ms ease both;
     }
 
     @keyframes turnRightPage {
       0% {
-        transform: perspective(1400px) rotateY(-58deg) translateX(-7%) skewY(-1.8deg);
+        transform: perspective(1500px) rotateY(-52deg) translateX(-6%) skewY(-1.2deg);
         filter: brightness(.88) saturate(.96);
-        box-shadow: -38px 0 54px rgba(56, 37, 23, .22);
+        box-shadow: -34px 0 52px rgba(56, 37, 23, .2);
       }
-      38% {
-        transform: perspective(1400px) rotateY(-32deg) translateX(-3%) skewY(-.8deg);
-        filter: brightness(1.03);
-        box-shadow: -30px 0 46px rgba(56, 37, 23, .2);
+      30% {
+        transform: perspective(1500px) rotateY(-35deg) translateX(-3.5%) skewY(-.7deg);
+        filter: brightness(.98);
+        box-shadow: -28px 0 44px rgba(56, 37, 23, .18);
       }
-      72% {
-        transform: perspective(1400px) rotateY(-9deg) translateX(-.7%) skewY(.2deg);
+      64% {
+        transform: perspective(1500px) rotateY(-14deg) translateX(-1.2%) skewY(.1deg);
+        filter: brightness(1.02);
+        box-shadow: -16px 0 30px rgba(56, 37, 23, .13);
+      }
+      86% {
+        transform: perspective(1500px) rotateY(-4deg) translateX(-.2%) skewY(0);
         filter: brightness(1.01);
-        box-shadow: -14px 0 28px rgba(56, 37, 23, .14);
+        box-shadow: -7px 0 18px rgba(56, 37, 23, .09);
       }
       100% {
-        transform: perspective(1400px) rotateY(0) translateX(0) skewY(0);
+        transform: perspective(1500px) rotateY(0) translateX(0) skewY(0);
         filter: brightness(1);
         box-shadow: inset 0 0 0 1px rgba(69, 49, 32, 0.1);
       }
@@ -957,22 +962,27 @@ APP_HTML = r"""<!doctype html>
 
     @keyframes turnLeftPage {
       0% {
-        transform: perspective(1400px) rotateY(58deg) translateX(7%) skewY(1.8deg);
+        transform: perspective(1500px) rotateY(52deg) translateX(6%) skewY(1.2deg);
         filter: brightness(.88) saturate(.96);
-        box-shadow: 38px 0 54px rgba(56, 37, 23, .22);
+        box-shadow: 34px 0 52px rgba(56, 37, 23, .2);
       }
-      38% {
-        transform: perspective(1400px) rotateY(32deg) translateX(3%) skewY(.8deg);
-        filter: brightness(1.03);
-        box-shadow: 30px 0 46px rgba(56, 37, 23, .2);
+      30% {
+        transform: perspective(1500px) rotateY(35deg) translateX(3.5%) skewY(.7deg);
+        filter: brightness(.98);
+        box-shadow: 28px 0 44px rgba(56, 37, 23, .18);
       }
-      72% {
-        transform: perspective(1400px) rotateY(9deg) translateX(.7%) skewY(-.2deg);
+      64% {
+        transform: perspective(1500px) rotateY(14deg) translateX(1.2%) skewY(-.1deg);
+        filter: brightness(1.02);
+        box-shadow: 16px 0 30px rgba(56, 37, 23, .13);
+      }
+      86% {
+        transform: perspective(1500px) rotateY(4deg) translateX(.2%) skewY(0);
         filter: brightness(1.01);
-        box-shadow: 14px 0 28px rgba(56, 37, 23, .14);
+        box-shadow: 7px 0 18px rgba(56, 37, 23, .09);
       }
       100% {
-        transform: perspective(1400px) rotateY(0) translateX(0) skewY(0);
+        transform: perspective(1500px) rotateY(0) translateX(0) skewY(0);
         filter: brightness(1);
         box-shadow: inset 0 0 0 1px rgba(69, 49, 32, 0.1);
       }
@@ -2003,7 +2013,7 @@ APP_HTML = r"""<!doctype html>
         <p>Build a sweet photo album from your own pictures, with paper choices, frames, dates, captions, notes, and stickers.</p>
       </div>
 
-      <details class="panel setup-panel collapsible" open>
+      <details class="panel setup-panel collapsible">
         <summary>
           <h2>Album Options</h2>
           <span class="chevron">⌃</span>
@@ -2075,7 +2085,7 @@ APP_HTML = r"""<!doctype html>
         </div>
       </details>
 
-      <details class="panel editor-panel collapsible" open>
+      <details class="panel editor-panel collapsible">
         <summary>
           <h2>Page Tools</h2>
           <span class="chevron">⌃</span>
@@ -2482,8 +2492,48 @@ APP_HTML = r"""<!doctype html>
       },
       {
         id: "plane",
-        label: "Plane",
+        label: "Aereo",
         art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M57 9 42 55l-11-20-21-9Z" fill="#bfe8ff" stroke="#4f8aaa" stroke-width="2.4" stroke-linejoin="round"/><path d="M31 35 57 9 22 31" fill="none" stroke="#4f8aaa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="m31 35-6 14 9-8" fill="#8fd4f4" stroke="#4f8aaa" stroke-width="2.2" stroke-linejoin="round"/></svg>`
+      },
+      {
+        id: "suitcase",
+        label: "Valigia",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><rect x="13" y="21" width="38" height="32" rx="6" fill="#e9a06f" stroke="#8a543a" stroke-width="2.4"/><path d="M25 21v-5c0-3 2-5 5-5h4c3 0 5 2 5 5v5" fill="none" stroke="#8a543a" stroke-width="2.4" stroke-linecap="round"/><path d="M23 21v32M41 21v32" stroke="#b56d49" stroke-width="2.2"/><circle cx="23" cy="55" r="2.5" fill="#8a543a"/><circle cx="41" cy="55" r="2.5" fill="#8a543a"/><path d="M18 31h8M38 41h8" stroke="#fff1dc" stroke-width="2.4" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "route",
+        label: "Tragitto",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 50c8-22 22 2 31-19 3-8 4-14 9-19" fill="none" stroke="#6da7c5" stroke-width="4" stroke-linecap="round" stroke-dasharray="4 6"/><path d="M14 54c-5-7-6-13-2-18 6 2 9 8 2 18Z" fill="#ff8a68" stroke="#9d503d" stroke-width="2"/><path d="M50 10c7 3 10 8 9 15-7 1-12-4-9-15Z" fill="#ffd36e" stroke="#a87419" stroke-width="2"/><circle cx="14" cy="43" r="3" fill="#fff7e6"/><circle cx="53" cy="19" r="3" fill="#fff7e6"/></svg>`
+      },
+      {
+        id: "map",
+        label: "Mappa",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M9 16 24 10l16 6 15-6v38l-15 6-16-6-15 6Z" fill="#fff2c7" stroke="#8f7652" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 10v38M40 16v38" stroke="#8f7652" stroke-width="2"/><path d="M15 28c8-5 13 8 21 2 5-4 6-9 13-8" fill="none" stroke="#79aa7a" stroke-width="3" stroke-linecap="round"/><circle cx="45" cy="24" r="4" fill="#ff7c8e"/></svg>`
+      },
+      {
+        id: "beach-umbrella",
+        label: "Ombrellone",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M9 35c6-16 20-25 38-20 4 1 7 3 9 6-10-4-18 1-22 9-8-6-17-5-25 5Z" fill="#ff8a9e" stroke="#a8475c" stroke-width="2.4" stroke-linejoin="round"/><path d="M24 20c6 1 10 5 10 10M42 17c-3 3-6 8-8 13" fill="none" stroke="#fff0bd" stroke-width="3" stroke-linecap="round"/><path d="M34 30 23 57" stroke="#8a6244" stroke-width="3" stroke-linecap="round"/><path d="M17 57h20" stroke="#d6a076" stroke-width="4" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "binoculars",
+        label: "Binocolo",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 32c0-7 5-12 11-12s9 5 9 12v14H13Z" fill="#8fc5d8" stroke="#3d6f82" stroke-width="2.4"/><path d="M31 32c0-7 3-12 9-12s11 5 11 12v14H31Z" fill="#8fc5d8" stroke="#3d6f82" stroke-width="2.4"/><path d="M24 20v-5h16v5M29 31h6" stroke="#3d6f82" stroke-width="2.4" stroke-linecap="round"/><circle cx="23" cy="45" r="7" fill="#dff6ff"/><circle cx="41" cy="45" r="7" fill="#dff6ff"/></svg>`
+      },
+      {
+        id: "hiking-boot",
+        label: "Scarpa trekking",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M17 18h20l6 18 10 4c4 2 5 7 2 10H13c-4 0-6-4-4-8l5-10Z" fill="#9b6a43" stroke="#5d3c27" stroke-width="2.4" stroke-linejoin="round"/><path d="M17 18v16h25M18 28h18" fill="none" stroke="#f1d1a8" stroke-width="2.4" stroke-linecap="round"/><path d="M17 50v5M28 50v5M39 50v5M50 50v5" stroke="#5d3c27" stroke-width="2.4" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "skis",
+        label: "Sci",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M19 8c-4 16 0 31 13 48M45 8c4 16 0 31-13 48" fill="none" stroke="#6ba0c8" stroke-width="4" stroke-linecap="round"/><path d="M19 8c4 2 8 1 10-3M45 8c-4 2-8 1-10-3" fill="none" stroke="#6ba0c8" stroke-width="4" stroke-linecap="round"/><path d="M19 31h26M22 39h20" stroke="#ff8a68" stroke-width="3" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "surf",
+        label: "Surf",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M42 6c12 21 9 42-10 54C17 39 20 18 42 6Z" fill="#ffe07a" stroke="#a87319" stroke-width="2.4" stroke-linejoin="round"/><path d="M36 12c5 16 2 29-8 41" fill="none" stroke="#ff8a9e" stroke-width="3" stroke-linecap="round"/><path d="M8 48c8-6 15-6 22 0 7 6 15 6 26 0" fill="none" stroke="#65b7d8" stroke-width="4" stroke-linecap="round"/></svg>`
       },
       {
         id: "leaf",
@@ -2494,6 +2544,41 @@ APP_HTML = r"""<!doctype html>
         id: "crown",
         label: "Crown",
         art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 24 25 35l7-20 8 20 11-11-4 27H17Z" fill="#ffd76a" stroke="#a87419" stroke-width="2.4" stroke-linejoin="round"/><circle cx="13" cy="24" r="4" fill="#ff9aaa" stroke="#a87419" stroke-width="2"/><circle cx="32" cy="15" r="4" fill="#ff9aaa" stroke="#a87419" stroke-width="2"/><circle cx="51" cy="24" r="4" fill="#ff9aaa" stroke="#a87419" stroke-width="2"/></svg>`
+      },
+      {
+        id: "santa",
+        label: "Babbo Natale",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M18 25c2-12 11-18 23-15 5 1 9 4 12 8-8-1-13 1-17 8Z" fill="#e64b4b" stroke="#8e2c2c" stroke-width="2.4" stroke-linejoin="round"/><circle cx="53" cy="18" r="5" fill="#fff7ef" stroke="#8e2c2c" stroke-width="2"/><circle cx="32" cy="35" r="17" fill="#ffd5b8" stroke="#8e5d47" stroke-width="2.4"/><path d="M18 39c4 15 24 15 28 0 2 11-4 19-14 19S16 50 18 39Z" fill="#fff7ef" stroke="#8e5d47" stroke-width="2"/><path d="M25 36h.1M39 36h.1" stroke="#543224" stroke-width="4" stroke-linecap="round"/><path d="M27 45c3 2 7 2 10 0" fill="none" stroke="#543224" stroke-width="2" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "gifts",
+        label: "Regali",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="28" width="21" height="24" rx="3" fill="#ff8a9e" stroke="#9b4c5c" stroke-width="2.2"/><rect x="33" y="24" width="21" height="28" rx="3" fill="#8fc5ff" stroke="#4d75a3" stroke-width="2.2"/><path d="M20 28v24M10 37h21M44 24v28M33 35h21" stroke="#fff1b8" stroke-width="3"/><path d="M20 28c-10-6-4-13 1-6 4-8 11-2-1 6ZM44 24c-8-7-1-12 2-5 5-7 11 0-2 5Z" fill="none" stroke="#fff1b8" stroke-width="2.4" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "easter-egg",
+        label: "Uovo Pasqua",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 7c13 0 21 17 21 31 0 13-8 20-21 20s-21-7-21-20C11 24 19 7 32 7Z" fill="#f7d9ff" stroke="#9a67a8" stroke-width="2.4"/><path d="M14 35c6 4 12 4 18 0s12-4 18 0M16 45h32" fill="none" stroke="#ff9aaa" stroke-width="3" stroke-linecap="round"/><circle cx="25" cy="25" r="3" fill="#ffd76a"/><circle cx="39" cy="27" r="3" fill="#91d59b"/></svg>`
+      },
+      {
+        id: "grandma",
+        label: "Nonna",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="20" r="12" fill="#d9d4cf" stroke="#8b7f75" stroke-width="2.2"/><circle cx="32" cy="34" r="17" fill="#ffd7bd" stroke="#8b5d48" stroke-width="2.4"/><path d="M18 35c5-8 23-8 28 0" fill="#d9d4cf" stroke="#8b7f75" stroke-width="2.2"/><circle cx="25" cy="36" r="3" fill="none" stroke="#5d4234" stroke-width="2"/><circle cx="39" cy="36" r="3" fill="none" stroke="#5d4234" stroke-width="2"/><path d="M28 45c3 2 5 2 8 0" fill="none" stroke="#7d4e4e" stroke-width="2" stroke-linecap="round"/><path d="M13 58c3-10 10-15 19-15s16 5 19 15Z" fill="#b9a6e8" stroke="#6b5b9b" stroke-width="2.4"/></svg>`
+      },
+      {
+        id: "befana-stocking",
+        label: "Calza Befana",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="M22 8h22v29c0 12-9 20-21 19-10-1-15-7-12-14 3-6 10-5 15-2V8Z" fill="#e85d75" stroke="#914052" stroke-width="2.4" stroke-linejoin="round"/><path d="M22 8h22v9H22Z" fill="#fff7ef" stroke="#914052" stroke-width="2.2"/><path d="M26 28h17M21 44c6 5 12 5 18 0" stroke="#fff1b8" stroke-width="3" stroke-linecap="round"/><circle cx="36" cy="24" r="3" fill="#91d59b"/></svg>`
+      },
+      {
+        id: "wreath",
+        label: "Ghirlanda",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="18" fill="none" stroke="#69a36d" stroke-width="9"/><circle cx="32" cy="32" r="10" fill="#fffaf0"/><g fill="#e84e55"><circle cx="23" cy="18" r="3"/><circle cx="42" cy="22" r="3"/><circle cx="45" cy="42" r="3"/><circle cx="20" cy="41" r="3"/></g><path d="M26 48c3 6 9 6 12 0" fill="#ff8a9e" stroke="#9b4c5c" stroke-width="2.2" stroke-linejoin="round"/><path d="M32 47v9" stroke="#9b4c5c" stroke-width="2.2" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "child",
+        label: "Bambino",
+        art: `<svg class="sticker-svg" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="27" r="16" fill="#ffd7bd" stroke="#8b5d48" stroke-width="2.4"/><path d="M18 24c3-11 13-15 24-11 6 2 9 6 9 12-8-6-22-6-33-1Z" fill="#8b5a3c" stroke="#5d3a27" stroke-width="2.2"/><path d="M24 29h.1M40 29h.1" stroke="#543224" stroke-width="4" stroke-linecap="round"/><path d="M27 38c4 3 7 3 11 0" fill="none" stroke="#7d4e4e" stroke-width="2" stroke-linecap="round"/><path d="M14 58c3-10 10-15 18-15s15 5 18 15Z" fill="#8fc5ff" stroke="#4d75a3" stroke-width="2.4"/></svg>`
       },
       {
         id: "wow",
@@ -3180,7 +3265,7 @@ APP_HTML = r"""<!doctype html>
       albumPage.classList.remove("turn-prev", "turn-next");
       void albumPage.offsetWidth;
       albumPage.classList.add(className);
-      setTimeout(() => albumPage.classList.remove(className), 1040);
+      setTimeout(() => albumPage.classList.remove(className), 1240);
     }
 
     function getAudioContext() {
@@ -3223,19 +3308,6 @@ APP_HTML = r"""<!doctype html>
       gain.connect(ctx.destination);
       source.start(now);
       source.stop(now + duration);
-
-      const bump = ctx.createOscillator();
-      const bumpGain = ctx.createGain();
-      bump.type = "triangle";
-      bump.frequency.setValueAtTime(92, now + 0.58);
-      bump.frequency.exponentialRampToValueAtTime(58, now + 0.76);
-      bumpGain.gain.setValueAtTime(0.0001, now + 0.56);
-      bumpGain.gain.exponentialRampToValueAtTime(0.035, now + 0.62);
-      bumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.82);
-      bump.connect(bumpGain);
-      bumpGain.connect(ctx.destination);
-      bump.start(now + 0.56);
-      bump.stop(now + 0.84);
     }
 
     function playBookOpenSound() {
