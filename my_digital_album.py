@@ -350,6 +350,14 @@ APP_HTML = r"""<!doctype html>
       line-height: 1.3;
     }
 
+    .settings-note {
+      margin: -2px 0 14px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
     .segmented {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -505,7 +513,8 @@ APP_HTML = r"""<!doctype html>
 
     .library-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(190px, 220px));
+      justify-content: start;
       gap: 18px;
       width: min(980px, 100%);
     }
@@ -529,6 +538,7 @@ APP_HTML = r"""<!doctype html>
       display: grid;
       gap: 12px;
       min-height: 280px;
+      width: 100%;
       padding: 14px;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -1065,6 +1075,12 @@ APP_HTML = r"""<!doctype html>
 
     .book-page.active-edit {
       z-index: 5;
+      outline: 3px solid color-mix(in srgb, var(--accent) 70%, white);
+      outline-offset: -7px;
+    }
+
+    .app.view-only .book-page.active-edit {
+      outline: 0;
     }
 
     .book-page::before {
@@ -1207,11 +1223,13 @@ APP_HTML = r"""<!doctype html>
       outline-offset: 2px;
     }
 
-    .frame-none .photo-frame {
+    .frame-none .photo-frame,
+    .photo-frame-style-none .photo-frame {
       background: transparent;
     }
 
-    .frame-simple .photo-frame {
+    .frame-simple .photo-frame,
+    .photo-frame-style-simple .photo-frame {
       border: 9px solid #fff;
       box-shadow: 0 8px 18px rgba(61, 42, 26, 0.14);
     }
@@ -1221,7 +1239,11 @@ APP_HTML = r"""<!doctype html>
     .frame-corners .photo-slot::before,
     .frame-corners .photo-slot::after,
     .frame-corners .page-photo::before,
-    .frame-corners .page-photo::after {
+    .frame-corners .page-photo::after,
+    .photo-frame-style-corners .photo-frame::before,
+    .photo-frame-style-corners .photo-frame::after,
+    .photo-frame-style-corners::before,
+    .photo-frame-style-corners::after {
       content: "";
       position: absolute;
       z-index: 3;
@@ -1231,14 +1253,16 @@ APP_HTML = r"""<!doctype html>
       pointer-events: none;
     }
 
-    .frame-corners .photo-frame::before {
+    .frame-corners .photo-frame::before,
+    .photo-frame-style-corners .photo-frame::before {
       top: 8px;
       left: 8px;
       border-top: 3px solid;
       border-left: 3px solid;
     }
 
-    .frame-corners .photo-frame::after {
+    .frame-corners .photo-frame::after,
+    .photo-frame-style-corners .photo-frame::after {
       top: 8px;
       right: 8px;
       border-top: 3px solid;
@@ -1259,14 +1283,16 @@ APP_HTML = r"""<!doctype html>
       border-right: 3px solid;
     }
 
-    .frame-corners .page-photo::before {
+    .frame-corners .page-photo::before,
+    .photo-frame-style-corners::before {
       top: 8px;
       left: 8px;
       border-top: 3px solid;
       border-left: 3px solid;
     }
 
-    .frame-corners .page-photo::after {
+    .frame-corners .page-photo::after,
+    .photo-frame-style-corners::after {
       right: 8px;
       bottom: 76px;
       border-bottom: 3px solid;
@@ -1274,23 +1300,29 @@ APP_HTML = r"""<!doctype html>
     }
 
     .frame-polaroid .photo-slot,
-    .frame-polaroid .photo-shell {
+    .frame-polaroid .photo-shell,
+    .photo-frame-style-polaroid .photo-shell {
       background: #fffaf2;
       box-shadow: 0 8px 18px rgba(61, 42, 26, 0.13);
     }
 
-    .frame-polaroid .page-photo .photo-frame {
+    .frame-polaroid .page-photo .photo-frame,
+    .photo-frame-style-polaroid .photo-frame {
       border: 0;
       box-shadow: none;
     }
 
     .frame-shadow .photo-shell,
-    .frame-shadow .photo-frame {
+    .frame-shadow .photo-frame,
+    .photo-frame-style-shadow .photo-shell,
+    .photo-frame-style-shadow .photo-frame {
       box-shadow: 0 16px 28px rgba(61, 42, 26, 0.24);
     }
 
     .frame-tape .photo-shell::before,
-    .frame-tape .photo-shell::after {
+    .frame-tape .photo-shell::after,
+    .photo-frame-style-tape .photo-shell::before,
+    .photo-frame-style-tape .photo-shell::after {
       content: "";
       position: absolute;
       z-index: 7;
@@ -1302,19 +1334,23 @@ APP_HTML = r"""<!doctype html>
       pointer-events: none;
     }
 
-    .frame-tape .photo-shell::before {
+    .frame-tape .photo-shell::before,
+    .photo-frame-style-tape .photo-shell::before {
       top: -10px;
       left: 22px;
     }
 
-    .frame-tape .photo-shell::after {
+    .frame-tape .photo-shell::after,
+    .photo-frame-style-tape .photo-shell::after {
       right: 22px;
       bottom: -10px;
       transform: rotate(7deg);
     }
 
     .frame-scallop .photo-shell,
-    .frame-scallop .photo-frame {
+    .frame-scallop .photo-frame,
+    .photo-frame-style-scallop .photo-shell,
+    .photo-frame-style-scallop .photo-frame {
       border: 8px solid #fff;
       border-radius: 18px;
       box-shadow: 0 10px 20px rgba(61, 42, 26, 0.14);
@@ -1541,7 +1577,8 @@ APP_HTML = r"""<!doctype html>
       display: none;
     }
 
-    .photo-effect {
+    .photo-effect,
+    .photo-frame-choice {
       min-height: 34px;
       background: rgba(255, 255, 255, 0.5);
       font-size: 13px;
@@ -1561,6 +1598,7 @@ APP_HTML = r"""<!doctype html>
 
     .page-photo.selected .photo-mentions,
     .page-photo.selected .photo-effect,
+    .page-photo.selected .photo-frame-choice,
     .page-photo.selected .video-loop {
       display: block;
     }
@@ -1730,12 +1768,22 @@ APP_HTML = r"""<!doctype html>
       width: 100%;
       min-height: var(--text-height);
       resize: none;
-      background: rgba(255, 255, 255, 0.48);
+      background: var(--text-bg);
       color: var(--text-color);
-      border: 1px dashed rgba(58, 42, 31, 0.24);
+      border: 0;
       font-size: var(--text-size);
       font-family: var(--text-font);
       line-height: 1.28;
+    }
+
+    .text-bg-toggle {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
     }
 
     .word-sticker {
@@ -1800,6 +1848,33 @@ APP_HTML = r"""<!doctype html>
       color: var(--ink);
       box-shadow: var(--shadow);
       padding: 18px;
+    }
+
+    .text-tools {
+      position: fixed;
+      left: var(--text-tools-left, auto);
+      top: var(--text-tools-top, auto);
+      right: auto;
+      bottom: auto;
+      z-index: 48;
+      display: none;
+      width: min(360px, calc(100vw - 48px));
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .text-tools.visible {
+      display: grid;
+      gap: 12px;
+    }
+
+    .text-tools .toolbar {
+      margin: 0;
+      padding: 0;
     }
 
     .search-overlay.visible {
@@ -2057,18 +2132,6 @@ APP_HTML = r"""<!doctype html>
           <input id="patternColor" type="color" value="#fff4df">
         </div>
         <div class="field">
-          <label for="frameStyle">Frames</label>
-          <select id="frameStyle">
-            <option value="none">No frame</option>
-            <option value="simple">Simple frame</option>
-            <option value="corners">Photo corners</option>
-            <option value="polaroid">Polaroid</option>
-            <option value="shadow">Soft shadow</option>
-            <option value="tape">Washi tape</option>
-            <option value="scallop">Rounded scrapbook</option>
-          </select>
-        </div>
-        <div class="field">
           <label for="pagePattern">Page pattern</label>
           <select id="pagePattern">
             <option value="plain">Plain paper</option>
@@ -2099,26 +2162,6 @@ APP_HTML = r"""<!doctype html>
           <button class="secondary" id="addStickerButton" type="button">Add sticker</button>
         </div>
         <input class="hidden" id="addPhotoInput" type="file" accept="image/*,video/*" multiple>
-        <div class="field">
-          <label for="textFont">Selected text font</label>
-          <select id="textFont">
-            <option value="Inter, ui-sans-serif, system-ui, sans-serif">Clean</option>
-            <option value="'Trebuchet MS', ui-rounded, system-ui, sans-serif">Cute rounded</option>
-            <option value="Georgia, serif">Classic</option>
-            <option value="'Courier New', monospace">Typewriter</option>
-            <option value="'Brush Script MT', cursive">Handwritten</option>
-          </select>
-        </div>
-        <div class="row">
-          <div class="field">
-            <label for="textColor">Text color</label>
-            <input id="textColor" type="color" value="#302822">
-          </div>
-          <div class="field">
-            <label for="textSize">Text size</label>
-            <input id="textSize" type="range" min="11" max="48" value="18">
-          </div>
-        </div>
         <div class="row">
           <button class="secondary" id="addPage" type="button">Add page</button>
           <button class="danger" id="deletePage" type="button">Delete page</button>
@@ -2204,6 +2247,40 @@ APP_HTML = r"""<!doctype html>
   <div class="pin-overlay" id="pinOverlay" aria-modal="true" role="dialog"></div>
   <div class="search-overlay" id="searchOverlay" aria-modal="true" role="dialog"></div>
   <div class="sticker-overlay" id="stickerOverlay" aria-modal="true" role="dialog"></div>
+  <section class="text-tools" id="textTools" aria-label="Text options">
+    <div class="toolbar">
+      <h2>Text</h2>
+      <button class="secondary" id="closeTextTools" type="button">Close</button>
+    </div>
+    <div class="field">
+      <label for="textFont">Font</label>
+      <select id="textFont">
+        <option value="Inter, ui-sans-serif, system-ui, sans-serif">Clean</option>
+        <option value="'Trebuchet MS', ui-rounded, system-ui, sans-serif">Cute rounded</option>
+        <option value="Georgia, serif">Classic</option>
+        <option value="'Courier New', monospace">Typewriter</option>
+        <option value="'Brush Script MT', cursive">Handwritten</option>
+      </select>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="textColor">Text color</label>
+        <input id="textColor" type="color" value="#302822">
+      </div>
+      <div class="field">
+        <label for="textBackground">Background</label>
+        <input id="textBackground" type="color" value="#ffffff">
+      </div>
+    </div>
+    <label class="text-bg-toggle">
+      <input id="textBackgroundTransparent" type="checkbox" checked>
+      <span>Transparent background</span>
+    </label>
+    <div class="field">
+      <label for="textSize">Text size</label>
+      <input id="textSize" type="range" min="11" max="48" value="18">
+    </div>
+  </section>
   <div class="settings-overlay" id="settingsOverlay" aria-modal="true" role="dialog">
     <section class="settings-card">
       <div class="toolbar">
@@ -2224,10 +2301,11 @@ APP_HTML = r"""<!doctype html>
       <label class="toggle-field" for="autoSaveToggle">
         <span>
           <strong>Auto-save</strong>
-          <small>Save every change automatically.</small>
+          <small>Save every change automatically in the app.</small>
         </span>
         <input id="autoSaveToggle" type="checkbox">
       </label>
+      <p class="settings-note" id="nativeStorageNote"></p>
       <div class="field">
         <label>Password</label>
         <button class="secondary" id="passwordButton" type="button">Password</button>
@@ -2245,6 +2323,8 @@ APP_HTML = r"""<!doctype html>
     const sessionKey = "my-digital-album-unlocked";
     const themeKey = "my-digital-album-theme";
     const modeKey = "my-digital-album-editor-mode";
+    const nativeApp = window.__MY_DIGITAL_ALBUM_NATIVE__ === true;
+    const nativeStoragePath = window.__MY_DIGITAL_ALBUM_STORAGE_PATH__ || "";
     const coverPatterns = [
       {
         id: "cloth",
@@ -2632,7 +2712,7 @@ APP_HTML = r"""<!doctype html>
     const defaultLibrary = {
       activeAlbumId: "",
       security: { pinHash: "" },
-      settings: { autoSave: true },
+      settings: { autoSave: true, theme: "neutral" },
       albums: []
     };
 
@@ -2671,11 +2751,12 @@ APP_HTML = r"""<!doctype html>
     const coverColor = document.getElementById("coverColor");
     const patternColor = document.getElementById("patternColor");
     const pageSize = document.getElementById("pageSize");
-    const frameStyle = document.getElementById("frameStyle");
     const pagePattern = document.getElementById("pagePattern");
     const addPhotoInput = document.getElementById("addPhotoInput");
     const textFont = document.getElementById("textFont");
     const textColor = document.getElementById("textColor");
+    const textBackground = document.getElementById("textBackground");
+    const textBackgroundTransparent = document.getElementById("textBackgroundTransparent");
     const textSize = document.getElementById("textSize");
     const themeChoice = document.getElementById("themeChoice");
     const autoSaveToggle = document.getElementById("autoSaveToggle");
@@ -2690,6 +2771,7 @@ APP_HTML = r"""<!doctype html>
     const searchOverlay = document.getElementById("searchOverlay");
     const stickerOverlay = document.getElementById("stickerOverlay");
     const settingsOverlay = document.getElementById("settingsOverlay");
+    const textTools = document.getElementById("textTools");
     const editModeButton = document.getElementById("editModeButton");
     const viewModeButton = document.getElementById("viewModeButton");
 
@@ -2703,14 +2785,15 @@ APP_HTML = r"""<!doctype html>
     document.getElementById("searchButton").addEventListener("click", () => openSearch(searchInput.value));
     document.getElementById("settingsButton").addEventListener("click", openSettings);
     document.getElementById("closeSettings").addEventListener("click", closeSettings);
-    document.getElementById("addPhotoButton").addEventListener("click", () => addPhotoInput.click());
+    document.getElementById("closeTextTools").addEventListener("click", closeTextTools);
+    document.getElementById("addPhotoButton").addEventListener("click", () => requestMediaFiles());
     addPhotoInput.addEventListener("change", () => addPhotosFromFiles(addPhotoInput.files));
     document.getElementById("addTextButton").addEventListener("click", addTextBox);
     document.getElementById("addStickerButton").addEventListener("click", openStickerPicker);
     document.getElementById("addPage").addEventListener("click", addPage);
     document.getElementById("deletePage").addEventListener("click", deletePage);
-    prevPageButton.addEventListener("click", () => navigateToPage(activePageIndex - 1));
-    nextPageButton.addEventListener("click", () => navigateToPage(activePageIndex + 1));
+    prevPageButton.addEventListener("click", () => navigateSpread(-1));
+    nextPageButton.addEventListener("click", () => navigateSpread(1));
     document.getElementById("saveButton").addEventListener("click", () => saveLibrary(true));
     document.getElementById("exportButton").addEventListener("click", () => window.print());
     document.getElementById("exportHtmlButton").addEventListener("click", exportSingleHtml);
@@ -2721,7 +2804,10 @@ APP_HTML = r"""<!doctype html>
     libraryTab.addEventListener("click", () => setView("library"));
     setupTab.addEventListener("click", () => startNewAlbum());
     editorTab.addEventListener("click", () => setView("editor"));
-    themeChoice.addEventListener("change", () => applyTheme(themeChoice.value));
+    themeChoice.addEventListener("change", () => {
+      applyTheme(themeChoice.value);
+      saveLibrary(true);
+    });
     autoSaveToggle.addEventListener("change", () => {
       library.settings = { ...(library.settings ?? {}), autoSave: autoSaveToggle.checked };
       saveLibrary(true);
@@ -2750,14 +2836,21 @@ APP_HTML = r"""<!doctype html>
       renderTabs();
     });
 
-    [albumTitle, paperColor, coverColor, patternColor, pageSize, frameStyle, pagePattern].forEach((input) => {
+    [albumTitle, paperColor, coverColor, patternColor, pageSize, pagePattern].forEach((input) => {
       input.addEventListener("input", updateAlbumOptions);
       input.addEventListener("change", updateAlbumOptions);
     });
 
-    [textFont, textColor, textSize].forEach((input) => {
+    [textFont, textColor, textBackground, textSize].forEach((input) => {
       input.addEventListener("input", updateSelectedTextStyle);
       input.addEventListener("change", updateSelectedTextStyle);
+    });
+    textBackgroundTransparent.addEventListener("change", () => {
+      updateSelectedTextStyle();
+      renderTextStyleControls();
+    });
+    window.addEventListener("resize", () => {
+      if (textTools.classList.contains("visible")) positionTextTools();
     });
 
     document.querySelectorAll("[data-orientation]").forEach((button) => {
@@ -2804,9 +2897,8 @@ APP_HTML = r"""<!doctype html>
         paperColor: pattern.paperColor,
         coverColor: pattern.coverColor,
         patternColor: pattern.patternColor,
-        frameStyle: "simple",
         pagePattern: pattern.pagePattern,
-        pages: [blankPage()]
+        pages: [blankPage(), blankPage()]
       };
     }
 
@@ -2831,6 +2923,7 @@ APP_HTML = r"""<!doctype html>
             zoom: photo.zoom ?? 1,
             rotate: photo.rotate ?? 0,
             effect: photo.effect ?? "none",
+            frameStyle: photo.frameStyle ?? saved?.frameStyle ?? "simple",
             mediaType: photo.mediaType ?? (String(photo.src ?? "").startsWith("data:video") ? "video" : "image"),
             loopInView: photo.loopInView ?? true,
             muted: photo.muted ?? true,
@@ -2858,26 +2951,42 @@ APP_HTML = r"""<!doctype html>
             tilt: box.tilt ?? 0,
             fontSize: box.fontSize ?? 18,
             fontFamily: box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif",
-            color: box.color ?? "#302822"
+            color: box.color ?? "#302822",
+            background: box.background ?? "transparent"
           }))
         })) : [blankPage()]
       };
     }
 
+    function hydrateLibrary(saved) {
+      const albums = saved.albums?.length ? saved.albums.map(normalizeAlbum) : [blankAlbum()];
+      return {
+        ...defaultLibrary,
+        ...saved,
+        albums,
+        activeAlbumId: saved.activeAlbumId && albums.some((item) => item.id === saved.activeAlbumId) ? saved.activeAlbumId : albums[0].id,
+        security: { pinHash: saved.security?.pinHash ?? "" },
+        settings: { ...defaultLibrary.settings, ...(saved.settings ?? {}) }
+      };
+    }
+
+    function nativeStoredLibrary() {
+      if (!nativeApp || !window.__NATIVE_ALBUM_DATA__) return null;
+      try {
+        return JSON.parse(window.__NATIVE_ALBUM_DATA__);
+      } catch {
+        return null;
+      }
+    }
+
     function loadLibrary() {
+      const nativeStored = nativeStoredLibrary();
+      if (nativeStored) return hydrateLibrary(nativeStored);
+
       const stored = localStorage.getItem(storageKey);
       if (stored) {
         try {
-          const saved = JSON.parse(stored);
-          const albums = saved.albums?.length ? saved.albums.map(normalizeAlbum) : [blankAlbum()];
-          return {
-            ...defaultLibrary,
-            ...saved,
-            albums,
-            activeAlbumId: saved.activeAlbumId && albums.some((item) => item.id === saved.activeAlbumId) ? saved.activeAlbumId : albums[0].id,
-            security: { pinHash: saved.security?.pinHash ?? "" },
-            settings: { ...defaultLibrary.settings, ...(saved.settings ?? {}) }
-          };
+          return hydrateLibrary(JSON.parse(stored));
         } catch {}
       }
 
@@ -2885,6 +2994,7 @@ APP_HTML = r"""<!doctype html>
       if (legacy) {
         try {
           const migrated = normalizeAlbum(JSON.parse(legacy));
+          if (migrated.pages.length === 1) migrated.pages.push(blankPage());
           return { ...defaultLibrary, activeAlbumId: migrated.id, albums: [migrated] };
         } catch {}
       }
@@ -2904,7 +3014,18 @@ APP_HTML = r"""<!doctype html>
 
     function saveLibrary(force = false) {
       if (!force && !autoSaveEnabled()) return;
-      localStorage.setItem(storageKey, JSON.stringify(library));
+      const serialized = JSON.stringify(library);
+      if (nativeApp && window.webkit?.messageHandlers?.albumNative) {
+        window.webkit.messageHandlers.albumNative.postMessage({ type: "save", payload: serialized });
+      }
+      try {
+        localStorage.setItem(storageKey, serialized);
+      } catch (error) {
+        if (!nativeApp) {
+          window.alert("The album is too large for browser storage. Try exporting it or use the Mac app.");
+        }
+        console.warn("Local browser save failed", error);
+      }
     }
 
     function startNewAlbum(patternId = "cloth") {
@@ -2965,7 +3086,6 @@ APP_HTML = r"""<!doctype html>
       album.coverColor = coverColor.value;
       album.patternColor = patternColor.value;
       album.pageSize = pageSize.value;
-      album.frameStyle = frameStyle.value;
       album.pagePattern = pagePattern.value;
       coverTitle.value = album.title;
       trimExtraPhotos();
@@ -3008,6 +3128,7 @@ APP_HTML = r"""<!doctype html>
       selectedPhotoIndex = null;
       selectedStickerId = null;
       selectedTextId = null;
+      closeTextTools();
       setView(activeView, false);
       render();
     }
@@ -3036,6 +3157,19 @@ APP_HTML = r"""<!doctype html>
       return album.pages[activePageIndex] ?? album.pages[0];
     }
 
+    function spreadCount() {
+      return Math.max(1, Math.ceil(album.pages.length / 2));
+    }
+
+    function displayPageNumber(pageIndex) {
+      return Math.floor(pageIndex / 2) + 1;
+    }
+
+    function spreadStart(index) {
+      const safeIndex = clamp(index, 0, Math.max(0, album.pages.length - 1));
+      return safeIndex - (safeIndex % 2);
+    }
+
     function pageAt(index) {
       return album.pages[index] ?? null;
     }
@@ -3049,8 +3183,8 @@ APP_HTML = r"""<!doctype html>
     }
 
     function addPage() {
-      album.pages.push(blankPage());
-      activePageIndex = album.pages.length - 1;
+      album.pages.push(blankPage(), blankPage());
+      activePageIndex = album.pages.length - 2;
       selectedPageIndex = activePageIndex;
       selectedPhotoIndex = null;
       selectedStickerId = null;
@@ -3060,12 +3194,13 @@ APP_HTML = r"""<!doctype html>
     }
 
     function deletePage() {
-      if (album.pages.length === 1) {
-        album.pages = [blankPage()];
+      const deleteIndex = activePageIndex;
+      if (spreadCount() === 1) {
+        album.pages = [blankPage(), blankPage()];
       } else {
-        album.pages.splice(activePageIndex, 1);
-        activePageIndex = Math.max(0, activePageIndex - 1);
+        album.pages.splice(deleteIndex, 2);
       }
+      activePageIndex = spreadStart(Math.min(deleteIndex, album.pages.length - 1));
       selectedPageIndex = activePageIndex;
       selectedPhotoIndex = null;
       selectedStickerId = null;
@@ -3103,7 +3238,8 @@ APP_HTML = r"""<!doctype html>
 
     function render() {
       if (!draftAlbum) album = activeAlbum();
-      activePageIndex = Math.min(activePageIndex, album.pages.length - 1);
+      activePageIndex = spreadStart(Math.min(activePageIndex, album.pages.length - 1));
+      selectedPageIndex = clamp(selectedPageIndex, 0, Math.max(0, album.pages.length - 1));
       renderSettingsControls();
       renderTemplateGrid();
       renderLibrary();
@@ -3113,6 +3249,11 @@ APP_HTML = r"""<!doctype html>
 
     function renderSettingsControls() {
       autoSaveToggle.checked = autoSaveEnabled();
+      themeChoice.value = library.settings?.theme || localStorage.getItem(themeKey) || "neutral";
+      const nativeStorageNote = document.getElementById("nativeStorageNote");
+      if (nativeStorageNote) {
+        nativeStorageNote.textContent = nativeApp && nativeStoragePath ? `Saved locally at ${nativeStoragePath}` : "";
+      }
     }
 
     function renderTemplateGrid() {
@@ -3145,22 +3286,23 @@ APP_HTML = r"""<!doctype html>
           <button class="library-delete" type="button" data-delete-album="${item.id}" aria-label="Delete album">x</button>
           <button class="library-open" type="button" data-open-album="${item.id}">
             ${coverMarkup(item, true)}
-            <span class="book-cover-meta">${item.pages.length} page${item.pages.length === 1 ? "" : "s"} · ${coverPatternName(item.coverPattern)}</span>
+            <span class="book-cover-meta">${Math.max(1, Math.ceil(item.pages.length / 2))} page${Math.ceil(item.pages.length / 2) === 1 ? "" : "s"} · ${coverPatternName(item.coverPattern)}</span>
           </button>
         </div>
       `).join("")}`;
       document.getElementById("newAlbumCard").addEventListener("click", () => startNewAlbum());
       libraryGrid.querySelectorAll("[data-open-album]").forEach((button) => {
         button.addEventListener("click", () => {
-          library.activeAlbumId = button.dataset.openAlbum;
-          draftAlbum = null;
-          album = activeAlbum();
-          activePageIndex = 0;
-          selectedPageIndex = 0;
-          selectedPhotoIndex = null;
-          selectedStickerId = null;
-          selectedTextId = null;
-          setView("editor", false);
+      library.activeAlbumId = button.dataset.openAlbum;
+      draftAlbum = null;
+      album = activeAlbum();
+      activePageIndex = 0;
+      selectedPageIndex = 0;
+      selectedPhotoIndex = null;
+      selectedStickerId = null;
+      selectedTextId = null;
+      closeTextTools();
+      setView("editor", false);
           saveLibrary();
           render();
           playBookOpenSound();
@@ -3196,7 +3338,7 @@ APP_HTML = r"""<!doctype html>
     }
 
     function renderEditor() {
-      albumEl.className = `album ${album.orientation} size-${album.pageSize ?? "medium"} frame-${album.frameStyle}`;
+      albumEl.className = `album ${album.orientation} size-${album.pageSize ?? "medium"}`;
       albumEl.style.setProperty("--paper", album.paperColor);
       albumEl.style.setProperty("--cover", album.coverColor);
       document.documentElement.style.setProperty("--paper", album.paperColor);
@@ -3208,7 +3350,6 @@ APP_HTML = r"""<!doctype html>
       coverColor.value = album.coverColor;
       patternColor.value = album.patternColor;
       pageSize.value = album.pageSize ?? "medium";
-      frameStyle.value = album.frameStyle;
       pagePattern.value = album.pagePattern;
       document.querySelectorAll("[data-orientation]").forEach((button) => {
         button.classList.toggle("active", button.dataset.orientation === album.orientation);
@@ -3220,32 +3361,53 @@ APP_HTML = r"""<!doctype html>
     }
 
     function renderTabs() {
-      pageTabs.innerHTML = album.pages.map((page, index) => `
-        <button class="page-tab ${index === activePageIndex ? "active" : ""}" type="button" data-page="${index}">
-          ${page.title ? escapeHtml(page.title) : `Page ${index + 1}`}
+      pageTabs.innerHTML = Array.from({ length: spreadCount() }, (_, spreadIndex) => {
+        const pageIndex = spreadIndex * 2;
+        const left = pageAt(pageIndex);
+        const right = pageAt(pageIndex + 1);
+        const title = left?.title || right?.title || `Page ${spreadIndex + 1}`;
+        return `
+        <button class="page-tab ${pageIndex === activePageIndex ? "active" : ""}" type="button" data-page="${pageIndex}">
+          ${escapeHtml(title)}
         </button>
-      `).join("");
+      `;
+      }).join("");
       pageTabs.querySelectorAll("[data-page]").forEach((button) => {
         button.addEventListener("click", () => {
-          navigateToPage(Number(button.dataset.page));
+          const pageIndex = Number(button.dataset.page);
+          navigateToPage(pageIndex, pageIndex);
         });
       });
     }
 
     function renderPageNavigation() {
       prevPageButton.disabled = activePageIndex <= 0;
-      nextPageButton.disabled = activePageIndex >= album.pages.length - 1;
+      nextPageButton.disabled = activePageIndex >= Math.max(0, spreadStart(album.pages.length - 1));
     }
 
-    function navigateToPage(index) {
-      const target = clamp(index, 0, album.pages.length - 1);
-      if (target === activePageIndex) return;
+    function navigateSpread(direction) {
+      const target = activePageIndex + direction * 2;
+      navigateToPage(target, target);
+    }
+
+    function navigateToPage(index, selectedIndex = index) {
+      const target = spreadStart(index);
+      if (target === activePageIndex) {
+        selectedPageIndex = clamp(selectedIndex, 0, album.pages.length - 1);
+        selectedPhotoIndex = null;
+        selectedStickerId = null;
+        selectedTextId = null;
+        closeTextTools();
+        render();
+        return;
+      }
       const direction = target > activePageIndex ? "next" : "prev";
       activePageIndex = target;
-      selectedPageIndex = activePageIndex;
+      selectedPageIndex = clamp(selectedIndex, 0, album.pages.length - 1);
       selectedPhotoIndex = null;
       selectedStickerId = null;
       selectedTextId = null;
+      closeTextTools();
       playPageTurnSound(direction);
       render();
       animatePageTurn(direction);
@@ -3335,12 +3497,38 @@ APP_HTML = r"""<!doctype html>
 
     function renderTextStyleControls() {
       const box = selectedTextBox();
+      textTools.classList.toggle("visible", Boolean(box) && activeView === "editor" && editorMode === "edit");
+      if (box && activeView === "editor" && editorMode === "edit") positionTextTools();
       textFont.disabled = !box;
       textColor.disabled = !box;
+      textBackground.disabled = !box || box?.background === "transparent";
+      textBackgroundTransparent.disabled = !box;
       textSize.disabled = !box;
       textFont.value = box?.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif";
       textColor.value = box?.color ?? "#302822";
+      textBackground.value = box?.background && box.background !== "transparent" ? box.background : "#ffffff";
+      textBackgroundTransparent.checked = !box || box.background === "transparent";
       textSize.value = String(box?.fontSize ?? 18);
+    }
+
+    function closeTextTools() {
+      textTools.classList.remove("visible");
+    }
+
+    function positionTextTools() {
+      const selectedItem = albumPage.querySelector(".text-item.selected");
+      if (!selectedItem) return;
+      const itemRect = selectedItem.getBoundingClientRect();
+      const width = Math.min(360, window.innerWidth - 48);
+      const height = Math.min(330, window.innerHeight - 48);
+      let left = itemRect.right + 16;
+      if (left + width > window.innerWidth - 18) left = itemRect.left - width - 16;
+      left = clamp(left, 18, Math.max(18, window.innerWidth - width - 18));
+      let top = itemRect.top;
+      if (top + height > window.innerHeight - 18) top = window.innerHeight - height - 18;
+      top = clamp(top, 18, Math.max(18, window.innerHeight - height - 18));
+      textTools.style.setProperty("--text-tools-left", `${left}px`);
+      textTools.style.setProperty("--text-tools-top", `${top}px`);
     }
 
     function updateSelectedTextStyle() {
@@ -3348,9 +3536,27 @@ APP_HTML = r"""<!doctype html>
       if (!box) return;
       box.fontFamily = textFont.value;
       box.color = textColor.value;
+      box.background = textBackgroundTransparent.checked ? "transparent" : textBackground.value;
       box.fontSize = Number(textSize.value);
       saveLibrary();
-      renderPage();
+      applySelectedTextStyleToDom(box);
+    }
+
+    function applySelectedTextStyleToDom(box) {
+      const item = albumPage.querySelector(".text-item.selected");
+      if (!item) return;
+      item.style.setProperty("--text-size", `${box.fontSize ?? 18}px`);
+      item.style.setProperty("--text-font", box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif");
+      item.style.setProperty("--text-color", box.color ?? "#302822");
+      item.style.setProperty("--text-bg", box.background ?? "transparent");
+      const textarea = item.querySelector("textarea");
+      if (textarea) {
+        textarea.style.fontSize = `${box.fontSize ?? 18}px`;
+        textarea.style.fontFamily = box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif";
+        textarea.style.color = box.color ?? "#302822";
+        textarea.style.background = box.background ?? "transparent";
+        textarea.style.border = "0";
+      }
     }
 
     function openStickerPicker() {
@@ -3392,10 +3598,10 @@ APP_HTML = r"""<!doctype html>
       albumPage.style.setProperty("--page-pattern", pagePatterns[album.pagePattern] ?? pagePatterns.plain);
       albumPage.innerHTML = `
         <div class="book-spread">
-          <section class="book-page left ${selectedPageIndex === activePageIndex ? "active-edit" : ""}" data-page-index="${activePageIndex}">
+          <section class="book-page left ${selectedPageIndex === activePageIndex ? "active-edit" : ""}" data-page-index="${activePageIndex}" aria-label="Page ${displayPageNumber(activePageIndex)} left side">
             ${pageMarkup(page, activePageIndex)}
           </section>
-          <section class="book-page right ${rightPage ? "" : "empty-page"} ${selectedPageIndex === activePageIndex + 1 ? "active-edit" : ""}" ${rightPage ? `data-page-index="${activePageIndex + 1}"` : ""}>
+          <section class="book-page right ${rightPage ? "" : "empty-page"} ${selectedPageIndex === activePageIndex + 1 ? "active-edit" : ""}" ${rightPage ? `data-page-index="${activePageIndex + 1}" aria-label="Page ${displayPageNumber(activePageIndex)} right side"` : ""}>
             ${rightPage ? pageMarkup(rightPage, activePageIndex + 1) : "<span>Add a page to continue the album.</span>"}
           </section>
         </div>
@@ -3448,6 +3654,15 @@ APP_HTML = r"""<!doctype html>
         input.addEventListener("change", () => {
           const index = Number(input.dataset.photoEffect);
           pageAt(eventPageIndex({ currentTarget: input })).photos[index].effect = input.value;
+          saveLibrary();
+          renderPage();
+        });
+      });
+
+      albumPage.querySelectorAll("[data-photo-frame]").forEach((input) => {
+        input.addEventListener("change", () => {
+          const index = Number(input.dataset.photoFrame);
+          pageAt(eventPageIndex({ currentTarget: input })).photos[index].frameStyle = input.value;
           saveLibrary();
           renderPage();
         });
@@ -3522,6 +3737,7 @@ APP_HTML = r"""<!doctype html>
           selectedPhotoIndex = Number(photo.dataset.photoIndex);
           selectedStickerId = null;
           selectedTextId = null;
+          closeTextTools();
           renderPage();
         });
       });
@@ -3570,6 +3786,7 @@ APP_HTML = r"""<!doctype html>
           selectedPhotoIndex = null;
           selectedStickerId = null;
           selectedTextId = null;
+          closeTextTools();
           renderPage();
         });
       });
@@ -3582,6 +3799,7 @@ APP_HTML = r"""<!doctype html>
           selectedStickerId = Number(sticker.dataset.stickerIndex);
           selectedPhotoIndex = null;
           selectedTextId = null;
+          closeTextTools();
           renderPage();
         });
       });
@@ -3604,6 +3822,13 @@ APP_HTML = r"""<!doctype html>
           saveLibrary();
         });
         input.addEventListener("focus", () => {
+          selectedPageIndex = eventPageIndex({ currentTarget: input });
+          selectedTextId = Number(input.dataset.textInput);
+          selectedStickerId = null;
+          selectedPhotoIndex = null;
+          renderTextStyleControls();
+        });
+        input.addEventListener("click", () => {
           selectedPageIndex = eventPageIndex({ currentTarget: input });
           selectedTextId = Number(input.dataset.textInput);
           selectedStickerId = null;
@@ -3644,7 +3869,7 @@ APP_HTML = r"""<!doctype html>
           </span>
         `).join("")}
         ${(page.textBoxes ?? []).map((box, index) => `
-          <div class="text-item ${selectedPageIndex === pageIndex && selectedTextId === index ? "selected" : ""}" data-text-index="${index}" style="left:${box.x}%; top:${box.y}%; --tilt:${box.tilt ?? 0}deg; --text-width:${box.width ?? 180}px; --text-height:${box.height ?? 86}px; --text-size:${box.fontSize ?? 18}px; --text-font:${escapeAttribute(box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif")}; --text-color:${box.color ?? "#302822"}">
+          <div class="text-item ${selectedPageIndex === pageIndex && selectedTextId === index ? "selected" : ""}" data-text-index="${index}" style="left:${box.x}%; top:${box.y}%; --tilt:${box.tilt ?? 0}deg; --text-width:${box.width ?? 180}px; --text-height:${box.height ?? 86}px; --text-size:${box.fontSize ?? 18}px; --text-font:${escapeAttribute(box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif")}; --text-color:${box.color ?? "#302822"}; --text-bg:${box.background ?? "transparent"}">
             <textarea data-text-input="${index}" placeholder="Write text...">${escapeHtml(box.text)}</textarea>
             <span class="direct-handle move-handle" data-move-text="${index}">↕</span>
             <button class="direct-handle delete-handle" type="button" data-delete-text="${index}">x</button>
@@ -3667,7 +3892,7 @@ APP_HTML = r"""<!doctype html>
           <span class="page-sticker" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>
         `).join("")}
         ${(page.textBoxes ?? []).map((box) => `
-          <div class="text-item" style="left:${box.x}%; top:${box.y}%; --tilt:${box.tilt ?? 0}deg; --text-width:${box.width ?? 180}px; --text-height:${box.height ?? 86}px; --text-size:${box.fontSize ?? 18}px; --text-font:${escapeAttribute(box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif")}; --text-color:${box.color ?? "#302822"}">
+          <div class="text-item" style="left:${box.x}%; top:${box.y}%; --tilt:${box.tilt ?? 0}deg; --text-width:${box.width ?? 180}px; --text-height:${box.height ?? 86}px; --text-size:${box.fontSize ?? 18}px; --text-font:${escapeAttribute(box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif")}; --text-color:${box.color ?? "#302822"}; --text-bg:${box.background ?? "transparent"}">
             <textarea readonly>${escapeHtml(box.text)}</textarea>
           </div>
         `).join("")}
@@ -3677,8 +3902,9 @@ APP_HTML = r"""<!doctype html>
     function photoObjectMarkup(photo, index, pageIndex) {
       const selected = selectedPageIndex === pageIndex && selectedPhotoIndex === index ? "selected" : "";
       const effect = photo.effect ?? "none";
+      const frame = photo.frameStyle ?? "simple";
       return `
-        <div class="page-photo ${selected} ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" draggable="true" data-photo-index="${index}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
+        <div class="page-photo photo-frame-style-${escapeAttribute(frame)} ${selected} ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" draggable="true" data-photo-index="${index}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
           <div class="photo-shell">
             <div class="photo-frame effect-${escapeAttribute(effect)}">
               ${mediaMarkup(photo, index, true)}
@@ -3690,6 +3916,9 @@ APP_HTML = r"""<!doctype html>
             <input class="photo-mentions" type="text" value="${escapeAttribute(tagsToInput(photo.tags))}" placeholder="@people @places" data-photo-tags="${index}">
             <select class="photo-effect" data-photo-effect="${index}" aria-label="Photo effect">
               ${photoEffectOptions(effect)}
+            </select>
+            <select class="photo-frame-choice" data-photo-frame="${index}" aria-label="Photo frame">
+              ${photoFrameOptions(frame)}
             </select>
             ${photo.mediaType === "video" ? `
               <label class="video-loop">
@@ -3714,8 +3943,9 @@ APP_HTML = r"""<!doctype html>
 
     function readonlyPhotoMarkup(photo, index) {
       const effect = photo.effect ?? "none";
+      const frame = photo.frameStyle ?? "simple";
       return `
-        <div class="page-photo ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
+        <div class="page-photo photo-frame-style-${escapeAttribute(frame)} ${(photo.captionVisible ?? true) ? "" : "caption-hidden"}" style="--photo-x:${photo.x ?? 14}%; --photo-y:${photo.y ?? 24}%; --photo-width:${photo.width ?? 210}px; --photo-height:${photo.height ?? 150}px; --tilt:${photo.tilt ?? 0}deg">
           <div class="photo-shell">
             <div class="photo-frame effect-${escapeAttribute(effect)}">
               ${mediaMarkup(photo, index, false)}
@@ -3769,6 +3999,27 @@ APP_HTML = r"""<!doctype html>
       return options.map(([value, label]) => `<option value="${value}" ${selected === value ? "selected" : ""}>${label}</option>`).join("");
     }
 
+    function photoFrameOptions(selected) {
+      const options = [
+        ["none", "No frame"],
+        ["simple", "Simple frame"],
+        ["corners", "Photo corners"],
+        ["polaroid", "Polaroid"],
+        ["shadow", "Soft shadow"],
+        ["tape", "Washi tape"],
+        ["scallop", "Rounded scrapbook"]
+      ];
+      return options.map(([value, label]) => `<option value="${value}" ${selected === value ? "selected" : ""}>${label}</option>`).join("");
+    }
+
+    function requestMediaFiles() {
+      if (nativeApp && window.webkit?.messageHandlers?.albumNative) {
+        window.webkit.messageHandlers.albumNative.postMessage({ type: "selectMedia", pageIndex: selectedPageIndex });
+        return;
+      }
+      addPhotoInput.click();
+    }
+
     function handlePhotoUpload(input) {
       const file = input.files?.[0];
       if (!file) return;
@@ -3788,40 +4039,62 @@ APP_HTML = r"""<!doctype html>
       addPhotoInput.value = "";
     }
 
+    function addMediaDataFiles(files, pageIndex = selectedPageIndex) {
+      const page = pageAt(pageIndex);
+      if (!page) return;
+      selectedPageIndex = pageIndex;
+      const startIndex = page.photos.length;
+      (files ?? []).forEach((file, offset) => {
+        insertMediaItem({
+          src: file.src,
+          name: file.name,
+          type: file.type,
+          mediaType: file.mediaType
+        }, startIndex + offset, pageIndex);
+      });
+      saveLibrary();
+      render();
+    }
+
     function readPhotoFile(file, index, pageIndex = selectedPageIndex) {
       const reader = new FileReader();
       reader.onload = () => {
-        const page = pageAt(pageIndex) ?? currentPage();
-        const count = page.photos.filter(Boolean).length;
-        const mediaType = file.type?.startsWith("video/") ? "video" : "image";
-        page.photos[index] = {
-          src: reader.result,
-          caption: page.photos[index]?.caption ?? "",
-          name: file.name,
-          mediaType,
-          cropX: 50,
-          cropY: 50,
-          zoom: 1,
-          rotate: 0,
-          effect: "none",
-          muted: mediaType === "video",
-          x: 12 + ((count * 18) % 52),
-          y: 22 + ((count * 14) % 52),
-          width: album.orientation === "horizontal" ? 230 : 200,
-          height: 150,
-          tilt: [-3, 2, -5, 4][count % 4],
-          captionVisible: true,
-          loopInView: mediaType === "video",
-          tags: []
-        };
-        selectedPageIndex = pageIndex;
-        selectedPhotoIndex = index;
-        selectedStickerId = null;
-        selectedTextId = null;
+        insertMediaItem({ src: reader.result, name: file.name, type: file.type }, index, pageIndex);
         saveLibrary();
-        renderPage();
+        render();
       };
       reader.readAsDataURL(file);
+    }
+
+    function insertMediaItem(file, index, pageIndex = selectedPageIndex) {
+      const page = pageAt(pageIndex) ?? currentPage();
+      const count = page.photos.filter(Boolean).length;
+      const mediaType = file.mediaType ?? (file.type?.startsWith("video/") || String(file.src ?? "").startsWith("data:video") ? "video" : "image");
+      page.photos[index] = {
+        src: file.src,
+        caption: page.photos[index]?.caption ?? "",
+        name: file.name,
+        mediaType,
+        cropX: 50,
+        cropY: 50,
+        zoom: 1,
+        rotate: 0,
+        effect: "none",
+        frameStyle: "simple",
+        muted: mediaType === "video",
+        x: 12 + ((count * 18) % 52),
+        y: 22 + ((count * 14) % 52),
+        width: album.orientation === "horizontal" ? 230 : 200,
+        height: 150,
+        tilt: [-3, 2, -5, 4][count % 4],
+        captionVisible: true,
+        loopInView: mediaType === "video",
+        tags: []
+      };
+      selectedPageIndex = pageIndex;
+      selectedPhotoIndex = index;
+      selectedStickerId = null;
+      selectedTextId = null;
     }
 
     function isSupportedMediaFile(file) {
@@ -3860,7 +4133,7 @@ APP_HTML = r"""<!doctype html>
       selectedStickerId = null;
       selectedTextId = null;
       saveLibrary();
-      renderPage();
+      render();
       return true;
     }
 
@@ -3887,6 +4160,30 @@ APP_HTML = r"""<!doctype html>
       return true;
     }
 
+    function moveTextToPage(fromPageIndex, textIndex, targetPageIndex, clientX, clientY) {
+      const fromPage = pageAt(fromPageIndex);
+      const toPage = pageAt(targetPageIndex);
+      if (!fromPage || !toPage || fromPageIndex === targetPageIndex) return false;
+      const textBox = fromPage.textBoxes.splice(textIndex, 1)[0];
+      if (!textBox) return false;
+      const targetEl = albumPage.querySelector(`.book-page[data-page-index="${targetPageIndex}"]`);
+      const bounds = targetEl?.getBoundingClientRect();
+      if (bounds) {
+        textBox.x = clamp(((clientX - bounds.left) / bounds.width) * 100 - 12, 0, 92);
+        textBox.y = clamp(((clientY - bounds.top) / bounds.height) * 100 - 6, 0, 86);
+      } else {
+        textBox.x = clamp(textBox.x, 0, 92);
+        textBox.y = clamp(textBox.y, 0, 86);
+      }
+      toPage.textBoxes = toPage.textBoxes ?? [];
+      toPage.textBoxes.push(textBox);
+      selectedPageIndex = targetPageIndex;
+      selectedTextId = toPage.textBoxes.length - 1;
+      selectedStickerId = null;
+      selectedPhotoIndex = null;
+      return true;
+    }
+
     function pointInsidePage(pageIndex, x, y) {
       const pageEl = albumPage.querySelector(`.book-page[data-page-index="${pageIndex}"]`);
       if (!pageEl) return false;
@@ -3903,7 +4200,7 @@ APP_HTML = r"""<!doctype html>
       selectedPage().photos.splice(selectedPhotoIndex, 1);
       selectedPhotoIndex = null;
       saveLibrary();
-      renderPage();
+      render();
     }
 
     function addSticker(value) {
@@ -3920,7 +4217,7 @@ APP_HTML = r"""<!doctype html>
       selectedPhotoIndex = null;
       selectedTextId = null;
       saveLibrary();
-      renderPage();
+      render();
     }
 
     function selectedSticker() {
@@ -3939,13 +4236,14 @@ APP_HTML = r"""<!doctype html>
         tilt: 0,
         fontSize: Number(textSize.value) || 18,
         fontFamily: textFont.value,
-        color: textColor.value
+        color: textColor.value,
+        background: "transparent"
       });
       selectedTextId = page.textBoxes.length - 1;
       selectedStickerId = null;
       selectedPhotoIndex = null;
       saveLibrary();
-      renderPage();
+      render();
     }
 
     function startStickerDrag(event) {
@@ -4016,7 +4314,7 @@ APP_HTML = r"""<!doctype html>
       pageAt(eventPageIndex(event)).stickers.splice(Number(event.currentTarget.dataset.deleteSticker), 1);
       selectedStickerId = null;
       saveLibrary();
-      renderPage();
+      render();
     }
 
     function deleteTextBox(event) {
@@ -4024,7 +4322,7 @@ APP_HTML = r"""<!doctype html>
       pageAt(eventPageIndex(event)).textBoxes.splice(Number(event.currentTarget.dataset.deleteText), 1);
       selectedTextId = null;
       saveLibrary();
-      renderPage();
+      render();
     }
 
     function startStickerResize(event) {
@@ -4041,6 +4339,7 @@ APP_HTML = r"""<!doctype html>
         selectedTextId = Number(event.currentTarget.dataset.textIndex);
         selectedStickerId = null;
         selectedPhotoIndex = null;
+        renderTextStyleControls();
         return;
       }
       if (event.target.closest(".direct-handle")) return;
@@ -4080,6 +4379,7 @@ APP_HTML = r"""<!doctype html>
       selectedTextId = type === "text" ? index : null;
       selectedPhotoIndex = type === "photo" ? index : null;
       renderTextStyleControls();
+      if (type !== "text") closeTextTools();
       const page = selectedPage();
       const target = type === "sticker" ? page.stickers[index] : type === "text" ? page.textBoxes[index] : page.photos[index];
       const bounds = (type === "photo" || type === "sticker" || type === "text"
@@ -4115,8 +4415,9 @@ APP_HTML = r"""<!doctype html>
       if (!target) return;
 
       if (edit.action === "move") {
-        const minX = edit.type === "photo" ? -88 : 0;
-        const maxX = edit.type === "photo" ? 176 : 92;
+        const canCrossPages = edit.type === "photo" || edit.type === "text";
+        const minX = canCrossPages ? -88 : 0;
+        const maxX = canCrossPages ? 176 : 92;
         target.x = clamp(edit.base.x + (dx / edit.bounds.width) * 100, minX, maxX);
         target.y = clamp(edit.base.y + (dy / edit.bounds.height) * 100, 0, 92);
       }
@@ -4151,19 +4452,24 @@ APP_HTML = r"""<!doctype html>
 
     function endDirectEdit() {
       window.removeEventListener("pointermove", moveDirectEdit);
-      if (activeDirectEdit?.type === "photo" && activeDirectEdit.action === "move") {
-        const target = pageAt(activeDirectEdit.pageIndex)?.photos?.[activeDirectEdit.index];
+      if ((activeDirectEdit?.type === "photo" || activeDirectEdit?.type === "text") && activeDirectEdit.action === "move") {
+        const page = pageAt(activeDirectEdit.pageIndex);
+        const target = activeDirectEdit.type === "photo"
+          ? page?.photos?.[activeDirectEdit.index]
+          : page?.textBoxes?.[activeDirectEdit.index];
         if (target) {
           const nextIndex = activeDirectEdit.pageIndex + 1;
           const prevIndex = activeDirectEdit.pageIndex - 1;
           const movedRight = pageAt(nextIndex) && (pointInsidePage(nextIndex, activeDirectEdit.lastX, activeDirectEdit.lastY) || target.x > 92);
           const movedLeft = pageAt(prevIndex) && (pointInsidePage(prevIndex, activeDirectEdit.lastX, activeDirectEdit.lastY) || target.x < 0);
           if (movedRight) {
-            movePhotoToPage(activeDirectEdit.pageIndex, activeDirectEdit.index, nextIndex, activeDirectEdit.lastX, activeDirectEdit.lastY);
+            if (activeDirectEdit.type === "photo") movePhotoToPage(activeDirectEdit.pageIndex, activeDirectEdit.index, nextIndex, activeDirectEdit.lastX, activeDirectEdit.lastY);
+            else moveTextToPage(activeDirectEdit.pageIndex, activeDirectEdit.index, nextIndex, activeDirectEdit.lastX, activeDirectEdit.lastY);
           } else if (movedLeft) {
-            movePhotoToPage(activeDirectEdit.pageIndex, activeDirectEdit.index, prevIndex, activeDirectEdit.lastX, activeDirectEdit.lastY);
+            if (activeDirectEdit.type === "photo") movePhotoToPage(activeDirectEdit.pageIndex, activeDirectEdit.index, prevIndex, activeDirectEdit.lastX, activeDirectEdit.lastY);
+            else moveTextToPage(activeDirectEdit.pageIndex, activeDirectEdit.index, prevIndex, activeDirectEdit.lastX, activeDirectEdit.lastY);
           } else {
-            target.x = clamp(target.x, 0, 86);
+            target.x = clamp(target.x, 0, activeDirectEdit.type === "photo" ? 86 : 92);
             target.y = clamp(target.y, 0, 86);
           }
         }
@@ -4187,7 +4493,7 @@ APP_HTML = r"""<!doctype html>
       const savedIndex = activePageIndex;
       const markup = album.pages.map((page, index) => {
         activePageIndex = index;
-        return `<section class="album ${album.orientation} size-${album.pageSize ?? "medium"} frame-${album.frameStyle}" style="--paper:${album.paperColor}; --cover:${album.coverColor}; margin:0 auto 24px"><article class="album-page" style="--page-pattern:${pagePatterns[album.pagePattern] ?? pagePatterns.plain}">${staticPageMarkup(page)}</article></section>`;
+        return `<section class="album ${album.orientation} size-${album.pageSize ?? "medium"}" style="--paper:${album.paperColor}; --cover:${album.coverColor}; margin:0 auto 24px"><article class="album-page" style="--page-pattern:${pagePatterns[album.pagePattern] ?? pagePatterns.plain}">${staticPageMarkup(page)}</article></section>`;
       }).join("");
       activePageIndex = savedIndex;
       return markup;
@@ -4199,7 +4505,7 @@ APP_HTML = r"""<!doctype html>
         ${page.photos.map((photo, index) => photo ? readonlyPhotoMarkup(photo, index) : "").join("")}
         <p class="page-note">${escapeHtml(page.text)}</p>
         ${page.stickers.map((sticker) => `<span class="page-sticker" style="left:${sticker.x}%; top:${sticker.y}%; --tilt:${sticker.tilt}deg; --sticker-size:${sticker.size ?? 52}px">${stickerArt(sticker.id)}</span>`).join("")}
-        ${(page.textBoxes ?? []).map((box) => `<div class="text-item" style="left:${box.x}%; top:${box.y}%; --tilt:${box.tilt ?? 0}deg; --text-width:${box.width ?? 180}px; --text-height:${box.height ?? 86}px; --text-size:${box.fontSize ?? 18}px; --text-font:${escapeAttribute(box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif")}; --text-color:${box.color ?? "#302822"}"><textarea readonly>${escapeHtml(box.text)}</textarea></div>`).join("")}
+        ${(page.textBoxes ?? []).map((box) => `<div class="text-item" style="left:${box.x}%; top:${box.y}%; --tilt:${box.tilt ?? 0}deg; --text-width:${box.width ?? 180}px; --text-height:${box.height ?? 86}px; --text-size:${box.fontSize ?? 18}px; --text-font:${escapeAttribute(box.fontFamily ?? "Inter, ui-sans-serif, system-ui, sans-serif")}; --text-color:${box.color ?? "#302822"}; --text-bg:${box.background ?? "transparent"}"><textarea readonly>${escapeHtml(box.text)}</textarea></div>`).join("")}
       `;
     }
 
@@ -4322,6 +4628,7 @@ APP_HTML = r"""<!doctype html>
       const theme = value || "neutral";
       document.body.dataset.theme = theme;
       themeChoice.value = theme;
+      library.settings = { ...defaultLibrary.settings, ...(library.settings ?? {}), theme };
       localStorage.setItem(themeKey, theme);
     }
 
@@ -4378,7 +4685,7 @@ APP_HTML = r"""<!doctype html>
               <button class="search-result" type="button" data-result-album="${result.albumItem.id}" data-result-page="${result.pageIndex}" data-result-photo="${result.photoIndex}">
                 <img src="${result.photo.src}" alt="${escapeAttribute(result.photo.caption || "Album photo")}">
                 <strong>${escapeHtml(result.photo.caption || "Untitled photo")}</strong>
-                <span>${escapeHtml(result.albumItem.title)} · Page ${result.pageIndex + 1}</span>
+                <span>${escapeHtml(result.albumItem.title)} · Page ${displayPageNumber(result.pageIndex)}</span>
                 <small>${escapeHtml(tagsToInput(result.photo.tags))}</small>
               </button>
             `).join("")}
@@ -4390,10 +4697,12 @@ APP_HTML = r"""<!doctype html>
         button.addEventListener("click", () => {
           library.activeAlbumId = button.dataset.resultAlbum;
           album = activeAlbum();
-          activePageIndex = Number(button.dataset.resultPage);
+          activePageIndex = spreadStart(Number(button.dataset.resultPage));
+          selectedPageIndex = Number(button.dataset.resultPage);
           selectedPhotoIndex = Number(button.dataset.resultPhoto);
           selectedStickerId = null;
           selectedTextId = null;
+          closeTextTools();
           closeSearch();
           setView("editor", false);
           saveLibrary();
@@ -4482,7 +4791,11 @@ APP_HTML = r"""<!doctype html>
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
 
-    applyTheme(localStorage.getItem(themeKey) || "neutral");
+    window.__receiveNativeMediaFiles = (files, pageIndex) => {
+      addMediaDataFiles(files, Number(pageIndex ?? selectedPageIndex));
+    };
+
+    applyTheme(library.settings?.theme || localStorage.getItem(themeKey) || "neutral");
     setView("library", false);
     saveLibrary();
     render();

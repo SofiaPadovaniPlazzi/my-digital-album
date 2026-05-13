@@ -1,8 +1,8 @@
 # My Digital Album
 
-My Digital Album is a local web app for creating a digital photo album from pictures on your device.
+My Digital Album is a local app for creating a digital photo album from pictures on your device.
 
-It runs on your computer and opens in your browser. You can choose an album style, upload photos onto the page, add titles, dates, movable text boxes, and decorate pages with cute built-in stickers.
+It can run either as a Mac app or as a local development web app. You can choose an album style, upload photos and videos onto the page, add titles, dates, movable text boxes, and decorate pages with cute built-in stickers.
 
 ## Features
 
@@ -17,7 +17,7 @@ It runs on your computer and opens in your browser. You can choose an album styl
 - Choose the outside cover color.
 - Choose the cover pattern color.
 - Add as many photos as you want to a page.
-- Pick a frame style: no frame, simple frame, photo corners, polaroid, soft shadow, washi tape, or rounded scrapbook.
+- Pick a frame style for each photo: no frame, simple frame, photo corners, polaroid, soft shadow, washi tape, or rounded scrapbook.
 - Upload pictures from your device onto the page.
 - Add a main album title.
 - Add page titles.
@@ -44,11 +44,36 @@ It runs on your computer and opens in your browser. You can choose an album styl
 - Add and delete pages.
 - Print or save the album as PDF from the browser.
 - Export the current album as a single HTML file.
-- Save the album locally in browser storage.
+- Save the album locally on your Mac when using the Mac app.
+- Save the album locally in browser storage when using the development web version.
 
-## How It Works
+## Mac App
 
-The app starts a tiny local web server on:
+Build the Mac app with:
+
+```bash
+./mac-app/build_mac_app.sh
+```
+
+Then open:
+
+```text
+mac-app/My Digital Album.app
+```
+
+The Mac app opens in its own window and does not launch Safari, Chrome, or another browser.
+
+Album data is saved locally here:
+
+```text
+~/Library/Application Support/My Digital Album/library.json
+```
+
+That file stores your albums, page layouts, captions, stickers, password setting, and uploaded photo/video data.
+
+## Development Web Version
+
+For development, the Python file can still start a tiny local web server on:
 
 ```text
 http://127.0.0.1:8790
@@ -70,23 +95,29 @@ It does not scan your device or read folders by itself. Uploaded photos are conv
 
 ## Privacy
 
-Your album is local to your computer and browser profile.
+Your album is local to your computer.
 
 Important caveats:
 
 - The album is not uploaded anywhere by the app.
 - The optional password is a local app lock. It helps during normal use, but it does not encrypt album data.
 - Exported HTML files include the album content and uploaded images inside the file.
-- Clearing browser data can erase the saved album.
+- In the Mac app, deleting `~/Library/Application Support/My Digital Album/library.json` will delete the saved library.
+- In the development web version, clearing browser data can erase the saved album.
 - Large photo files can fill browser storage quickly.
-- A different browser profile will have different saved albums.
-- Anyone with access to your computer/browser profile may be able to see the album.
+- Anyone with access to your computer account may be able to access the local save file.
 
 ## Project Structure
 
 ```text
 .
 ├── my_digital_album.py
+├── mac-app
+│   ├── build_mac_app.sh
+│   ├── resources
+│   │   └── Info.plist
+│   └── src
+│       └── main.m
 ├── README.md
 └── .gitignore
 ```
