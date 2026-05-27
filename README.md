@@ -45,6 +45,7 @@ It can run either as a Mac app or as a local development web app. You can choose
 - Print or save the album as PDF from the browser.
 - Export the current album as a single HTML file.
 - Save the album locally on your Mac when using the Mac app.
+- Save the album locally on your iPad when using the iPad app.
 - Save the album locally in browser storage when using the development web version.
 
 ## Mac App
@@ -87,6 +88,30 @@ python3 my_digital_album.py
 
 Then open the local URL above.
 
+## iPad App
+
+The iPad version lives in:
+
+```text
+ipad-app/MyDigitalAlbum.xcodeproj
+```
+
+Before opening it in Xcode, sync the web interface into the iPad resources:
+
+```bash
+./ipad-app/sync_web_asset.sh
+```
+
+Then open the Xcode project, choose an iPad simulator or real iPad, and press Run.
+
+The iPad app uses the native photo/video picker and saves locally inside the app container:
+
+```text
+Library/Application Support/My Digital Album/library.json
+```
+
+Touch gestures are supported through the same direct controls used by the Mac/web app, with larger handles on touch devices.
+
 ## Photo Access
 
 The app can access your pictures only when you choose them through the browser file picker.
@@ -118,6 +143,12 @@ Important caveats:
 │   │   └── Info.plist
 │   └── src
 │       └── main.m
+├── ipad-app
+│   ├── MyDigitalAlbum.xcodeproj
+│   ├── MyDigitalAlbum
+│   │   ├── App
+│   │   └── Resources
+│   └── sync_web_asset.sh
 ├── README.md
 └── .gitignore
 ```

@@ -3,5 +3,9 @@ __pycache__/
 *.pyc
 tmp/
 mac-app/*.app/
+ipad-app/DerivedData/
+ipad-app/*.xcuserdata/
+ipad-app/MyDigitalAlbum.xcodeproj/xcuserdata/
+ipad-app/MyDigitalAlbum.xcodeproj/project.xcworkspace/xcuserdata/
 assets/stickers/imported/
 assets/stickers/imported.json
